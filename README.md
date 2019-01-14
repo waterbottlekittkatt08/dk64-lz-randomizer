@@ -11,5 +11,6 @@ Assistance Credit and contributers:
 - Obiyo
 - Bismuth
 - Znernicus
+- KaptainKohl
 - Connor75
 - GloriousLiar
