@@ -10,6 +10,10 @@ zipper_progress = {0x7ECC60, nil, nil};
 frame_lag = {0x76AF10, nil, nil};
 frame_real = {0x7F0560, nil, nil};
 
+-------------------------------
+-- SOME SCRIPTHAWK FUNCTIONS --
+-------------------------------
+
 function getVersion()
 	romHash = gameinfo.getromhash();
 	if romHash == "F96AF883845308106600D84E0618C1A066DC6676" then
@@ -24,9 +28,52 @@ function getVersion()
 	end
 end
 
+RDRAMBase = 0x80000000;
+RDRAMSize = 0x800000; 
+RAMBase = RDRAMBase;
+RAMSize = RDRAMSize;
+
+function isRDRAM(value)
+	return type(value) == "number" and value >= 0 and value < RDRAMSize;
+end
+
+function isPointer(value)
+		return type(value) == "number" and value >= RDRAMBase and value < RDRAMBase + RDRAMSize;
+end
+
+function dereferencePointer(address)
+	if type(address) == "number" and address >= 0 and address < (RDRAMSize - 4) then
+		address = mainmemory.read_u32_be(address);
+		if isPointer(address) then
+			return address - RDRAMBase;
+		end
+	end
+end
+
 version = getVersion();
 
 client.pause();
+
+function getActorPointers(actor_value)
+	pointers = {};
+	count = 0;
+	object_m1_count = math.min(255, mainmemory.read_u16_be(0x7FC3F0)); -- Actor Count
+	for object_no = 0, object_m1_count do
+		local pointer = dereferencePointer(0x7FBFF0 + (object_no * 4));
+		if isRDRAM(pointer) then
+			actor_type = mainmemory.read_u32_be(pointer + 0x58);
+			if actor_type == actor_value then
+				count = count + 1;
+				pointers[count] = pointer;
+			end
+		end
+	end
+	return pointers
+end
+
+----------------
+-- FORM STUFF --
+----------------
 
 lzrForm = {
 	warnings = false, -- Useful for debugging but annoying for end users, so default to false
@@ -48,14 +95,6 @@ lzrForm = {
 function round(num, idp)
 	return tonumber(string.format("%." .. (idp or 0) .. "f", num));
 end
-
-function DefaultSettings()
-	inputdisplay_x = 70;
-	inputdisplay_y = 10;
-	inputdisplay_scale = 4;
-end
-
-DefaultSettings();
 
 seedValue = {};
 
@@ -175,7 +214,6 @@ function lzrForm.UI.checkbox(col, row, tag, caption, default)
 	end
 end
 
--- Display Modifier
 lzrForm.UI.form_controls["Title Label"] = forms.label(lzrForm.UI.options_form, "DK64 LOADING ZONE RANDOMISER SETTINGS", lzrForm.UI.col(0), lzrForm.UI.row(0) + lzrForm.UI.label_offset, 410, 24);
 
 lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Loading Zone Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(2) - 5 + lzrForm.UI.label_offset, 180, 24);

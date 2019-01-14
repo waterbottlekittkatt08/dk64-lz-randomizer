@@ -7,7 +7,7 @@ function removeCutscenes()
 	cutscene = mainmemory.read_u16_be(0x7476F4);
 	cutscene_timer = mainmemory.read_u16_be(0x7476F0);
 	if current_cmap == 15 then -- Snide's
-		if cutscene == 5 then
+		if cutscene == 5 then -- Get rid of most contraption cutscenes
 			if cutscene_timer == 199 then
 				stored_parent_map = mainmemory.read_u16_be(0x76A172);
 			elseif cutscene_timer == 200 then
@@ -15,6 +15,10 @@ function removeCutscenes()
 			end
 		elseif cutscene == 2 then
 			mainmemory.write_u16_be(0x76A172, stored_parent_map);
+		end
+		snide_pointers = getActorPointers(184);
+		if #snide_pointers > 0 then
+			mainmemory.writebyte(snide_pointers[1] + 0x232, 1);
 		end
 	end
 	quickFile() -- Getting back to the main menu faster
