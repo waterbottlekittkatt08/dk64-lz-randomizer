@@ -1,7 +1,6 @@
 function giveMoves()
-	kong_headers = {0x7FC950, 0x7FC9AE, 0x7FCA0C, 0x7FCA6A, 0x7FCAC8};
-	for i = 1, #kong_headers do
-		selected_kong_header = kong_headers[i];
+	for i = 0, 4 do
+		selected_kong_header = Mem.kong_base[version] + (i * 0x5E);
 		mainmemory.write_u32_be(selected_kong_header, 0x03030702); -- Moves/Slam/Gun/Ammo Belt
 		mainmemory.writebyte(selected_kong_header + 4, 15); -- Instrument
 	end

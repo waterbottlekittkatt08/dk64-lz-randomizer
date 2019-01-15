@@ -1,14 +1,24 @@
-rng = {0x746A40, 0x7411A0, 0x746300};
-dmap = {0x7444E4, 0x73EC34, 0x743DA4};
-mode = {0x755318, 0x74FB98, 0x7553D8};
-transition_speed = {0x7FD88C, 0x7FD7CC, 0x7FDD1C};
-cmap = {0x76A0A8, 0x764BC8, 0x76A298};
-dexit = {0x7444E8, 0x73EC38, 0x743DA8};
-cs = {0x7476F4, 0x741E54, 0x746FB4};
-cs_active = {0x7444EC, 0x73EC3C, 0x743DAC};
-zipper_progress = {0x7ECC60, nil, nil};
-frame_lag = {0x76AF10, nil, nil};
-frame_real = {0x7F0560, nil, nil};
+Mem = {
+	kong_base = {0x7FC950, 0x7FC890, 0x7FCDE0},
+	rng = {0x746A40, 0x7411A0, 0x746300},
+	dmap = {0x7444E4, 0x73EC34, 0x743DA4},
+	mode = {0x755318, 0x74FB98, 0x7553D8},
+	transition_speed = {0x7FD88C, 0x7FD7CC, 0x7FDD1C},
+	cmap = {0x76A0A8, 0x764BC8, 0x76A298},
+	dexit = {0x7444E8, 0x73EC38, 0x743DA8},
+	cs = {0x7476F4, 0x741E54, 0x746FB4},
+	cs_active = {0x7444EC, 0x73EC3C, 0x743DAC},
+	zipper_progress = {0x7ECC60, 0x7ECBA0, 0x7ECE50},
+	frame_lag = {0x76AF10, 0x765A30, 0x76B100},
+	frame_real = {0x7F0560, 0x7F0480, 0x7F09D0},
+	cutscene_value = {0x7476F4, 0x741E54, 0x746FB4},
+	cutscene_timer = {0x7476F0, 0x741E50, 0x746FB0},
+	pmap = {0x76A172, 0x764C92, 0x76A362},
+	actor_count = {0x7FC3F0, 0x7FC310, 0x7FC860},
+	pointer_list = {0x7FBFF0, 0x7FBF10, 0x7FC460},
+	map_state = {0x76A0B1, 0x764BD1, 0x76A2A1},
+	krool_round = {0x750AD4, 0x74B224, 0x7503B4},
+};
 
 -------------------------------
 -- SOME SCRIPTHAWK FUNCTIONS --
@@ -57,9 +67,9 @@ client.pause();
 function getActorPointers(actor_value)
 	pointers = {};
 	count = 0;
-	object_m1_count = math.min(255, mainmemory.read_u16_be(0x7FC3F0)); -- Actor Count
+	object_m1_count = math.min(255, mainmemory.read_u16_be(Mem.actor_count[version])); -- Actor Count
 	for object_no = 0, object_m1_count do
-		local pointer = dereferencePointer(0x7FBFF0 + (object_no * 4));
+		local pointer = dereferencePointer(Mem.pointer_list[version] + (object_no * 4));
 		if isRDRAM(pointer) then
 			actor_type = mainmemory.read_u32_be(pointer + 0x58);
 			if actor_type == actor_value then
@@ -81,8 +91,8 @@ lzrForm = {
 	UI = {
 		form_controls = {},
 		form_padding = 8,
-		form_width = 15,
-		form_height = 15,
+		form_width = 10,
+		form_height = 17,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -124,51 +134,61 @@ getSeedString();
 function increase10000()
 	seedValue[1] = seedValue[1] + 1;
 	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
 function increase1000()
 	seedValue[2] = seedValue[2] + 1;
 	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
 function increase100()
 	seedValue[3] = seedValue[3] + 1;
 	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
 function increase10()
 	seedValue[4] = seedValue[4] + 1;
 	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
 function increase1()
 	seedValue[5] = seedValue[5] + 1;
 	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
 function decrease10000()
 	seedValue[1] = seedValue[1] - 1;
 	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
 function decrease1000()
 	seedValue[2] = seedValue[2] - 1;
 	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
 function decrease100()
 	seedValue[3] = seedValue[3] - 1;
 	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
 function decrease10()
 	seedValue[4] = seedValue[4] - 1;
 	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
 function decrease1()
 	seedValue[5] = seedValue[5] - 1;
 	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
 function confirmSettings()
@@ -186,7 +206,9 @@ function confirmSettings()
 		require "modules.reducedCutscenes"
 		print("No Cutscenes On");
 	end
+	client.reboot_core();
 	client.unpause();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "");
 end
 
 function lzrForm.UI.row(row_num)
@@ -214,37 +236,40 @@ function lzrForm.UI.checkbox(col, row, tag, caption, default)
 	end
 end
 
-lzrForm.UI.form_controls["Title Label"] = forms.label(lzrForm.UI.options_form, "DK64 LOADING ZONE RANDOMISER SETTINGS", lzrForm.UI.col(0), lzrForm.UI.row(0) + lzrForm.UI.label_offset, 410, 24);
+lzrForm.UI.form_controls["Title Label 1"] = forms.label(lzrForm.UI.options_form, "DONKEY KONG 64", lzrForm.UI.col(1) + 10, lzrForm.UI.row(0) + lzrForm.UI.label_offset, 410, 24);
+lzrForm.UI.form_controls["Title Label 2"] = forms.label(lzrForm.UI.options_form, "LOADING ZONE RANDOMISER", lzrForm.UI.col(0), lzrForm.UI.row(1) + lzrForm.UI.label_offset, 410, 24);
+lzrForm.UI.form_controls["Title Label 3"] = forms.label(lzrForm.UI.options_form, "SETTINGS", lzrForm.UI.col(2) + 10, lzrForm.UI.row(2) + lzrForm.UI.label_offset, 410, 24);
 
-lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Loading Zone Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(2) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(2) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Loading Zone Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(4) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(4) + lzrForm.UI.dropdown_offset);
 forms.setproperty(lzrForm.UI.form_controls["Randomiser Checkbox"], "Checked", true);
 
-lzrForm.UI.form_controls["All Moves Label"] = forms.label(lzrForm.UI.options_form, "Give All Moves:", lzrForm.UI.col(0), lzrForm.UI.row(3) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["All Moves Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(3) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["All Moves Label"] = forms.label(lzrForm.UI.options_form, "Give All Moves:", lzrForm.UI.col(0), lzrForm.UI.row(5) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["All Moves Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(5) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["No Cutscenes Label"] = forms.label(lzrForm.UI.options_form, "Reduced Cutscenes:", lzrForm.UI.col(0), lzrForm.UI.row(4) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["No Cutscenes Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(4) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["No Cutscenes Label"] = forms.label(lzrForm.UI.options_form, "Reduced Cutscenes:", lzrForm.UI.col(0), lzrForm.UI.row(6) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["No Cutscenes Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(6) + lzrForm.UI.dropdown_offset);
 
-seed_form_height = 6;
+seed_form_height = 8;
+seed_form_offset = 0.5;
 
-lzrForm.UI.form_controls["Increase 10000"] = forms.button(lzrForm.UI.options_form, "+", increase10000, lzrForm.UI.col(2), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
-lzrForm.UI.form_controls["Increase 1000"] = forms.button(lzrForm.UI.options_form, "+", increase1000, lzrForm.UI.col(3), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
-lzrForm.UI.form_controls["Increase 100"] = forms.button(lzrForm.UI.options_form, "+", increase100, lzrForm.UI.col(4), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
-lzrForm.UI.form_controls["Increase 10"] = forms.button(lzrForm.UI.options_form, "+", increase10, lzrForm.UI.col(5), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
-lzrForm.UI.form_controls["Increase 1"] = forms.button(lzrForm.UI.options_form, "+", increase1, lzrForm.UI.col(6), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Increase 10000"] = forms.button(lzrForm.UI.options_form, "+", increase10000, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Increase 1000"] = forms.button(lzrForm.UI.options_form, "+", increase1000, lzrForm.UI.col(seed_form_offset + 3), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Increase 100"] = forms.button(lzrForm.UI.options_form, "+", increase100, lzrForm.UI.col(seed_form_offset + 4), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Increase 10"] = forms.button(lzrForm.UI.options_form, "+", increase10, lzrForm.UI.col(seed_form_offset + 5), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Increase 1"] = forms.button(lzrForm.UI.options_form, "+", increase1, lzrForm.UI.col(seed_form_offset + 6), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
 
-lzrForm.UI.form_controls["Seed Label"] = forms.label(lzrForm.UI.options_form, seedString, lzrForm.UI.col(0), lzrForm.UI.row(seed_form_height + 1) + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Seed Label"] = forms.label(lzrForm.UI.options_form, seedString, lzrForm.UI.col(seed_form_offset), lzrForm.UI.row(seed_form_height + 1) + lzrForm.UI.label_offset, 180, 24);
 
-lzrForm.UI.form_controls["Decrease 10000"] = forms.button(lzrForm.UI.options_form, "-", decrease10000, lzrForm.UI.col(2), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
-lzrForm.UI.form_controls["Decrease 1000"] = forms.button(lzrForm.UI.options_form, "-", decrease1000, lzrForm.UI.col(3), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
-lzrForm.UI.form_controls["Decrease 100"] = forms.button(lzrForm.UI.options_form, "-", decrease100, lzrForm.UI.col(4), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
-lzrForm.UI.form_controls["Decrease 10"] = forms.button(lzrForm.UI.options_form, "-", decrease10, lzrForm.UI.col(5), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
-lzrForm.UI.form_controls["Decrease 1"] = forms.button(lzrForm.UI.options_form, "-", decrease1, lzrForm.UI.col(6), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Decrease 10000"] = forms.button(lzrForm.UI.options_form, "-", decrease10000, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Decrease 1000"] = forms.button(lzrForm.UI.options_form, "-", decrease1000, lzrForm.UI.col(seed_form_offset + 3), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Decrease 100"] = forms.button(lzrForm.UI.options_form, "-", decrease100, lzrForm.UI.col(seed_form_offset + 4), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Decrease 10"] = forms.button(lzrForm.UI.options_form, "-", decrease10, lzrForm.UI.col(seed_form_offset + 5), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Decrease 1"] = forms.button(lzrForm.UI.options_form, "-", decrease1, lzrForm.UI.col(seed_form_offset + 6), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
 
-lzrForm.UI.form_controls["Settings Check Label"] = forms.label(lzrForm.UI.options_form, "SETTINGS NOT SET YET", lzrForm.UI.col(0), lzrForm.UI.row(seed_form_height + 4) + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Settings Check Label"] = forms.label(lzrForm.UI.options_form, "SETTINGS NOT SET YET", lzrForm.UI.col(0.5), lzrForm.UI.row(seed_form_height + 4) + lzrForm.UI.label_offset, 180, 24);
 
-lzrForm.UI.form_controls["Confirm Settings Button"] = forms.button(lzrForm.UI.options_form, "Confirm Settings", confirmSettings, lzrForm.UI.col(6), lzrForm.UI.row(seed_form_height + 5), lzrForm.UI.button_height, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Confirm Settings Button"] = forms.button(lzrForm.UI.options_form, "Confirm Settings", confirmSettings, lzrForm.UI.col(0.6), lzrForm.UI.row(seed_form_height + 5) + 5, 7 * lzrForm.UI.button_height, lzrForm.UI.button_height);
 
 function lzrForm.UI.updateReadouts()
 	getSeedString();
