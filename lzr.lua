@@ -149,7 +149,7 @@ lzrForm = {
 		form_controls = {},
 		form_padding = 8,
 		form_width = 10,
-		form_height = 18,
+		form_height = 19,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -253,6 +253,7 @@ settings = {
 	all_moves = 0,
 	no_cutscenes = 0,
 	all_kongs = 0,
+	using_jabos = 0,
 };
 
 function confirmSettings()
@@ -278,7 +279,13 @@ function confirmSettings()
 		require "modules.allKongs"
 		print("All Kongs On");
 	end
-	client.reboot_core();
+	if forms.ischecked(lzrForm.UI.form_controls["Jabos Checkbox"]) then
+		settings.using_jabos = 1;
+		print("Using Jabos On");
+	end
+	if settings.using_jabos == 0 then
+		client.reboot_core();
+	end
 	client.unpause();
 	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "");
 end
@@ -325,8 +332,10 @@ lzrForm.UI.form_controls["No Cutscenes Checkbox"] = forms.checkbox(lzrForm.UI.op
 lzrForm.UI.form_controls["All Kongs Label"] = forms.label(lzrForm.UI.options_form, "Unlock All Kongs:", lzrForm.UI.col(0), lzrForm.UI.row(7) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["All Kongs Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(7) + lzrForm.UI.dropdown_offset);
 
+lzrForm.UI.form_controls["Jabos Label"] = forms.label(lzrForm.UI.options_form, "I am using Jabo 1.6.1:", lzrForm.UI.col(0), lzrForm.UI.row(8) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Jabos Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(8) + lzrForm.UI.dropdown_offset);
 
-seed_form_height = 9;
+seed_form_height = 10;
 seed_form_offset = 0.5;
 
 lzrForm.UI.form_controls["Increase 10000"] = forms.button(lzrForm.UI.options_form, "+", increase10000, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
