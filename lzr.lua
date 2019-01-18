@@ -18,6 +18,10 @@ Mem = {
 	pointer_list = {0x7FBFF0, 0x7FBF10, 0x7FC460},
 	map_state = {0x76A0B1, 0x764BD1, 0x76A2A1},
 	krool_round = {0x750AD4, 0x74B224, 0x7503B4},
+	level_index_mapping = {0x7445E0, 0x73ED30, 0x743EA0},
+	eeprom_copy_base = {0x7ECEA8, 0x7ECDC8, 0x7ED318},
+	eeprom_file_mapping = {0x7EDEA8, 0x7EDDC8, 0x7EE318},
+	file = {0x7467C8, 0x740F18, 0x746088},
 };
 
 -------------------------------
@@ -61,6 +65,56 @@ function dereferencePointer(address)
 end
 
 version = getVersion();
+
+function getFileIndex()
+	return mainmemory.readbyte(Mem.file[version]);
+end
+
+local eeprom_slot_size = 0x1AC;
+
+function getCurrentEEPROMSlot()
+	local fileIndex = getFileIndex();
+	for i = 0, 3 do
+		local EEPROMMap = mainmemory.readbyte(Mem.eeprom_file_mapping[version] + i);
+		if EEPROMMap == fileIndex then
+			return i;
+		end
+	end
+	return 0; -- Default
+end
+
+function getFlagBlockAddress()
+	return Mem.eeprom_copy_base[version] + getCurrentEEPROMSlot() * eeprom_slot_size;
+end
+
+function setFlag(byte, bit)
+	local flags = getFlagBlockAddress();
+	if type(byte) == "number" and type(bit) == "number" and bit >= 0 and bit < 8 then
+		local currentValue = mainmemory.readbyte(flags + byte);
+		mainmemory.writebyte(flags + byte, set_bit(currentValue, bit));
+	end
+end
+
+function checkFlag(byte, bit)
+	if type(byte) == "string" then
+		local flag = getFlagByName(byte);
+		if type(flag) == "table" then
+			byte = flag.byte;
+			bit = flag.bit;
+		end
+	end
+	if type(byte) == "number" and type(bit) == "number" and bit >= 0 and bit < 8 then
+		local flags = getFlagBlockAddress();
+		local currentValue = mainmemory.readbyte(flags + byte);
+		if check_bit(currentValue, bit) then
+			return true;
+		else
+			return false;
+		end
+	else
+	end
+	return false;
+end
 
 client.pause();
 

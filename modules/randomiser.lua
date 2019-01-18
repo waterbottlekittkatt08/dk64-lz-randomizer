@@ -554,6 +554,26 @@ function getSeed()
 	end
 end
 
+level_index_flags = {
+	[0] = {0x38,5}, -- Japes
+	[1] = {0x38,6}, -- Aztec
+	[2] = {0x38,7}, -- Factory
+	[3] = {0x39,0}, -- Galleon
+	[4] = {0x39,1}, -- Fungi
+	[5] = {0x39,2}, -- Caves
+	[6] = {0x39,3}, -- Castle
+	[8] = {0x39,4}, -- Helm
+};
+
+function checkMap(map_value)
+	levelIndex = mainmemory.readbyte(Mem.level_index_mapping[version] + map_value);
+	if level_index_flags[levelIndex][1] ~= nil then
+		if not checkFlag(level_index_flags[levelIndex][1], level_index_flags[levelIndex][2]) then
+			setFlag(level_index_flags[levelIndex][1], level_index_flags[levelIndex][2]);
+		end
+	end
+end
+
 forcing_a_cutscene = 0;
 
 function randomise()
@@ -584,11 +604,14 @@ function randomise()
 						new_destmap_to_write = getKRoolDestination(current_dmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 					elseif cmapType ~= "bonus_maps" and dmapType == "regular_maps" then
-						loadingZoneCode = getLoadingZone(current_dmap, current_dexit);
-						new_destexit_to_write = loadingZoneCode % 256;
-						new_destmap_to_write = (loadingZoneCode - (loadingZoneCode % 256)) / 256;
-						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
-						mainmemory.write_u32_be(Mem.dexit[version], new_destexit_to_write);
+						if current_cmap ~= 0x61 and current_dmap ~= 0x61 then
+							loadingZoneCode = getLoadingZone(current_dmap, current_dexit);
+							new_destexit_to_write = loadingZoneCode % 256;
+							new_destmap_to_write = (loadingZoneCode - (loadingZoneCode % 256)) / 256;
+							mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
+							mainmemory.write_u32_be(Mem.dexit[version], new_destexit_to_write);
+							checkMap(new_destmap_to_write);
+						end
 					end
 				end
 			elseif transition_speed_value < 0 and zipProg > 3 and zipProg < 9 and cutsceneActive == 0 and dmapType == "k_rool" and previous_msb_value % 2 == 0 then
