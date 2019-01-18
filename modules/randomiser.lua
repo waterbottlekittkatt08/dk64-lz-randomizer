@@ -547,8 +547,9 @@ function getSeed()
 	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
 	zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
 	if current_cmap == 80 and cutsceneActive == 6 and cutsceneValue == 19 and current_dmap == 176 and zipProg > 89 and zipProg < 93 then -- Entering New File
-		--saveSeed();
-		giveMoves();
+		if settings.all_moves == 1 then
+			giveMoves();
+		end
 	end
 end
 

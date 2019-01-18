@@ -65,6 +65,9 @@ function dereferencePointer(address)
 end
 
 version = getVersion();
+check_bit = bit.check;
+clear_bit = bit.clear;
+set_bit = bit.set;
 
 function getFileIndex()
 	return mainmemory.readbyte(Mem.file[version]);
@@ -146,7 +149,7 @@ lzrForm = {
 		form_controls = {},
 		form_padding = 8,
 		form_width = 10,
-		form_height = 17,
+		form_height = 18,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -245,20 +248,35 @@ function decrease1()
 	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
 
+settings = {
+	randomiser = 0,
+	all_moves = 0,
+	no_cutscenes = 0,
+	all_kongs = 0,
+};
+
 function confirmSettings()
 	print("Settings Confirmed");
 	print("Seed: "..seedAsNumber);
 	if forms.ischecked(lzrForm.UI.form_controls["Randomiser Checkbox"]) then
+		settings.randomiser = 1;
 		require "modules.randomiser"
 		print("Randomiser On");
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["All Moves Checkbox"]) then
+		settings.all_moves = 1;
 		require "modules.allMoves"
 		print("All Moves On");
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["No Cutscenes Checkbox"]) then
+		settings.no_cutscenes = 1;
 		require "modules.reducedCutscenes"
 		print("No Cutscenes On");
+	end
+	if forms.ischecked(lzrForm.UI.form_controls["All Kongs Checkbox"]) then
+		settings.all_kongs = 1;
+		require "modules.allKongs"
+		print("All Kongs On");
 	end
 	client.reboot_core();
 	client.unpause();
@@ -304,7 +322,11 @@ lzrForm.UI.form_controls["All Moves Checkbox"] = forms.checkbox(lzrForm.UI.optio
 lzrForm.UI.form_controls["No Cutscenes Label"] = forms.label(lzrForm.UI.options_form, "Reduced Cutscenes:", lzrForm.UI.col(0), lzrForm.UI.row(6) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["No Cutscenes Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(6) + lzrForm.UI.dropdown_offset);
 
-seed_form_height = 8;
+lzrForm.UI.form_controls["All Kongs Label"] = forms.label(lzrForm.UI.options_form, "Unlock All Kongs:", lzrForm.UI.col(0), lzrForm.UI.row(7) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["All Kongs Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(7) + lzrForm.UI.dropdown_offset);
+
+
+seed_form_height = 9;
 seed_form_offset = 0.5;
 
 lzrForm.UI.form_controls["Increase 10000"] = forms.button(lzrForm.UI.options_form, "+", increase10000, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
