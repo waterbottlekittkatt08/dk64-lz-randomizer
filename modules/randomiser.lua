@@ -566,6 +566,7 @@ level_index_flags = {
 
 function checkMap(map_value)
 	levelIndex = mainmemory.readbyte(Mem.level_index_mapping[version] + map_value);
+	dmapType = mapType(current_dmap);
 	if level_index_flags[levelIndex][1] ~= nil then
 		if not checkFlag(level_index_flags[levelIndex][1], level_index_flags[levelIndex][2]) then
 			setFlag(level_index_flags[levelIndex][1], level_index_flags[levelIndex][2]);
@@ -602,6 +603,8 @@ function randomise()
 					elseif dmapType == "k_rool" and current_cmap ~= 0xD6 then
 						new_destmap_to_write = getKRoolDestination(current_dmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
+					elseif dmapType == "global_maps" then
+						mainmemory.write_u16_be(Mem.pmap[version], current_cmap);
 					elseif cmapType ~= "bonus_maps" and dmapType == "regular_maps" then
 						if current_cmap ~= 0x61 and current_dmap ~= 0x61 then
 							loadingZoneCode = getLoadingZone(current_dmap, current_dexit);
