@@ -21,7 +21,9 @@ function removeCutscenes()
 			mainmemory.writebyte(snide_pointers[1] + 0x232, 1);
 		end
 	end
-	quickFile() -- Getting back to the main menu faster
+	if settings.using_jabos == 0 then
+		quickFile() -- Getting back to the main menu faster
+	end
 end
 
 function quickFile()
