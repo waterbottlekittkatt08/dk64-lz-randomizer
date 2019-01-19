@@ -425,10 +425,12 @@ function generateKRoolOrder()
 	k_rool_assortment[5] = 5; -- Always ends on Chunky Phase
 end
 
-generateAssortment();
-generateBonusAssortment();
-generateBossAssortment();
-generateKRoolOrder();
+function setAssortments()
+	generateAssortment();
+	generateBonusAssortment();
+	generateBossAssortment();
+	generateKRoolOrder();
+end
 
 function getLoadingZone(destmap, destexit)
 	lookup_value = (destmap * 256) + destexit;

@@ -24,6 +24,7 @@ function removeCutscenes()
 	if settings.using_jabos == 0 then
 		quickFile() -- Getting back to the main menu faster
 	end
+	mainmemory.writebyte(Mem.story_skip[version],1);
 end
 
 function quickFile()

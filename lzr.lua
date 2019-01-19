@@ -22,6 +22,7 @@ Mem = {
 	eeprom_copy_base = {0x7ECEA8, 0x7ECDC8, 0x7ED318},
 	eeprom_file_mapping = {0x7EDEA8, 0x7EDDC8, 0x7EE318},
 	file = {0x7467C8, 0x740F18, 0x746088},
+	story_skip = {0x74452C,0x73EC7C,0x743DEC},
 };
 
 -------------------------------
@@ -263,6 +264,7 @@ function confirmSettings()
 		settings.randomiser = 1;
 		require "modules.randomiser"
 		print("Randomiser On");
+		setAssortments();
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["All Moves Checkbox"]) then
 		settings.all_moves = 1;
