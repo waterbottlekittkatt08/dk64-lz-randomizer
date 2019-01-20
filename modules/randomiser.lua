@@ -825,6 +825,7 @@ function checkMap(map_value)
 end
 
 forcing_a_cutscene = 0;
+rando_happened = 0;
 
 function randomise()
 	if version < 2 then -- Should be <4, need to fix CS fade stuff
@@ -839,23 +840,30 @@ function randomise()
 			dmapType = mapType(current_dmap);
 			cmapType = mapType(current_cmap);
 			previous_msb_value = mainmemory.readbyte(Mem.map_state[version]);
+			if transition_speed_value < 0 then
+				rando_happened = 0;
+			end
 			if transition_speed_value > 0 then
 				current_dexit = mainmemory.read_u32_be(Mem.dexit[version]);
 				lag = mainmemory.read_u32_be(Mem.frame_lag[version]);
 				real = mainmemory.read_u32_be(Mem.frame_real[version]);
-				if zipProg > 89 and zipProg < 93 and lag == real then
+				if zipProg < 37 and lag == real and rando_happened == 0 then
 					if dmapType == "bonus_maps" then
 						new_destmap_to_write = getBonusDestination(current_dmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
+						rando_happened = 1;
 					elseif dmapType == "boss_maps" then
 						new_destmap_to_write = getBossDestination(current_dmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
+						rando_happened = 1;
 					elseif dmapType == "k_rool" and current_cmap ~= 0xD6 then
 						new_destmap_to_write = getKRoolDestination(current_dmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
-					elseif dmapType == "global_maps" then
+						rando_happened = 1;
+					elseif dmapType == "global_maps" and cmapType == "regular_maps" then
 						mainmemory.write_u16_be(Mem.pmap[version], current_cmap);
-					elseif cmapType ~= "bonus_maps" and dmapType == "regular_maps" then
+						rando_happened = 1;
+					elseif cmapType ~= "bonus_maps" and cmapType ~= "crown_maps" and dmapType == "regular_maps" then
 						if current_cmap ~= 0x61 and current_dmap ~= 0x61 then
 							loadingZoneCode = getLoadingZone(current_dmap, current_dexit);
 							new_destexit_to_write = loadingZoneCode % 256;
@@ -863,6 +871,7 @@ function randomise()
 							mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 							mainmemory.write_u32_be(Mem.dexit[version], new_destexit_to_write);
 							checkMap(new_destmap_to_write);
+							rando_happened = 1;
 						end
 					end
 				end

@@ -2,6 +2,17 @@ function setCutscene(value)
 	mainmemory.write_u16_be(Mem.cs[version], value);
 end
 
+koshaFlags = {
+	[1] = {0x25,4}, -- Kill Kosha
+	[2] = {0x25,3}, -- Kosha Cutscene
+};
+
+function removeKosha()
+	for i = 1, #koshaFlags do
+		setFlag(koshaFlags[i][1],koshaFlags[i][2])
+	end
+end
+
 function removeCutscenes()
 	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
 	cutscene = mainmemory.read_u16_be(Mem.cs[version]);
