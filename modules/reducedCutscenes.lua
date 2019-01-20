@@ -18,7 +18,10 @@ function removeCutscenes()
 		end
 		snide_pointers = getActorPointers(184);
 		if #snide_pointers > 0 then
-			mainmemory.writebyte(snide_pointers[1] + 0x232, 1);
+			turnincount = mainmemory.readbyte(snide_pointers[1] + 0x232);
+			if turnincount > 0 then
+				mainmemory.writebyte(snide_pointers[1] + 0x232, 1);
+			end
 		end
 	end
 	if settings.using_jabos == 0 then
