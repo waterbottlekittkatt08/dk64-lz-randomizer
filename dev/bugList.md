@@ -1,9 +1,9 @@
-#BUGS
+# BUGS
 This is just an internal list to track bugs that have been found and bugs that have been
 resolved
 
 
-##BUG LIST TO FIX
+## BUG LIST TO FIX
 - BBlasts loop
 - K Rool CS Skip doesn't work sometimes
 - Exiting Chunky Phase by victory randomises LZ
@@ -27,7 +27,7 @@ resolved
 	- Parent Exit stuff?
 - Giant Kosha initiated still
 
-##BUGS THAT HAVE BEEN FIXED
+## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps
 - Snide's plays cutscene even if you have no BPs
 - Crown Exits randomise the pool

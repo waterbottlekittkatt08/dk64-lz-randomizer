@@ -1,4 +1,4 @@
-#IDEAS
+# IDEAS
 This is just an internal list to track of ideas
 
 ## LIST
