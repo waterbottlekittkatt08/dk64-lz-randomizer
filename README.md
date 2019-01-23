@@ -1,4 +1,7 @@
-# Donkey Kong 64 Loading Zone Randomizer
+<p align="center">
+  <img src ="https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/logo%20-%20ui%20(450).png" />
+</p>
+
 A loading zone randomizer lua script for Donkey Kong 64.
 Intended for BizHawk.
 
@@ -12,7 +15,7 @@ Intended for BizHawk.
 
 ## Features
 - Randomisation of regular loading zones
-	- For example: Trying to enter the loading zone to DK Isles from Aztec Lobby will take you to the Winch Room in Fungi Forest (Seed #801).
+	- For example: Trying to enter the loading zone to DK Isles from Aztec Lobby will take you to the Winch Room in Fungi Forest.
 	- Some maps are excluded from this randomisation (Snide's, Cranky's, Candy's, Funky's, Troff 'n' Scoff)
 - Randomisation of Bonus Barrels
 	- For Example: Trying to enter the bonus barrel near Arcade in Frantic Factory (Which would take you to Stash Snatch) might take you to Mad Maze Maul
