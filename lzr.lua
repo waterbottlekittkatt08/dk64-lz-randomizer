@@ -23,6 +23,9 @@ Mem = {
 	eeprom_file_mapping = {0x7EDEA8, 0x7EDDC8, 0x7EE318},
 	file = {0x7467C8, 0x740F18, 0x746088},
 	story_skip = {0x74452C,0x73EC7C,0x743DEC},
+	enemy_respawn_object = {0x7FDC8C, 0x7FDBCC, 0x7FE11C},
+	num_enemies = {0x7FDC88, 0x7FDBC8, 0x7FE118},
+	obj_model2_timer = {0x76A064, 0x764B84, 0x76A254},
 };
 
 -------------------------------
@@ -139,6 +142,80 @@ function getActorPointers(actor_value)
 	return pointers
 end
 
+regular_maps = {4,6,7,12,13,14,16,17,19,20,21,22,23,24,26,27,29,30,31,33,34,36,37,38,39,41,43,44,45,46,47,48,49,51,52,54,55,56,57,58,59,60,61,62,63,64,70,71,72,82,84,85,86,87,88,89,90,91,92,93,94,95,97,98,100,105,106,108,110,112,113,114,151,163,164,166,167,168,169,170,171,173,174,175,176,178,179,183,185,186,187,188,189,193,194,195,200};
+global_maps = {1,5,15,25,42};
+boss_maps = {8,83,111,154,196,197,199};
+special_minigame_maps = {2,9};
+bonus_maps = {3,10,18,32,35,50,65,66,67,68,69,74,75,77,78,79,96,99,101,102,103,104,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,165,201,202,209,210,211,212};
+crown_maps = {53,73,155,156,157,158,159,160,161,162};
+training_barrels = {177,180,181,182};
+k_rool = {203,204,205,206,207};
+
+function getEnemyPointerFromIds(enemyIdTable)
+	local enemyRespawnObject = dereferencePointer(Mem.enemy_respawn_object[version]);
+	local enemySlotSize = 0x48;
+	inputTable = enemyIdTable;
+	enemyIdPointerList = {};
+	enemyId_count = 0;
+	if isRDRAM(enemyRespawnObject) then
+		local numberOfEnemies = mainmemory.read_u16_be(Mem.num_enemies[version]);
+		for j = 1, #inputTable do
+			for i = 1, numberOfEnemies do
+				slotBase = enemyRespawnObject + (i - 1) * enemySlotSize;
+				if mainmemory.readbyte(slotBase) == inputTable[j] then
+					enemyId_count = enemyId_count + 1;
+					enemyIdPointerList[enemyId_count] = slotBase;
+				end
+			end
+		end
+	end
+	return enemyIdPointerList;
+end
+
+function mapType(mapNumber)
+	for i = 1, #regular_maps do
+		if mapNumber == regular_maps[i] then
+			return "regular_maps";
+		end
+	end
+	for i = 1, #global_maps do
+		if mapNumber == global_maps[i] then
+			return "global_maps";
+		end
+	end
+	for i = 1, #boss_maps do
+		if mapNumber == boss_maps[i] then
+			return "boss_maps";
+		end
+	end
+	for i = 1, #special_minigame_maps do
+		if mapNumber == special_minigame_maps[i] then
+			return "special_minigame_maps";
+		end
+	end
+	for i = 1, #bonus_maps do
+		if mapNumber == bonus_maps[i] then
+			return "bonus_maps";
+		end
+	end
+	for i = 1, #crown_maps do
+		if mapNumber == crown_maps[i] then
+			return "crown_maps";
+		end
+	end
+	for i = 1, #training_barrels do
+		if mapNumber == training_barrels[i] then
+			return "training_barrels";
+		end
+	end
+	for i = 1, #k_rool do
+		if mapNumber == k_rool[i] then
+			return "k_rool";
+		end
+	end
+	return "Unassigned";
+end
+
 ----------------
 -- FORM STUFF --
 ----------------
@@ -150,7 +227,7 @@ lzrForm = {
 		form_controls = {},
 		form_padding = 8,
 		form_width = 10,
-		form_height = 19,
+		form_height = 20,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -255,6 +332,7 @@ settings = {
 	no_cutscenes = 0,
 	all_kongs = 0,
 	using_jabos = 0,
+	random_kasplats = 0,
 };
 
 function confirmSettings()
@@ -284,6 +362,12 @@ function confirmSettings()
 	if forms.ischecked(lzrForm.UI.form_controls["Jabos Checkbox"]) then
 		settings.using_jabos = 1;
 		print("Using Jabos On");
+	end
+	if forms.ischecked(lzrForm.UI.form_controls["Kasplat Checkbox"]) then
+		settings.random_kasplats = 1;
+		require "modules.randomKasplats"
+		print("Random Kasplats On");
+		generateKasplatAssortment();
 	end
 	if settings.using_jabos == 0 then
 		client.reboot_core();
@@ -337,7 +421,10 @@ lzrForm.UI.form_controls["All Kongs Checkbox"] = forms.checkbox(lzrForm.UI.optio
 lzrForm.UI.form_controls["Jabos Label"] = forms.label(lzrForm.UI.options_form, "I am using Jabo 1.6.1:", lzrForm.UI.col(0), lzrForm.UI.row(8) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["Jabos Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(8) + lzrForm.UI.dropdown_offset);
 
-seed_form_height = 10;
+lzrForm.UI.form_controls["Kasplat Label"] = forms.label(lzrForm.UI.options_form, "Random Kasplat Locations:", lzrForm.UI.col(0), lzrForm.UI.row(9) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Kasplat Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(9) + lzrForm.UI.dropdown_offset);
+
+seed_form_height = 11;
 seed_form_offset = 0.5;
 
 lzrForm.UI.form_controls["Increase 10000"] = forms.button(lzrForm.UI.options_form, "+", increase10000, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
