@@ -2,10 +2,14 @@
   <img src ="https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/logo%20-%20ui%20(450).png" />
 </p>
 
-A loading zone randomizer lua script for Donkey Kong 64.
-Intended for BizHawk.
+<p align="center">
+A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
+</p>
 
-## Installation and usage
+<br>
+
+![Installation and Usage](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20install.png)
+
 - Step 1: Open the [BizHawk emulator](https://github.com/TASVideos/BizHawk/releases/)
 - Step 2: Open any valid DK64 ROM (The 'Not For Resale' version of this game is not supported)
 - Step 3: Open the Lua Console (Tools > Lua Console)
@@ -13,7 +17,7 @@ Intended for BizHawk.
 - Step 5: Select the settings you want to use and determine your seed
 - Step 6: Click confirm and enjoy the oncoming madness!
 
-## Features
+![Features](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20features.png)
 - Randomisation of regular loading zones
 	- For example: Trying to enter the loading zone to DK Isles from Aztec Lobby will take you to the Winch Room in Fungi Forest.
 	- Some maps are excluded from this randomisation (Snide's, Cranky's, Candy's, Funky's, Troff 'n' Scoff)
@@ -27,8 +31,15 @@ Intended for BizHawk.
 	- K Rool phases immediately start at the "In the red corner" cutscene
 - Option to acquire all moves in the game from the start
 	- Cuts out some coin collection, completely optional
+- Option to unlock all kongs in the game from the start
+	- Cuts out some of the start of the run
+- Randomised Kasplats
+	- Over 110 locations which the 40 kasplats in the game can be
+	- All are collectable glitchless as every kong
+	- Some are just shifted to [new locations](https://twitter.com/2dosSRL/status/1087442940094500865) and some are [in completely new maps!](https://twitter.com/2dosSRL/status/1087800177765818368)
+	- Unfortunately, none are in Helm
 
-## BizHawk Setup Guide
+![BizHawk Setup Guide](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20setup.png)
 - Download and install BizHawk & the pre-requisites
 	- Any version between (inclusive) 1.12.0 and 1.13.1 is recommended for DK64 due to it's inclusion of the Dynarec Core Type & Jabo's Video Plugin
 	- To alter your plugins/settings, open any N64 ROM, click N64 (Top bar), and then click plugins.
@@ -59,7 +70,7 @@ Intended for BizHawk.
 	- Analogue Stick mapping: Use the 3rd page (Player 1, Analog Controls)
 		- This allows you to go in all directions, not just the 8 ordinal/cardinal points.
 	
-## Assistance Credit and contributors:
+![devs](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20devs.png)
 - [theballaam96](https://www.youtube.com/c/theballaam96srl)
 - [2dos](http://www.twitch.tv/2dos)
 - [Mittenz](http://twitch.tv/mittenzsrl)
