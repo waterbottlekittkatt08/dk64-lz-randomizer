@@ -7,6 +7,11 @@ kong_flags = {
 };
 
 function getFileEntranceAllKongs()
+	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
+	cutsceneValue = mainmemory.read_u16_be(Mem.cs[version]);
+	cutsceneActive = mainmemory.readbyte(Mem.cs_active[version]);
+	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
+	zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
 	if current_cmap == 80 and cutsceneActive == 6 and cutsceneValue == 19 and current_dmap == 176 and zipProg > 31 and zipProg < 37 then -- Entering New File
 		for i = 1, 5 do
 			setFlag(kong_flags[i][1],kong_flags[i][2]);
