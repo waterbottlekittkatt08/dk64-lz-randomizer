@@ -28,7 +28,7 @@ resolved
 - Giant Kosha initiated still
 - Give Moves isn't called
 - Kasplat in ? Box stays as Tiny
-- Low
+- Low Kasplat in Galleon Water unobtainable glitchless
 
 ## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps
