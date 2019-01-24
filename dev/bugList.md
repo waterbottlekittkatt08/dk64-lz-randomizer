@@ -26,6 +26,9 @@ resolved
 	- Seed 420: Exiting T&S/Cranky/Candy in Factory > Exiting Funky in Aztec
 	- Parent Exit stuff?
 - Giant Kosha initiated still
+- Give Moves isn't called
+- Kasplat in ? Box stays as Tiny
+- Low
 
 ## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps
