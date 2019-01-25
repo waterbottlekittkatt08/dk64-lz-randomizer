@@ -249,320 +249,321 @@ mapsWithMultipleExits = {
 	194, --Crystal Caves Lobby
 };
 
-exitTable = {}
-exitTable[7] = {
-	"From Japes Lobby (Intro)",
-	"From Shellhive",
-	"From Mountain",
-	"From Cranky",
-	"From Funky",
-	"From Painting Room",
-	"From Snide's",
-	"From BBlast",
-	"From Underground",
-	"From T&S (Diddy Cave)",
-	"From T&S (Near Cannon)",
-	"From ? (Other hill near SSSortie)",
-	"From T&S (Near Pool Fairy)",
-	"From ? (Near Pool Fairy)",
-	"From Minecart",
-	"From Japes Lobby",
-	"From DK Rap (DKTV Demo)",
-	"From Japes Lobby (Intro)"
-}
-exitTable[26] = {
-	"From Factory Lobby/Arcade",
-	"From Arcade Area (near Tiny BP)",
-	"From Tiny BP Area (To Arcade Area)",
-	"From Power Shed",
-	"From R&D Area (To Storage Room)",
-	"From Snide's",
-	"From Funky's",
-	"From Cranky's",
-	"From Crusher Room",
-	"From T&S (Block Tower)",
-	"From T&S (Arcade)",
-	"From T&S (R&D)",
-	"From T&S (Production Room)",
-	"From T&S (Storage Room)",
-	"From ? (Near Bad Hit Detection Man)",
-	"From BBlast",
-	"From Car Race",
-	"From Candy's",
-	"From Factory Lobby"
-}
-exitTable[30] = {
-	"From Galleon Lobby",
-	"From Diddy 5DS",
-	"From Chunky 5DS",
-	"From Lanky 5DS",
-	"From Pearls Chest",
-	"From Mermaid",
-	"From Tiny 5DS",
-	"From DK 5DS",
-	"From Tiny 2DS",
-	"From Lanky 2DS",
-	"From Lighthouse",
-	"From Seasick Ship",
-	"From T&S (Cactus)",
-	"From T&S (Near Cranky's)",
-	"From T&S (2DS)",
-	"From T&S (Enguarde Door)",
-	"From BBlast",
-	"From Snide's",
-	"From Candy's",
-	"From Seal Race",
-	"From T&S (Meme Hole)",
-	"From Submarine",
-	"From Cranky's",
-	"From Funky's",
-	"From Galleon Lobby"
-}
-exitTable[34] = {
-	"From Training Grounds",
-	"From K-Lumsy",
-	"From Japes Lobby",
-	"From Aztec Lobby",
-	"From Factory Lobby",
-	"From Galleon Lobby",
-	"From Fungi Lobby",
-	"From Helm Lobby",
-	"From BFI",
-	"From Snide's Room",
-	"From Caves Lobby",
-	"From Castle Lobby",
-	"From K Rool",
-	"From Training Grounds"
-}
-exitTable[38] = {
-	"From Aztec Lobby",
-	"From Tiny Temple",
-	"From Llama Temple",
-	"From Tiny 5DT",
-	"From Chunky 5DT",
-	"From DK 5DT",
-	"From Diddy 5DT",
-	"From Lanky 5DT",
-	"From Candy's",
-	"From Snide's",
-	"From Cranky's",
-	"From BBlast",
-	"From T&S (Candy's)",
-	"From T&S (W5)",
-	"From T&S (5DT)",
-	"From T&S (Cranky's)",
-	"From T&S (Funky's)",
-	"From Beetle Race",
-	"From Funky's",
-	"From Aztec Lobby"
-}
-exitTable[43] = {
-	"From Galleon (Diddy Entrance)",
-	"From Galleon (Chunky Entrance)",
-	"From Galleon (Lanky Entrance)",
-	"From Galleon (Diddy Entrance)"
-}
-exitTable[46] = {
-	"From Galleon (DK Entrance)",
-	"From Galleon (Tiny Entrance)",
-	"From Galleon (DK Entrance)"
-}
-exitTable[47] = {
-	"From Galleon (Tiny Entrance)",
-	"From Galleon (Lanky Entrance)",
-	"From Galleon (Tiny Entrance)"
-}
-exitTable[48] = {
-	"From Fungi Lobby",
-	"From Lanky Attic",
-	"From Diddy Attic",
-	"From Diddy Barn",
-	"From DK Barn",
-	"From Mill (Rear, PPunch Door)",
-	"From Mill (Front)",
-	"From Mill (Rear, Tiny Hole)",
-	"From G. Mush (Lower)",
-	"From G. Mush (Low Middle)",
-	"From G. Mush (Middle)",
-	"From G. Mush (High Middle)",
-	"From G. Mush (High)",
-	"From Face Puzzle",
-	"From Light Room (Lanky)",
-	"From Dark Room (Lanky)",
-	"From Minecart",
-	"From Cranky's",
-	"From Funky's",
-	"From Snide's",
-	"From T&S (DK Barn)",
-	"From T&S (Snide's)",
-	"From T&S (Beanstalk)",
-	"From Anthill",
-	"From T&S (G. Mush)",
-	"From T&S (Tree)",
-	"From BBlast",
-	"From Fungi Lobby (?)",
-	"From Fungi Lobby"
-}
-exitTable[61] = {
-	"From Fungi (W1 Door)",
-	"From Mill (Rear)",
-	"From Fungi (W1 Door)"
-}
-exitTable[62] = {
-	"From Fungi (PPunch Door)",
-	"From Spider Boss",
-	"From Mill (Front)",
-	"From Fungi (Tiny Door)",
-	"From Fungi (PPunch Door)"
-}
-exitTable[64] = {
-	"From Fungi (Low)",
-	"From Fungi (Middle)",
-	"From Fungi (Low Middle)",
-	"From Fungi (High Middle)",
-	"From Fungi (High)",
-	"From Fungi (Low)"
-}
-exitTable[72] = {
-	"From Caves Lobby",
-	"From Diddy 5DI",
-	"From DK 5DI",
-	"From Lanky 5DI",
-	"From Chunky 5DI",
-	"From Tiny 5DI",
-	"From Beetle Race",
-	"From ? (Near Rotating Room)",
-	"From ? (Near 1DC)",
-	"From ? (Near 5DC)",
-	"From ? (Near W3 Room)",
-	"From ? (5DI W3, Beta T&S)",
-	"From Cranky's",
-	"From Funky's",
-	"From DK 5DC",
-	"From Chunky 5DC",
-	"From Tiny 5DC",
-	"From Diddy 5DC (Lower)",
-	"From Diddy 5DC (Upper)",
-	"From Rotating Room",
-	"From 1DC",
-	"From Candy's",
-	"From Snide's",
-	"From T&S (Snide's)",
-	"From T&S (Rotating Room)",
-	"From T&S (1DC)",
-	"From T&S (Giant Boulder)",
-	"From ? (Behind W3 Room)",
-	"From BBlast",
-	"From ? (Giant Kosha Room)",
-	"From Ice Castle",
-	"From DK Treehouse (Secret Exit)",
-	"From Caves Lobby"
-}
-exitTable[87] = {
-	"From Castle Lobby",
-	"From Tree (Exit)",
-	"From Dungeon Tunnel (Close)",
-	"From T&S (W2)",
-	"From Crypt",
-	"From Dungeon Tunnel (Far)",
-	"From T&S (Rear)",
-	"From Museum",
-	"From Greenhouse (Front)",
-	"From Shed",
-	"From T&S (W4)",
-	"From Ballroom",
-	"From Library (Entrance)",
-	"From Library (Exit)",
-	"From Tower",
-	"From Tree (Entrance)",
-	"From Trash Can",
-	"From BBlast",
-	"From Cranky's",
-	"From Snide's",
-	"From Greenhouse (Rear)",
-	"From Castle Lobby (Intro)",
-	"From Castle Lobby"
-}
-exitTable[88] = {
-	"From Castle",
-	"From Museum (Monkeyport)",
-	"From Castle"
-}
-exitTable[112] = {
-	"From Crypt",
-	"From Minecart",
-	"From Crypt"
-}
-exitTable[113] = {
-	"From Castle",
-	"From Car Race",
-	"From Ballroom (Monkeyport)",
-	"From Castle"
-}
-exitTable[114] = {
-	"From Castle (Entrance)",
-	"From Castle (Exit)",
-	"From Castle (Entrance)"
-}
-exitTable[151] = {
-	"From Castle (Near)",
-	"From Candy's",
-	"From Castle (Far)",
-	"From T&S",
-	"From Dungeon",
-	"From Castle (Near)"
-}
-exitTable[169] = {
-	"From DK Isles",
-	"From Japes",
-	"From DK Isles"
-}
-exitTable[170] = {
-	"From DK Isles",
-	"From Helm",
-	"From DK Isles"
-}
-exitTable[173] = {
-	"From DK Isles",
-	"From Aztec",
-	"From DK Isles"
-}
-exitTable[174] = {
-	"From DK Isles",
-	"From Galleon",
-	"From DK Isles"
-}
-exitTable[175] = {
-	"From DK Isles",
-	"From Factory",
-	"From DK Isles"
-}
-exitTable[176] = {
-	"From DK Isles",
-	"From DK's Treehouse",
-	"From Cranky's",
-	"From DK Isles"
-}
-exitTable[178] = {
-	"From DK Isles",
-	"From Fungi",
-	"From DK Isles"
-}
-exitTable[183] = {
-	"From Castle",
-	"From Funky's",
-	"From T&S",
-	"From Crypt (DK/Diddy/Chunky)",
-	"From Crypt (Lanky/Tiny)",
-	"From Castle"
-}
-exitTable[193] = {
-	"From DK Isles",
-	"From Castle",
-	"From DK Isles"
-}
-exitTable[194] = {
-	"From DK Isles",
-	"From Caves",
-	"From DK Isles"
-}
+exitTable = {
+	[7] = {
+		"From Japes Lobby (Intro)",
+		"From Shellhive",
+		"From Mountain",
+		"From Cranky",
+		"From Funky",
+		"From Painting Room",
+		"From Snide's",
+		"From BBlast",
+		"From Underground",
+		"From T&S (Diddy Cave)",
+		"From T&S (Near Cannon)",
+		"From ? (Other hill near SSSortie)",
+		"From T&S (Near Pool Fairy)",
+		"From ? (Near Pool Fairy)",
+		"From Minecart",
+		"From Japes Lobby",
+		"From DK Rap (DKTV Demo)",
+		"From Japes Lobby (Intro)"
+	},
+	[26] = {
+		"From Factory Lobby/Arcade",
+		"From Arcade Area (near Tiny BP)",
+		"From Tiny BP Area (To Arcade Area)",
+		"From Power Shed",
+		"From R&D Area (To Storage Room)",
+		"From Snide's",
+		"From Funky's",
+		"From Cranky's",
+		"From Crusher Room",
+		"From T&S (Block Tower)",
+		"From T&S (Arcade)",
+		"From T&S (R&D)",
+		"From T&S (Production Room)",
+		"From T&S (Storage Room)",
+		"From ? (Near Bad Hit Detection Man)",
+		"From BBlast",
+		"From Car Race",
+		"From Candy's",
+		"From Factory Lobby"
+	},
+	[30] = {
+		"From Galleon Lobby",
+		"From Diddy 5DS",
+		"From Chunky 5DS",
+		"From Lanky 5DS",
+		"From Pearls Chest",
+		"From Mermaid",
+		"From Tiny 5DS",
+		"From DK 5DS",
+		"From Tiny 2DS",
+		"From Lanky 2DS",
+		"From Lighthouse",
+		"From Seasick Ship",
+		"From T&S (Cactus)",
+		"From T&S (Near Cranky's)",
+		"From T&S (2DS)",
+		"From T&S (Enguarde Door)",
+		"From BBlast",
+		"From Snide's",
+		"From Candy's",
+		"From Seal Race",
+		"From T&S (Meme Hole)",
+		"From Submarine",
+		"From Cranky's",
+		"From Funky's",
+		"From Galleon Lobby"
+	},
+	[34] = {
+		"From Training Grounds",
+		"From K-Lumsy",
+		"From Japes Lobby",
+		"From Aztec Lobby",
+		"From Factory Lobby",
+		"From Galleon Lobby",
+		"From Fungi Lobby",
+		"From Helm Lobby",
+		"From BFI",
+		"From Snide's Room",
+		"From Caves Lobby",
+		"From Castle Lobby",
+		"From K Rool",
+		"From Training Grounds"
+	},
+	[38] = {
+		"From Aztec Lobby",
+		"From Tiny Temple",
+		"From Llama Temple",
+		"From Tiny 5DT",
+		"From Chunky 5DT",
+		"From DK 5DT",
+		"From Diddy 5DT",
+		"From Lanky 5DT",
+		"From Candy's",
+		"From Snide's",
+		"From Cranky's",
+		"From BBlast",
+		"From T&S (Candy's)",
+		"From T&S (W5)",
+		"From T&S (5DT)",
+		"From T&S (Cranky's)",
+		"From T&S (Funky's)",
+		"From Beetle Race",
+		"From Funky's",
+		"From Aztec Lobby"
+	},
+	[43] = {
+		"From Galleon (Diddy Entrance)",
+		"From Galleon (Chunky Entrance)",
+		"From Galleon (Lanky Entrance)",
+		"From Galleon (Diddy Entrance)"
+	},
+	[46] = {
+		"From Galleon (DK Entrance)",
+		"From Galleon (Tiny Entrance)",
+		"From Galleon (DK Entrance)"
+	},
+	[47] = {
+		"From Galleon (Tiny Entrance)",
+		"From Galleon (Lanky Entrance)",
+		"From Galleon (Tiny Entrance)"
+	},
+	[48] = {
+		"From Fungi Lobby",
+		"From Lanky Attic",
+		"From Diddy Attic",
+		"From Diddy Barn",
+		"From DK Barn",
+		"From Mill (Rear, PPunch Door)",
+		"From Mill (Front)",
+		"From Mill (Rear, Tiny Hole)",
+		"From G. Mush (Lower)",
+		"From G. Mush (Low Middle)",
+		"From G. Mush (Middle)",
+		"From G. Mush (High Middle)",
+		"From G. Mush (High)",
+		"From Face Puzzle",
+		"From Light Room (Lanky)",
+		"From Dark Room (Lanky)",
+		"From Minecart",
+		"From Cranky's",
+		"From Funky's",
+		"From Snide's",
+		"From T&S (DK Barn)",
+		"From T&S (Snide's)",
+		"From T&S (Beanstalk)",
+		"From Anthill",
+		"From T&S (G. Mush)",
+		"From T&S (Tree)",
+		"From BBlast",
+		"From Fungi Lobby (?)",
+		"From Fungi Lobby"
+	},
+	[61] = {
+		"From Fungi (W1 Door)",
+		"From Mill (Rear)",
+		"From Fungi (W1 Door)"
+	},
+	[62] = {
+		"From Fungi (PPunch Door)",
+		"From Spider Boss",
+		"From Mill (Front)",
+		"From Fungi (Tiny Door)",
+		"From Fungi (PPunch Door)"
+	},
+	[64] = {
+		"From Fungi (Low)",
+		"From Fungi (Middle)",
+		"From Fungi (Low Middle)",
+		"From Fungi (High Middle)",
+		"From Fungi (High)",
+		"From Fungi (Low)"
+	},
+	[72] = {
+		"From Caves Lobby",
+		"From Diddy 5DI",
+		"From DK 5DI",
+		"From Lanky 5DI",
+		"From Chunky 5DI",
+		"From Tiny 5DI",
+		"From Beetle Race",
+		"From ? (Near Rotating Room)",
+		"From ? (Near 1DC)",
+		"From ? (Near 5DC)",
+		"From ? (Near W3 Room)",
+		"From ? (5DI W3, Beta T&S)",
+		"From Cranky's",
+		"From Funky's",
+		"From DK 5DC",
+		"From Chunky 5DC",
+		"From Tiny 5DC",
+		"From Diddy 5DC (Lower)",
+		"From Diddy 5DC (Upper)",
+		"From Rotating Room",
+		"From 1DC",
+		"From Candy's",
+		"From Snide's",
+		"From T&S (Snide's)",
+		"From T&S (Rotating Room)",
+		"From T&S (1DC)",
+		"From T&S (Giant Boulder)",
+		"From ? (Behind W3 Room)",
+		"From BBlast",
+		"From ? (Giant Kosha Room)",
+		"From Ice Castle",
+		"From DK Treehouse (Secret Exit)",
+		"From Caves Lobby"
+	},
+	[87] = {
+		"From Castle Lobby",
+		"From Tree (Exit)",
+		"From Dungeon Tunnel (Close)",
+		"From T&S (W2)",
+		"From Crypt",
+		"From Dungeon Tunnel (Far)",
+		"From T&S (Rear)",
+		"From Museum",
+		"From Greenhouse (Front)",
+		"From Shed",
+		"From T&S (W4)",
+		"From Ballroom",
+		"From Library (Entrance)",
+		"From Library (Exit)",
+		"From Tower",
+		"From Tree (Entrance)",
+		"From Trash Can",
+		"From BBlast",
+		"From Cranky's",
+		"From Snide's",
+		"From Greenhouse (Rear)",
+		"From Castle Lobby (Intro)",
+		"From Castle Lobby"
+	},
+	[88] = {
+		"From Castle",
+		"From Museum (Monkeyport)",
+		"From Castle"
+	},
+	[112] = {
+		"From Crypt",
+		"From Minecart",
+		"From Crypt"
+	},
+	[113] = {
+		"From Castle",
+		"From Car Race",
+		"From Ballroom (Monkeyport)",
+		"From Castle"
+	},
+	[114] = {
+		"From Castle (Entrance)",
+		"From Castle (Exit)",
+		"From Castle (Entrance)"
+	},
+	[151] = {
+		"From Castle (Near)",
+		"From Candy's",
+		"From Castle (Far)",
+		"From T&S",
+		"From Dungeon",
+		"From Castle (Near)"
+	},
+	[169] = {
+		"From DK Isles",
+		"From Japes",
+		"From DK Isles"
+	},
+	[170] = {
+		"From DK Isles",
+		"From Helm",
+		"From DK Isles"
+	},
+	[173] = {
+		"From DK Isles",
+		"From Aztec",
+		"From DK Isles"
+	},
+	[174] = {
+		"From DK Isles",
+		"From Galleon",
+		"From DK Isles"
+	},
+	[175] = {
+		"From DK Isles",
+		"From Factory",
+		"From DK Isles"
+	},
+	[176] = {
+		"From DK Isles",
+		"From DK's Treehouse",
+		"From Cranky's",
+		"From DK Isles"
+	},
+	[178] = {
+		"From DK Isles",
+		"From Fungi",
+		"From DK Isles"
+	},
+	[183] = {
+		"From Castle",
+		"From Funky's",
+		"From T&S",
+		"From Crypt (DK/Diddy/Chunky)",
+		"From Crypt (Lanky/Tiny)",
+		"From Castle"
+	},
+	[193] = {
+		"From DK Isles",
+		"From Castle",
+		"From DK Isles"
+	},
+	[194] = {
+		"From DK Isles",
+		"From Caves",
+		"From DK Isles"
+	},
+};
