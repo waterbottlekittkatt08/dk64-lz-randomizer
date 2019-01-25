@@ -29,6 +29,8 @@ resolved
 - Give Moves isn't called
 - Kasplat in ? Box stays as Tiny
 - Low Kasplat in Galleon Water unobtainable glitchless
+- Kasplat doesn't move
+	- Ensure the replaced kasplat is in that same chunk
 
 ## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps

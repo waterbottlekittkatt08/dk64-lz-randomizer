@@ -41,7 +41,7 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 
 ![BizHawk Setup Guide](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20setup.png)
 - Download and install BizHawk & the pre-requisites
-	- Any version between (inclusive) 1.12.0 and 1.13.1 is recommended for DK64 due to it's inclusion of the Dynarec Core Type & Jabo's Video Plugin
+	- Version 1.12.1 is recommended for DK64 due to it's inclusion of the Dynarec Core Type & Jabo's Video Plugin (and also the best version for reducing BizHawk crashes)
 	- To alter your plugins/settings, open any N64 ROM, click N64 (Top bar), and then click plugins.
 	- What settings you change depends on your PC's performance.
 	
