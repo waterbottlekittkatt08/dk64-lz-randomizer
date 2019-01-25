@@ -38,6 +38,11 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 	- All are collectable glitchless as every kong
 	- Some are just shifted to [new locations](https://twitter.com/2dosSRL/status/1087442940094500865) and some are [in completely new maps!](https://twitter.com/2dosSRL/status/1087800177765818368)
 	- Unfortunately, none are in Helm
+	
+![Future Features](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20future%20features.png)
+- [Randomisation of coloured bananas](https://cdn.discordapp.com/attachments/460646910919966732/461750596152590356/unknown.png)
+- [Randomisation of Battle Crowns](https://twitter.com/2dosSRL/status/1087804011418390528)
+
 
 ![BizHawk Setup Guide](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20setup.png)
 - Download and install BizHawk & the pre-requisites
