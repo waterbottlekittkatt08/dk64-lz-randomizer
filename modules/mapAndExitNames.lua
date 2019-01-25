@@ -230,7 +230,7 @@ mapsWithMultipleExits = {
 	61, --Fungi Forest - Front Part of Mill
 	62, --Fungi Forest - Rear Part of Mill
 	64, --Fungi Forest - Giant Mushroom
-	73, --Crystal Caves
+	72, --Crystal Caves
 	87, --Creepy Castle
 	88, --Creepy Castle - Ballroom
 	112, --Creepy Castle - Crypt (DK, Diddy, Chunky)
@@ -423,7 +423,7 @@ exitTable[64] = {
 	"From Fungi (High)",
 	"From Fungi (Low)"
 }
-exitTable[73] = {
+exitTable[72] = {
 	"From Caves Lobby",
 	"From Diddy 5DI",
 	"From DK 5DI",
