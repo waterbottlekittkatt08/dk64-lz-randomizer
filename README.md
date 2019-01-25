@@ -87,3 +87,6 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 - [KaptainKohl](https://www.twitch.tv/kaptainkohl)
 - [Connor75](https://www.twitch.tv/connor75)
 - [GloriousLiar](https://www.twitch.tv/gloriousliar)
+- [Ciyon](https://www.twitch.tv/ciyon)
+- [Cfox](https://www.twitch.tv/cfox)
+- [Jag](https://www.twitch.tv/jaguar_002/)
