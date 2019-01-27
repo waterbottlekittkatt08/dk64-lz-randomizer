@@ -53,16 +53,16 @@ KasplatLocations = {
 		[1] = {30, {3468, 1670, 3803}, 8, "Near the 3 Above-Ground treasure Chests"},-- Chest area
 		[2] = {30, {1631, 1611, 4162}, 9, "On the Lighthouse island"},-- Lighthouse Platform
 		[3] = {30, {3596, 1614, 1899}, 13, "Near Warp 5 on the 5-Door Ship Side"},-- Floating Platform
-		[4] = {30, {1885, 942, 3872}, 9, "Near the Enguarde Box on Lighthouse Side"},-- Near Enguarde Box
-		[5] = {30, {2037, 1750, 769}, 17, "On Diddy's Gold Tower"},-- Gold Tower
-		[6] = {30, {699, 1564, 4093}, 9, "In the Alcove near the Lighthouse"},-- Near Chunky Instrument Pad
-		[7] = {30, {1308, 1610, 2794}, 5, "On the platforms in Cannon Game Room"},-- Cannon Game Room
-		[8] = {30, {2806, 1890, 2969}, 6, "Near the T&S near Cranky's"},-- Near Cranky T&S
-		[9] = {30, {4372, 1650, 1031}, 13, "On the Cactus near the sunken submarine"},-- Cactus
-		[10] = {30, {3307, 1680, 2451}, 7, "On the Crown Pad"}, -- Crown
-		[11] = {30, {1249, 1451, 2876}, 5, "In the water in Cannon Game Room"}, -- In the cannon room water
-		[12] = {30, {3314, 1792, 2498}, 7, "Next to Cranky's"}, -- on Cranky's platform
-		[13] = {30, {2547, 1173, 2000}, 12, "On the 5-Door Ship"}, -- On 5DS
+		[4] = {30, {2037, 1750, 769}, 17, "On Diddy's Gold Tower"},-- Gold Tower
+		[5] = {30, {699, 1564, 4093}, 9, "In the Alcove near the Lighthouse"},-- Near Chunky Instrument Pad
+		[6] = {30, {1308, 1610, 2794}, 5, "On the platforms in Cannon Game Room"},-- Cannon Game Room
+		[7] = {30, {2806, 1890, 2969}, 6, "Near the T&S near Cranky's"},-- Near Cranky T&S
+		[8] = {30, {4372, 1650, 1031}, 13, "On the Cactus near the sunken submarine"},-- Cactus
+		[9] = {30, {3307, 1680, 2451}, 7, "On the Crown Pad"}, -- Crown
+		[10] = {30, {1249, 1451, 2876}, 5, "In the water in Cannon Game Room"}, -- In the cannon room water
+		[11] = {30, {3314, 1792, 2498}, 7, "Next to Cranky's"}, -- on Cranky's platform
+		[12] = {30, {2547, 1173, 2000}, 12, "On the 5-Door Ship"}, -- On 5DS
+		--[13] = {30, {1885, 942, 3872}, 9, "Near the Enguarde Box on Lighthouse Side"},-- Near Enguarde Box
 		--[14] = {}, -- *On* K Rool's Ship
 	},
 	[4] = { -- Fungi
@@ -152,15 +152,23 @@ function generateKasplatAssortment()
 	for i = 0, 7 do
 		temporary_kasplat_assortment = {};
 		kasplat_assortment[i] = {};
-		kasplat_seedSetting = (seedAsNumber * 100000 * (i + 1));
+		kasplat_seedSetting = (seedAsNumber * 5 * (i + 1));
 		for j = 1, #KasplatLocations[i] do
 			temporary_kasplat_assortment[j] = j;
 		end
+		if i == 7 then
+			kasplat_assortment[7][4] = 8;
+			table.remove(temporary_kasplat_assortment, 8);
+		end
 		math.randomseed(kasplat_seedSetting);
 		for k = 1, 5 do -- 5 Kongs
-			selected_temp_value = math.ceil(math.random() * #temporary_kasplat_assortment);
-			kasplat_assortment[i][k] = temporary_kasplat_assortment[selected_temp_value];
-			table.remove(temporary_kasplat_assortment, selected_temp_value);
+			if i == 7 and k == 4 then
+			
+			else
+				selected_temp_value = math.ceil(math.random() * #temporary_kasplat_assortment);
+				kasplat_assortment[i][k] = temporary_kasplat_assortment[selected_temp_value];
+				table.remove(temporary_kasplat_assortment, selected_temp_value);
+			end
 		end
 	end
 end
@@ -222,6 +230,22 @@ function writeKasplats(level)
 			end
 			mainmemory.writebyte(beavers_in_map[number_in_array] + 0xF, 50); -- Scale
 			mainmemory.write_s16_be(beavers_in_map[number_in_array] + 0x40, KasplatLocations[level][value_to_check][3]); -- Chunk
+			box_address = mainmemory.read_u32_be(beavers_in_map[number_in_array] + 0x1C) - 0x80000000;
+			box_size = 50;
+			kasplat_x = KasplatLocations[level][value_to_check][2][1];
+			kasplat_z = KasplatLocations[level][value_to_check][2][3];
+			x_min = mainmemory.read_s16_be(box_address + 0x0);
+			z_min = mainmemory.read_s16_be(box_address + 0x2);
+			x_max = mainmemory.read_s16_be(box_address + 0x4);
+			z_max = mainmemory.read_s16_be(box_address + 0x6);
+			if kasplat_x > x_min or x_max < kasplat_x then
+				mainmemory.write_s16_be(box_address + 0x0, kasplat_x - box_size);
+				mainmemory.write_s16_be(box_address + 0x4, kasplat_x + box_size);
+			end
+			if kasplat_z > z_min or z_max < kasplat_z then
+				mainmemory.write_s16_be(box_address + 0x6, kasplat_x + box_size);
+				mainmemory.write_s16_be(box_address + 0x2, kasplat_z - box_size);
+			end
 		end
 	end
 end
@@ -279,20 +303,6 @@ function writeData()
 		end
 	elseif transition_speed_value > 0 then
 		kasplat_rando_happened = 0;
-	end
-end
-
-function displayKasplatSpoiler()
-	print("");
-	print("~~~~~~~~~~~~~~");
-	print("Seed: "..seedAsNumber);
-	for i = 0, 7 do
-		print("");
-		print(levels[i]);
-		for j = 1, 5 do
-			value_to_check = kasplat_assortment[i][j];
-			print(kongs[j]..": "..KasplatLocations[i][value_to_check][4]);
-		end
 	end
 end
 

@@ -227,7 +227,7 @@ lzrForm = {
 		form_controls = {},
 		form_padding = 8,
 		form_width = 10,
-		form_height = 20,
+		form_height = 21,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -376,6 +376,73 @@ function confirmSettings()
 	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "");
 end
 
+function Spoiler()
+	print("Writing spoiler to file...");
+	file = io.open("spoiler.txt", "w+")
+	file:write("~~~~~~~~~~~~~", "\n");
+	file:write("SEED SPOILERS", "\n");
+	file:write("Seed Number: "..seedAsNumber, "\n");
+	file:write("\n");
+	if settings.randomiser == 1 then
+		file:write("REGULAR MAP ASSORTMENT", "\n");
+		for i = 1, #regular_map_assortment do
+			lz_map_in = math.floor(regular_map_table[i] / 256);
+			lz_exit_in = regular_map_table[i] - (256 * lz_map_in);
+			lz_map_out = math.floor(regular_map_table[regular_map_assortment[i]] / 256);
+			lz_exit_out = regular_map_table[regular_map_assortment[i]] - (256 * lz_map_out);
+			file:write("\n");
+			file:write("LZ to: "..maps[lz_map_in + 1].." (Exit "..getExitName(lz_map_in, lz_exit_in)..")", "\n");
+			file:write("Goes to: "..maps[lz_map_out + 1].." (Exit "..getExitName(lz_map_out, lz_exit_out)..")", "\n");
+		end
+		file:write("\n");
+		file:write("BONUS MAP ASSORTMENT", "\n");
+		for i = 1, #bonus_map_assortment do
+			lz_map_in = bonus_map_table[i];
+			lz_map_out = bonus_map_table[bonus_map_assortment[i]];
+			file:write("\n");
+			file:write("LZ to: "..maps[lz_map_in + 1], "\n");
+			file:write("Goes to: "..maps[lz_map_out + 1], "\n");
+		end
+		file:write("\n");
+		file:write("BOSS MAP ASSORTMENT", "\n");
+		for i = 1, #boss_map_assortment do
+			lz_map_in = boss_map_table[i];
+			lz_map_out = boss_map_table[boss_map_assortment[i]];
+			file:write("\n");
+			file:write("LZ to: "..maps[lz_map_in + 1], "\n");
+			file:write("Goes to: "..maps[lz_map_out + 1], "\n");
+		end
+	end
+	if settings.random_kasplats == 1 then
+		file:write("\n");
+		file:write("KASPLAT LOCATIONS", "\n");
+		for i = 0, 7 do
+			file:write("\n");
+			file:write(levels[i], "\n");
+			for j = 1, 5 do
+				value_to_check = kasplat_assortment[i][j];
+				file:write(kongs[j]..": "..KasplatLocations[i][value_to_check][4], "\n");
+			end
+		end
+	end
+	file:close();
+	print("Saved spoiler log to spoiler.txt!");
+end
+
+function randomiseSeedValue()
+	seedAsNumber = math.floor(math.random() * 100000);
+	if seedAsNumber > 99999 then
+		seedAsNumber = 99999;
+	end
+	seedTotal = 0;
+	for i = 1, 5 do
+		seedValue[i] = math.floor((seedAsNumber - seedTotal) / (10 ^ (5 - i)));
+		seedTotal = seedTotal + (seedValue[i] * (10 ^ (5 - i)));
+	end
+	realTime();
+	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
+end
+
 function lzrForm.UI.row(row_num)
 	return round(lzrForm.UI.form_padding + lzrForm.UI.button_height * row_num, 0);
 end
@@ -440,6 +507,8 @@ lzrForm.UI.form_controls["Decrease 1000"] = forms.button(lzrForm.UI.options_form
 lzrForm.UI.form_controls["Decrease 100"] = forms.button(lzrForm.UI.options_form, "-", decrease100, lzrForm.UI.col(seed_form_offset + 4), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
 lzrForm.UI.form_controls["Decrease 10"] = forms.button(lzrForm.UI.options_form, "-", decrease10, lzrForm.UI.col(seed_form_offset + 5), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
 lzrForm.UI.form_controls["Decrease 1"] = forms.button(lzrForm.UI.options_form, "-", decrease1, lzrForm.UI.col(seed_form_offset + 6), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
+
+lzrForm.UI.form_controls["Randomise Seed"] = forms.button(lzrForm.UI.options_form, "Randomise Seed", randomiseSeedValue, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height + 3) + 5, lzrForm.UI.button_height * 5, lzrForm.UI.button_height);
 
 lzrForm.UI.form_controls["Settings Check Label"] = forms.label(lzrForm.UI.options_form, "SETTINGS NOT SET YET", lzrForm.UI.col(0.5), lzrForm.UI.row(seed_form_height + 4) + lzrForm.UI.label_offset, 180, 24);
 
