@@ -26,6 +26,8 @@ Mem = {
 	enemy_respawn_object = {0x7FDC8C, 0x7FDBCC, 0x7FE11C},
 	num_enemies = {0x7FDC88, 0x7FDBC8, 0x7FE118},
 	obj_model2_timer = {0x76A064, 0x764B84, 0x76A254},
+	cexit = {0x76A0AC, 0x764BCC, 0x76A29C},
+	pexit = {0x76A174, 0x764C94, 0x76A364},
 };
 
 -------------------------------
@@ -372,9 +374,25 @@ function confirmSettings()
 	if settings.using_jabos == 0 then
 		client.reboot_core();
 	end
+	WriteSettings();
 	client.unpause();
 	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "");
 end
+
+function setSeed(value)
+	seedAsNumber = value;
+	if seedAsNumber > 99999 then
+		seedAsNumber = 99999;
+	end
+	seedTotal = 0;
+	for i = 1, 5 do
+		seedValue[i] = math.floor((seedAsNumber - seedTotal) / (10 ^ (5 - i)));
+		seedTotal = seedTotal + (seedValue[i] * (10 ^ (5 - i)));
+	end
+end
+
+require 'settings';
+setSeed(previousSettings.seed);
 
 function Spoiler()
 	print("Writing spoiler to file...");
@@ -429,16 +447,25 @@ function Spoiler()
 	print("Saved spoiler log to spoiler.txt!");
 end
 
+function WriteSettings()
+	print("Writing settings to file...");
+	file = io.open("settings.lua", "w+")
+	file:write("previousSettings = {", "\n");
+	file:write("randomiser = ", settings.randomiser, ",", "\n");
+	file:write("all_moves = ", settings.all_moves, ",", "\n");
+	file:write("no_cutscenes = ", settings.no_cutscenes, ",", "\n");
+	file:write("all_kongs = ", settings.all_kongs, ",", "\n");
+	file:write("using_jabos = ", settings.using_jabos, ",", "\n");
+	file:write("random_kasplats = ", settings.random_kasplats, ",", "\n");
+	file:write("seed = ", seedAsNumber, ",", "\n");
+	file:write("};", "\n");
+	file:close();
+	print("Saved settings to settings.lua!");
+end
+
 function randomiseSeedValue()
 	seedAsNumber = math.floor(math.random() * 100000);
-	if seedAsNumber > 99999 then
-		seedAsNumber = 99999;
-	end
-	seedTotal = 0;
-	for i = 1, 5 do
-		seedValue[i] = math.floor((seedAsNumber - seedTotal) / (10 ^ (5 - i)));
-		seedTotal = seedTotal + (seedValue[i] * (10 ^ (5 - i)));
-	end
+	setSeed(seedAsNumber);
 	realTime();
 	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
 end
@@ -474,7 +501,6 @@ lzrForm.UI.form_controls["Title Label 3"] = forms.label(lzrForm.UI.options_form,
 
 lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Loading Zone Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(4) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(4) + lzrForm.UI.dropdown_offset);
-forms.setproperty(lzrForm.UI.form_controls["Randomiser Checkbox"], "Checked", true);
 
 lzrForm.UI.form_controls["All Moves Label"] = forms.label(lzrForm.UI.options_form, "Give All Moves:", lzrForm.UI.col(0), lzrForm.UI.row(5) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["All Moves Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(5) + lzrForm.UI.dropdown_offset);
@@ -514,6 +540,25 @@ lzrForm.UI.form_controls["Settings Check Label"] = forms.label(lzrForm.UI.option
 
 lzrForm.UI.form_controls["Confirm Settings Button"] = forms.button(lzrForm.UI.options_form, "Confirm Settings", confirmSettings, lzrForm.UI.col(0.6), lzrForm.UI.row(seed_form_height + 5) + 5, 7 * lzrForm.UI.button_height, lzrForm.UI.button_height);
 
+if previousSettings.randomiser == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["Randomiser Checkbox"], "Checked", true);
+end
+if previousSettings.all_moves == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["All Moves Checkbox"], "Checked", true);
+end
+if previousSettings.no_cutscenes == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["No Cutscenes Checkbox"], "Checked", true);
+end
+if previousSettings.all_kongs == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["All Kongs Checkbox"], "Checked", true);
+end
+if previousSettings.using_jabos == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["Jabos Checkbox"], "Checked", true);
+end
+if previousSettings.random_kasplats == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["Kasplat Checkbox"], "Checked", true);
+end
+
 function lzrForm.UI.updateReadouts()
 	getSeedString();
 	forms.settext(lzrForm.UI.form_controls["Seed Label"], seedString);
@@ -522,6 +567,7 @@ end
 function realTime()
 	lzrForm.UI.updateReadouts();
 end
+realTime();
 
 while true do
 	if client.ispaused() then
