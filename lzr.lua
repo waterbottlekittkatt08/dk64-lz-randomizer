@@ -28,6 +28,7 @@ Mem = {
 	obj_model2_timer = {0x76A064, 0x764B84, 0x76A254},
 	cexit = {0x76A0AC, 0x764BCC, 0x76A29C},
 	pexit = {0x76A174, 0x764C94, 0x76A364},
+	music = {0x7458DD, nil, nil},
 };
 
 -------------------------------
