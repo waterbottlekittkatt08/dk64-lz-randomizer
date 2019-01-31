@@ -335,6 +335,7 @@ settings = {
 	all_kongs = 0,
 	using_jabos = 0,
 	random_kasplats = 0,
+	randomiser_barrel = 0,
 };
 
 function confirmSettings()
@@ -342,9 +343,18 @@ function confirmSettings()
 	print("Seed: "..seedAsNumber);
 	if forms.ischecked(lzrForm.UI.form_controls["Randomiser Checkbox"]) then
 		settings.randomiser = 1;
-		require "modules.randomiser"
+		require "modules.randomiser_regular"
 		print("Randomiser On");
 		setAssortments();
+	end
+	if forms.ischecked(lzrForm.UI.form_controls["Barrel Randomiser Checkbox"]) then
+		settings.randomiser_barrel = 1;
+		require "modules.randomiser_barrel"
+		print("Barrel Randomiser On");
+		generateBonusAssortment();
+	end
+	if settings.randomiser_barrel == 1 or settings.randomiser == 1 then
+		require "modules.replaceLZCode"
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["All Moves Checkbox"]) then
 		settings.all_moves = 1;
@@ -413,19 +423,21 @@ function Spoiler()
 			file:write("Goes to: "..maps[lz_map_out + 1].." (Exit "..getExitName(lz_map_out, lz_exit_out)..")", "\n");
 		end
 		file:write("\n");
-		file:write("BONUS MAP ASSORTMENT", "\n");
-		for i = 1, #bonus_map_assortment do
-			lz_map_in = bonus_map_table[i];
-			lz_map_out = bonus_map_table[bonus_map_assortment[i]];
-			file:write("\n");
-			file:write("LZ to: "..maps[lz_map_in + 1], "\n");
-			file:write("Goes to: "..maps[lz_map_out + 1], "\n");
-		end
-		file:write("\n");
 		file:write("BOSS MAP ASSORTMENT", "\n");
 		for i = 1, #boss_map_assortment do
 			lz_map_in = boss_map_table[i];
 			lz_map_out = boss_map_table[boss_map_assortment[i]];
+			file:write("\n");
+			file:write("LZ to: "..maps[lz_map_in + 1], "\n");
+			file:write("Goes to: "..maps[lz_map_out + 1], "\n");
+		end
+	end
+	if settings.randomiser_barrel == 1 then
+		file:write("\n");
+		file:write("BONUS MAP ASSORTMENT", "\n");
+		for i = 1, #bonus_map_assortment do
+			lz_map_in = bonus_map_table[i];
+			lz_map_out = bonus_map_table[bonus_map_assortment[i]];
 			file:write("\n");
 			file:write("LZ to: "..maps[lz_map_in + 1], "\n");
 			file:write("Goes to: "..maps[lz_map_out + 1], "\n");
@@ -452,6 +464,7 @@ function WriteSettings()
 	file = io.open("settings.lua", "w+")
 	file:write("previousSettings = {", "\n");
 	file:write("randomiser = ", settings.randomiser, ",", "\n");
+	file:write("randomiser_barrel = ", settings.randomiser_barrel, ",", "\n");
 	file:write("all_moves = ", settings.all_moves, ",", "\n");
 	file:write("no_cutscenes = ", settings.no_cutscenes, ",", "\n");
 	file:write("all_kongs = ", settings.all_kongs, ",", "\n");
@@ -502,22 +515,25 @@ lzrForm.UI.form_controls["Title Label 3"] = forms.label(lzrForm.UI.options_form,
 lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Loading Zone Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(4) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(4) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["All Moves Label"] = forms.label(lzrForm.UI.options_form, "Give All Moves:", lzrForm.UI.col(0), lzrForm.UI.row(5) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["All Moves Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(5) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Barrel Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Barrel Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(5) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Barrel Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(5) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["No Cutscenes Label"] = forms.label(lzrForm.UI.options_form, "Reduced Cutscenes:", lzrForm.UI.col(0), lzrForm.UI.row(6) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["No Cutscenes Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(6) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["All Moves Label"] = forms.label(lzrForm.UI.options_form, "Give All Moves:", lzrForm.UI.col(0), lzrForm.UI.row(6) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["All Moves Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(6) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["All Kongs Label"] = forms.label(lzrForm.UI.options_form, "Unlock All Kongs:", lzrForm.UI.col(0), lzrForm.UI.row(7) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["All Kongs Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(7) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["No Cutscenes Label"] = forms.label(lzrForm.UI.options_form, "Reduced Cutscenes:", lzrForm.UI.col(0), lzrForm.UI.row(7) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["No Cutscenes Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(7) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["Jabos Label"] = forms.label(lzrForm.UI.options_form, "I am using Jabo 1.6.1:", lzrForm.UI.col(0), lzrForm.UI.row(8) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Jabos Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(8) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["All Kongs Label"] = forms.label(lzrForm.UI.options_form, "Unlock All Kongs:", lzrForm.UI.col(0), lzrForm.UI.row(8) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["All Kongs Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(8) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["Kasplat Label"] = forms.label(lzrForm.UI.options_form, "Random Kasplat Locations:", lzrForm.UI.col(0), lzrForm.UI.row(9) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Kasplat Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(9) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Jabos Label"] = forms.label(lzrForm.UI.options_form, "I am using Jabo 1.6.1:", lzrForm.UI.col(0), lzrForm.UI.row(9) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Jabos Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(9) + lzrForm.UI.dropdown_offset);
 
-seed_form_height = 11;
+lzrForm.UI.form_controls["Kasplat Label"] = forms.label(lzrForm.UI.options_form, "Random Kasplat Locations:", lzrForm.UI.col(0), lzrForm.UI.row(10) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Kasplat Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(10) + lzrForm.UI.dropdown_offset);
+
+seed_form_height = 12;
 seed_form_offset = 0.5;
 
 lzrForm.UI.form_controls["Increase 10000"] = forms.button(lzrForm.UI.options_form, "+", increase10000, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
@@ -542,6 +558,9 @@ lzrForm.UI.form_controls["Confirm Settings Button"] = forms.button(lzrForm.UI.op
 
 if previousSettings.randomiser == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Randomiser Checkbox"], "Checked", true);
+end
+if previousSettings.randomiser_barrel == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["Barrel Randomiser Checkbox"], "Checked", true);
 end
 if previousSettings.all_moves == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["All Moves Checkbox"], "Checked", true);
