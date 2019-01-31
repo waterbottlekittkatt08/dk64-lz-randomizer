@@ -23,7 +23,6 @@ resolved
 	- Seed 420: Exiting T&S/Cranky/Candy in Factory > Exiting Funky in Aztec
 	- Parent Exit stuff?
 - Giant Kosha initiated still
-- Give Moves isn't called
 - Kasplat doesn't move
 	- Ensure the replaced kasplat is in that same chunk
 - Bosses appearing in several levels
@@ -47,3 +46,4 @@ resolved
 - Exiting Ballroom warps to previous exit
 - Kasplat in ? Box stays as Tiny
 - Low Kasplat in Galleon Water unobtainable glitchless
+- Give Moves isn't called

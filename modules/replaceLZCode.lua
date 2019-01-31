@@ -3,7 +3,6 @@ rando_happened = 0;
 
 function randomise()
 	if version < 2 then -- Should be <4, need to fix CS fade stuff
-		getSeed();
 		mode_value = mainmemory.readbyte(Mem.mode[version]);
 		if mode_value > 5 then -- Not Intro Stuff
 			transition_speed_value = mainmemory.readfloat(Mem.transition_speed[version], true);
