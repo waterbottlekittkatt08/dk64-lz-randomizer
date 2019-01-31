@@ -6,10 +6,8 @@ resolved
 ## BUG LIST TO FIX
 - K Rool CS Skip doesn't work sometimes
 - Exiting Chunky Phase by victory randomises LZ
-- Remove TGrounds/Open Japes
 - Snide's Contraption CS Skips don't always work
 - Galleon Water Level / Fungi day setting causes inconsistencies until you load area where the change occurs (lighthouse/clock)
-- Restarting a minigame takes you to another minigame
 - Helm Timer doesn't update with BP Turn-ins
 - Fake K Rool Phase fix not always working
 - Fix object deload bug (this seems like a DK64 bug that LZR causes)
@@ -47,3 +45,5 @@ resolved
 - Kasplat in ? Box stays as Tiny
 - Low Kasplat in Galleon Water unobtainable glitchless
 - Give Moves isn't called
+- Remove TGrounds/Open Japes
+- Restarting a minigame takes you to another minigame
