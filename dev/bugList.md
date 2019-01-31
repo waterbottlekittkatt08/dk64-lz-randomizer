@@ -4,7 +4,6 @@ resolved
 
 
 ## BUG LIST TO FIX
-- BBlasts loop
 - K Rool CS Skip doesn't work sometimes
 - Exiting Chunky Phase by victory randomises LZ
 - Remove TGrounds/Open Japes
@@ -12,7 +11,6 @@ resolved
 - Galleon Water Level / Fungi day setting causes inconsistencies until you load area where the change occurs (lighthouse/clock)
 - Restarting a minigame takes you to another minigame
 - Helm Timer doesn't update with BP Turn-ins
-- Helm Timer doesn't go away if you warp out of Helm
 - Fake K Rool Phase fix not always working
 - Fix object deload bug (this seems like a DK64 bug that LZR causes)
 - Softlock Exits
@@ -21,16 +19,14 @@ resolved
 - Bad Exits
 	- Factory Tiny BP Pole
 	- R&D > Storage Room Chute
-- Exiting Ballroom warps to previous exit
 - Exits seem to be reappearing
 	- Seed 420: Exiting T&S/Cranky/Candy in Factory > Exiting Funky in Aztec
 	- Parent Exit stuff?
 - Giant Kosha initiated still
 - Give Moves isn't called
-- Kasplat in ? Box stays as Tiny
-- Low Kasplat in Galleon Water unobtainable glitchless
 - Kasplat doesn't move
 	- Ensure the replaced kasplat is in that same chunk
+- Bosses appearing in several levels
 
 ## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps
@@ -46,3 +42,8 @@ resolved
 - Randomiser Settings not always being set
 - Better spoiler display
 - Remove DK Isles K Rool Exit from pool
+- BBlasts loop
+- Helm Timer doesn't go away if you warp out of Helm
+- Exiting Ballroom warps to previous exit
+- Kasplat in ? Box stays as Tiny
+- Low Kasplat in Galleon Water unobtainable glitchless
