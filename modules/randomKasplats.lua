@@ -283,6 +283,14 @@ kongs = {
 	[5] = "Chunky",
 };
 
+-- Movement Box Pointer = Spawner Object + 0x1C
+-- Movement Box: x0, z0, x1, z1 = MB Pointer + 0x0/0x2/0x4/0x6
+-- Aggression Box Pointer = MB Pointer + 0xC
+-- Aggression Box: x0, y0, z0, x1, y1, z1: AB Pointer + 0x0/0x2/0x4/0x6/0x8/0xA
+-- Aggression Box 2: x2, y2, z2, x3, y3, x3: AB Pointer + 0xC/0xE/0x10/0x12/0x14/0x16
+-- Some other co-ordinate: AB Pointer + 0x18/0x1A/0x1C
+
+
 function writeData()
 	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
 	transition_speed_value = mainmemory.readfloat(Mem.transition_speed[version], true);
