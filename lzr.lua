@@ -219,6 +219,94 @@ function mapType(mapNumber)
 	return "Unassigned";
 end
 
+newFileFlags = {
+	[1] = {0x2F,2}, -- TG Squawks CS
+	[2] = {0x2F,7}, -- TG Barrels Spawned
+	[3] = {0x30,2}, -- Dive Barrel
+	[4] = {0x30,3}, -- Vine Barrel
+	[5] = {0x30,4}, -- Orange Barrel
+	[6] = {0x30,5}, -- Barrel Barrel
+	[7] = {0x30,1}, -- DK Free
+	[8] = {0x30,7}, -- All Training Barrels CS
+	[9] = {0x37,3}, -- Japes Open
+	[10] = {0xB,7}, -- Aztec FT CS
+	[11] = {0xC,0}, -- Aztec Tiny Tiny Temple FT CS
+	[12] = {0xC,1}, -- Aztec Lanky Tiny Temple FT CS
+	[13] = {0xC,2}, -- Aztec Diddy Tiny Temple FT CS
+	[14] = {0xC,3}, -- Aztec Chunky Tiny Temple FT CS
+	[15] = {0xC,4}, -- Aztec DK 5DT FT CS
+	[16] = {0xC,5}, -- Aztec Diddy 5DT FT CS
+	[17] = {0xC,6}, -- Aztec Lanky 5DT FT CS
+	[18] = {0xC,7}, -- Aztec Tiny 5DT FT CS
+	[19] = {0xD,0}, -- Aztec Chunky 5DT FT CS
+	[20] = {0xD,1}, -- Aztec DK Llama Temple FT CS
+	[21] = {0xD,2}, -- Aztec Lanky Llama Temple FT CS
+	[22] = {0xD,3}, -- Aztec Tiny Llama Temple FT CS
+	[23] = {0x22,5}, -- Caves RR FT CS
+	[24] = {0x23,2}, -- Caves FT CS
+	[25] = {0x2C,3}, -- Bananaport FTT
+	[26] = {0x2C,6}, -- Crown FTT
+	[27] = {0x2C,7}, -- T&S FTT (1)
+	[28] = {0x2D,0}, -- MMonkey FTT
+	[29] = {0x2D,1}, -- HChunky FTT
+	[30] = {0x2D,2}, -- OSprint FTT
+	[31] = {0x2D,3}, -- SKong FTT
+	[32] = {0x2D,4}, -- R Coin FTT
+	[33] = {0x2D,5}, -- Rambi FTT
+	[34] = {0x2D,6}, -- Enguarde FTT
+	[35] = {0x2D,7}, -- Diddy FTT
+	[36] = {0x2E,0}, -- Lanky FTT
+	[37] = {0x2E,1}, -- Tiny FTT
+	[38] = {0x2E,2}, -- Chunky FTT
+	[39] = {0x2E,3}, -- FT Orange Collection FTT
+	[40] = {0x2E,4}, -- Snide's FTT
+	[41] = {0x2F,0}, -- Wrinkly FTT
+	[42] = {0x2F,6}, -- B Locker FTT
+	[43] = {0x31,0}, -- T&S FTT (2)
+	[44] = {0x31,3}, -- FT Ammo/CB/Bunch Collection FTT
+	[45] = {0x31,4}, -- FT Coin Collection FTT
+	[46] = {0x60,7}, -- Funky FTT
+	[47] = {0x61,0}, -- Snide FTT
+	[48] = {0x61,1}, -- Cranky FTT
+	[49] = {0x61,2}, -- Candy FTT
+	[50] = {0x61,3}, -- Japes FTT
+	[51] = {0x61,4}, -- Factory FTT
+	[52] = {0x61,5}, -- Galleon FTT
+	[53] = {0x61,6}, -- Fungi FTT
+	[54] = {0x61,7}, -- Caves FTT
+	[55] = {0x62,0}, -- Castle FTT
+	[56] = {0x62,1}, -- T&S FTT (3)
+	[57] = {0x62,2}, -- Helm FTT
+	[58] = {0x62,3}, -- Aztec FTT
+	[59] = {0x3,3}, -- Japes Start FT CS
+	[60] = {0x5,2}, -- Diddy Help Me FT CS
+	[61] = {0x5,4}, -- Mountain FT CS
+	[62] = {0x6,2}, -- Llama FT CS
+};
+
+function checkNewFile()
+	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
+	cutsceneValue = mainmemory.read_u16_be(Mem.cs[version]);
+	cutsceneActive = mainmemory.readbyte(Mem.cs_active[version]);
+	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
+	zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
+	if current_cmap == 80 and cutsceneActive == 6 and cutsceneValue == 19 and current_dmap == 176 and zipProg < 37 then -- Entering New File
+		if settings.all_moves == 1 then
+			giveMoves();
+		end
+		if settings.all_kongs == 1 then
+			getAllKongs();
+		end
+		mainmemory.write_u32_be(Mem.dmap[version],0x22);
+		mainmemory.write_u32_be(Mem.dexit[version],0);
+		for i = 1, #newFileFlags do
+			setFlag(newFileFlags[i][1],newFileFlags[i][2]);
+		end
+	end
+end
+
+event.onframeend(checkNewFile, "Checks for new file creation");
+
 ----------------
 -- FORM STUFF --
 ----------------

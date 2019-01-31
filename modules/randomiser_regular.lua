@@ -396,19 +396,6 @@ function getKRoolDestination(destmap)
 	end
 end
 
-function getSeed()
-	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
-	cutsceneValue = mainmemory.read_u16_be(Mem.cs[version]);
-	cutsceneActive = mainmemory.readbyte(Mem.cs_active[version]);
-	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
-	zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
-	if current_cmap == 80 and cutsceneActive == 6 and cutsceneValue == 19 and current_dmap == 176 and zipProg > 89 and zipProg < 93 then -- Entering New File
-		if settings.all_moves == 1 then
-			giveMoves();
-		end
-	end
-end
-
 level_index_flags = {
 	[0] = {0x38,5}, -- Japes
 	[1] = {0x38,6}, -- Aztec
