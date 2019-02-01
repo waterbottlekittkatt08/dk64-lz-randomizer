@@ -1,3 +1,5 @@
+require "modules.mapAndExitNames";
+
 forcing_a_cutscene = 0;
 rando_happened = 0;
 

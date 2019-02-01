@@ -8,7 +8,6 @@ resolved
 - Exiting Chunky Phase by victory randomises LZ
 - Snide's Contraption CS Skips don't always work
 - Galleon Water Level / Fungi day setting causes inconsistencies until you load area where the change occurs (lighthouse/clock)
-- Helm Timer doesn't update with BP Turn-ins
 - Fake K Rool Phase fix not always working
 - Fix object deload bug (this seems like a DK64 bug that LZR causes)
 - Softlock Exits
@@ -20,10 +19,8 @@ resolved
 - Exits seem to be reappearing
 	- Seed 420: Exiting T&S/Cranky/Candy in Factory > Exiting Funky in Aztec
 	- Parent Exit stuff?
-- Giant Kosha initiated still
-- Kasplat doesn't move
-	- Ensure the replaced kasplat is in that same chunk
-- Bosses appearing in several levels
+- Kasplats aren't being spawned correctly when replacing pre-existing kasplat locations
+- Crashes from invalid exit values exiting global maps
 
 ## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps
@@ -47,3 +44,8 @@ resolved
 - Give Moves isn't called
 - Remove TGrounds/Open Japes
 - Restarting a minigame takes you to another minigame
+- Helm Timer doesn't update with BP Turn-ins
+- Bosses appearing in several levels
+- Give Simian Slam upon new file creation
+- Giant Kosha initiated still
+- Kasplat doesn't move

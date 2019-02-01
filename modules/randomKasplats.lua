@@ -205,46 +205,118 @@ function getKasplatCount(level)
 	return kasplat_count;
 end
 
+function isBetween(bound_lower, bound_upper, value)
+	if value > bound_lower - 1 and value < bound_upper + 1 then
+		return true;
+	end
+	if value > bound_upper - 1 and value < bound_lower + 1 then
+		return true;
+	end
+	return false;
+end
+
 function writeKasplats(level)
 	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
 	beavers_in_map = getEnemyPointerFromIds(potential_enemies_table);
 	if mapType(current_cmap) ~= "crown_maps" then
+		kasplat_direct_replacement = {};
+		kdr_count = 0;
+		beaver_table_swap = {};
 		for i = 1, #kasplats_in_map do
 			kong = kasplats_in_map[i];
 			value_to_check = kasplat_assortment[level][kong];
-			number_in_array = i;
 			if #beavers_in_map > 0 then
 				for k = 1, #beavers_in_map do
 					if mainmemory.read_s16_be(beavers_in_map[k] + 4) == KasplatLocations[level][value_to_check][2][1] then
 						if mainmemory.read_s16_be(beavers_in_map[k] + 6) == KasplatLocations[level][value_to_check][2][2] then
 							if mainmemory.read_s16_be(beavers_in_map[k] + 8) == KasplatLocations[level][value_to_check][2][3] then
-								number_in_array = k;
+								mainmemory.writebyte(beavers_in_map[k],0x3C + kong); -- Set Enemy Value
+								for j = 1, 3 do
+									mainmemory.write_s16_be(beavers_in_map[k] + 2 + (2 * j), KasplatLocations[level][value_to_check][2][j]); -- X/Y/Z
+								end
+								mainmemory.writebyte(beavers_in_map[k] + 0xF, 50); -- Scale
+								mainmemory.write_s16_be(beavers_in_map[k] + 0x40, KasplatLocations[level][value_to_check][3]); -- Chunk
+								kdr_count = kdr_count + 1;
+								kasplat_direct_replacement[kdr_count] = i;
+								beaver_table_swap[kdr_count] = k;
 							end
 						end
 					end
 				end
 			end
-			mainmemory.writebyte(beavers_in_map[number_in_array],0x3C + kong); -- Set Enemy Value
-			for j = 1, 3 do
-				mainmemory.write_s16_be(beavers_in_map[number_in_array] + 2 + (2 * j), KasplatLocations[level][value_to_check][2][j]); -- X/Y/Z
+		end
+		
+		if #beaver_table_swap > 0 then
+			previous_swap_largest = 100;
+			for j = 1, #beaver_table_swap do
+				swap_largest = 0;
+				swap_number = 0;
+				for i = 1, #beaver_table_swap do
+					if beaver_table_swap[i] > swap_largest and beaver_table_swap[i] < previous_swap_largest then
+						swap_largest = beaver_table_swap[i];
+						swap_number = i;
+					end
+				end
+				previous_swap_largest = swap_largest;
+				table.remove(beavers_in_map,beaver_table_swap[swap_number]);
 			end
-			mainmemory.writebyte(beavers_in_map[number_in_array] + 0xF, 50); -- Scale
-			mainmemory.write_s16_be(beavers_in_map[number_in_array] + 0x40, KasplatLocations[level][value_to_check][3]); -- Chunk
-			box_address = mainmemory.read_u32_be(beavers_in_map[number_in_array] + 0x1C) - 0x80000000;
-			box_size = 50;
-			kasplat_x = KasplatLocations[level][value_to_check][2][1];
-			kasplat_z = KasplatLocations[level][value_to_check][2][3];
-			x_min = mainmemory.read_s16_be(box_address + 0x0);
-			z_min = mainmemory.read_s16_be(box_address + 0x2);
-			x_max = mainmemory.read_s16_be(box_address + 0x4);
-			z_max = mainmemory.read_s16_be(box_address + 0x6);
-			if kasplat_x > x_min or x_max < kasplat_x then
-				mainmemory.write_s16_be(box_address + 0x0, kasplat_x - box_size);
-				mainmemory.write_s16_be(box_address + 0x4, kasplat_x + box_size);
+		end
+		
+		for i = 1, #kasplats_in_map do
+			kasplat_previously_replaced = 0;
+			if kdr_count > 0 then
+				for k = 1, kdr_count do
+					if kasplat_direct_replacement[k] == kasplats_in_map[i] then
+						kasplat_previously_replaced = 1;
+					end
+				end
 			end
-			if kasplat_z > z_min or z_max < kasplat_z then
-				mainmemory.write_s16_be(box_address + 0x6, kasplat_x + box_size);
-				mainmemory.write_s16_be(box_address + 0x2, kasplat_z - box_size);
+			if kasplat_previously_replaced == 0 then
+				kong = kasplats_in_map[i];
+				value_to_check = kasplat_assortment[level][kong];
+				number_in_array = i;
+				mainmemory.writebyte(beavers_in_map[number_in_array],0x3C + kong); -- Set Enemy Value
+				for j = 1, 3 do
+					mainmemory.write_s16_be(beavers_in_map[number_in_array] + 2 + (2 * j), KasplatLocations[level][value_to_check][2][j]); -- X/Y/Z
+				end
+				mainmemory.writebyte(beavers_in_map[number_in_array] + 0xF, 50); -- Scale
+				mainmemory.write_s16_be(beavers_in_map[number_in_array] + 0x40, KasplatLocations[level][value_to_check][3]); -- Chunk
+				box_address = mainmemory.read_u32_be(beavers_in_map[number_in_array] + 0x1C) - 0x80000000;
+				agg_address = mainmemory.read_u32_be(box_address + 0xC) - 0x80000000
+				box_size = 30;
+				kasplat_x = KasplatLocations[level][value_to_check][2][1];
+				kasplat_y = KasplatLocations[level][value_to_check][2][2];
+				kasplat_z = KasplatLocations[level][value_to_check][2][3];
+				x_min_offset = 0x0;
+				x_max_offset = 0x4;
+				z_min_offset = 0x2;
+				z_max_offset = 0x6;
+				x_min = mainmemory.read_s16_be(box_address + x_min_offset);
+				z_min = mainmemory.read_s16_be(box_address + z_min_offset);
+				x_max = mainmemory.read_s16_be(box_address + x_max_offset);
+				z_max = mainmemory.read_s16_be(box_address + z_max_offset);
+				if not isBetween(x_min, x_max, kasplat_x) then
+					mainmemory.write_s16_be(box_address + x_min_offset, kasplat_x - box_size);
+					mainmemory.write_s16_be(box_address + x_max_offset, kasplat_x + box_size);
+					mainmemory.write_s16_be(agg_address + 0x0, kasplat_x - box_size);
+					mainmemory.write_s16_be(agg_address + 0xC, kasplat_x - box_size);
+					mainmemory.write_s16_be(agg_address + 0x6, kasplat_x + box_size);
+					mainmemory.write_s16_be(agg_address + 0x12, kasplat_x + box_size);
+				end
+				if not isBetween(z_min, z_max, kasplat_z) then
+					mainmemory.write_s16_be(box_address + z_min_offset, kasplat_z - box_size);
+					mainmemory.write_s16_be(box_address + z_max_offset, kasplat_z + box_size);
+					mainmemory.write_s16_be(agg_address + 0x4, kasplat_z - box_size);
+					mainmemory.write_s16_be(agg_address + 0x10, kasplat_z - box_size);
+					mainmemory.write_s16_be(agg_address + 0xA, kasplat_z + box_size);
+					mainmemory.write_s16_be(agg_address + 0x16, kasplat_z + box_size);
+				end
+				for i = 1, 4 do
+					mainmemory.write_s16_be(agg_address + (6 * i) - 4, kasplat_y + (2500 * (1 - (2 * (i % 2))))); 
+				end
+				mainmemory.write_s16_be(agg_address + 26, kasplat_y); 
+				mainmemory.write_s16_be(agg_address + 0x18, kasplat_x);
+				mainmemory.write_s16_be(agg_address + 0x1C, kasplat_z);
 			end
 		end
 	end

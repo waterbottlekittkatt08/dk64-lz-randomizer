@@ -282,6 +282,8 @@ newFileFlags = {
 	[60] = {0x5,2}, -- Diddy Help Me FT CS
 	[61] = {0x5,4}, -- Mountain FT CS
 	[62] = {0x6,2}, -- Llama FT CS
+	[63] = {0x25,4}, -- Kill Kosha
+	[64] = {0x25,3}, -- Kosha Cutscene
 };
 
 function checkNewFile()
@@ -301,6 +303,10 @@ function checkNewFile()
 		mainmemory.write_u32_be(Mem.dexit[version],0);
 		for i = 1, #newFileFlags do
 			setFlag(newFileFlags[i][1],newFileFlags[i][2]);
+		end
+		for i = 0, 4 do
+			selected_kong_header = Mem.kong_base[version] + (i * 0x5E);
+			mainmemory.writebyte(selected_kong_header + 1, 3); -- Slam
 		end
 	end
 end

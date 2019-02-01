@@ -1,5 +1,3 @@
-require "modules.mapAndExitNames";
-
 regular_map_table = {
 	[1] = 0x0400,
 	[2] = 0x0600,
