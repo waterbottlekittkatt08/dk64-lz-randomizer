@@ -29,6 +29,7 @@ Mem = {
 	cexit = {0x76A0AC, 0x764BCC, 0x76A29C},
 	pexit = {0x76A174, 0x764C94, 0x76A364},
 	music = {0x7458DD, nil, nil},
+	insubmap = {0x76A160, nil, nil},
 };
 
 -------------------------------
@@ -306,7 +307,7 @@ function checkNewFile()
 		end
 		for i = 0, 4 do
 			selected_kong_header = Mem.kong_base[version] + (i * 0x5E);
-			mainmemory.writebyte(selected_kong_header + 1, 3); -- Slam
+			mainmemory.writebyte(selected_kong_header + 1, 1); -- Slam
 		end
 	end
 end

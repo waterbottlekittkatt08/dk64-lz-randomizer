@@ -7,10 +7,15 @@ This is just an internal list to track of ideas
 	- On Fungi Well
 	- In front of GM Gun Switches
 	- A bunch of places in GM
-- Hard Mode Kasplats (Requires glitches)
-	- Spider Boss Room
-	- Galleon near Lighthouse Enguarde
+- Hard Mode
+	- Kasplats in spots that require glitches
+		- Spider Boss Room
+		- Galleon near Lighthouse Enguarde
+	- Harder boss fights
+		- All bosses shoot faster (and more)
+		- 1/4 melon
 - Random Crown Enemies
 	- Random Timer
 	- Random Crown names?
 - Make boring autoscroller minigames shorter
+- Klaptrap Randomiser

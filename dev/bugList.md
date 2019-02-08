@@ -5,22 +5,24 @@ resolved
 
 ## BUG LIST TO FIX
 - K Rool CS Skip doesn't work sometimes
-- Exiting Chunky Phase by victory randomises LZ
-- Snide's Contraption CS Skips don't always work
 - Galleon Water Level / Fungi day setting causes inconsistencies until you load area where the change occurs (lighthouse/clock)
 - Fake K Rool Phase fix not always working
 - Fix object deload bug (this seems like a DK64 bug that LZR causes)
-- Softlock Exits
-	- Castle Minecart Door (Softlock as DK)
 - Savestates can cause crashes
-- Bad Exits
-	- Factory Tiny BP Pole
-	- R&D > Storage Room Chute
 - Exits seem to be reappearing
 	- Seed 420: Exiting T&S/Cranky/Candy in Factory > Exiting Funky in Aztec
 	- Parent Exit stuff?
-- Kasplats aren't being spawned correctly when replacing pre-existing kasplat locations
 - Crashes from invalid exit values exiting global maps
+- Spawning Japes Mountain GB not working
+- Tiny Caves Bonus not working
+- Softlocks are occuring
+- [Glitchless] T&S for Fungi Boss showing non-Chunky Kong
+- [Glitchless] T&S for Factory Boss showing Lanky Kong
+- Arcade is broken upon exit
+- Turning on Lighthouse CS doesn't work properly
+- Free seal GB not obtainable
+- Boss Door remains shut upon re-entry if key has been collected, making it problematic for glitchless
+- T&Ses are closing, causing entrances to be closed off
 
 ## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps
@@ -30,7 +32,11 @@ resolved
 	- Castle Tree Gate
 	- Ballroom Door
 	- Crusher Room Gate
-	- Aztec Lobby Door)
+	- Aztec Lobby Door
+	- Castle Minecart Door (Softlock as DK)
+- Bad Exits
+	- Factory Tiny BP Pole
+	- R&D > Storage Room Chute
 - Ensure T&S Exits are never removed
 - Loading zones aren't completely consistent
 - Randomiser Settings not always being set
@@ -49,3 +55,8 @@ resolved
 - Give Simian Slam upon new file creation
 - Giant Kosha initiated still
 - Kasplat doesn't move
+- Kasplats aren't being spawned correctly when replacing pre-existing kasplat locations
+- Snide's Contraption CS Skips don't always work
+- Exiting Chunky Phase by victory randomises LZ
+- SDSS given on file select when it should be regular SS
+- Kasplat not spawning in Caves

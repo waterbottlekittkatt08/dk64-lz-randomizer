@@ -218,6 +218,27 @@ end
 function writeKasplats(level)
 	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
 	beavers_in_map = getEnemyPointerFromIds(potential_enemies_table);
+	caves_enemies_xmin = 2483; -- 2484
+	caves_enemies_xmax = 2681; -- 2680
+	caves_enemies_zmin = 519; -- 520
+	caves_enemies_zmax = 570; -- 569
+	enemies_to_remove = {};
+	enemy_removal_counter = 0;
+	if current_cmap == 0x48 then -- Caves
+		for i = 1, #beavers_in_map do
+			x_pos_enemy = mainmemory.read_s16_be(beavers_in_map[i] + 4);
+			z_pos_enemy = mainmemory.read_s16_be(beavers_in_map[i] + 8);
+			if caves_enemies_xmax > x_pos_enemy and caves_enemies_xmin < x_pos_enemy then
+				if caves_enemies_zmax > z_pos_enemy and caves_enemies_zmin < z_pos_enemy then
+					enemy_removal_counter = enemy_removal_counter + 1;
+					enemies_to_remove[enemy_removal_counter] = i;
+				end
+			end
+		end
+	end
+	for j = #enemies_to_remove, 1, -1 do
+		table.remove(beavers_in_map, enemies_to_remove[j]);
+	end
 	if mapType(current_cmap) ~= "crown_maps" then
 		kasplat_direct_replacement = {};
 		kdr_count = 0;
@@ -296,23 +317,23 @@ function writeKasplats(level)
 				x_max = mainmemory.read_s16_be(box_address + x_max_offset);
 				z_max = mainmemory.read_s16_be(box_address + z_max_offset);
 				if not isBetween(x_min, x_max, kasplat_x) then
-					mainmemory.write_s16_be(box_address + x_min_offset, kasplat_x - box_size);
-					mainmemory.write_s16_be(box_address + x_max_offset, kasplat_x + box_size);
-					mainmemory.write_s16_be(agg_address + 0x0, kasplat_x - box_size);
-					mainmemory.write_s16_be(agg_address + 0xC, kasplat_x - box_size);
-					mainmemory.write_s16_be(agg_address + 0x6, kasplat_x + box_size);
-					mainmemory.write_s16_be(agg_address + 0x12, kasplat_x + box_size);
+					mainmemory.write_s16_be(box_address + x_min_offset, KasplatLocations[level][value_to_check][5]);
+					mainmemory.write_s16_be(box_address + x_max_offset, KasplatLocations[level][value_to_check][6]);
+					mainmemory.write_s16_be(agg_address + 0x0, KasplatLocations[level][value_to_check][5]);
+					mainmemory.write_s16_be(agg_address + 0xC, KasplatLocations[level][value_to_check][5]);
+					mainmemory.write_s16_be(agg_address + 0x6, KasplatLocations[level][value_to_check][6]);
+					mainmemory.write_s16_be(agg_address + 0x12, KasplatLocations[level][value_to_check][6]);
 				end
 				if not isBetween(z_min, z_max, kasplat_z) then
-					mainmemory.write_s16_be(box_address + z_min_offset, kasplat_z - box_size);
-					mainmemory.write_s16_be(box_address + z_max_offset, kasplat_z + box_size);
-					mainmemory.write_s16_be(agg_address + 0x4, kasplat_z - box_size);
-					mainmemory.write_s16_be(agg_address + 0x10, kasplat_z - box_size);
-					mainmemory.write_s16_be(agg_address + 0xA, kasplat_z + box_size);
-					mainmemory.write_s16_be(agg_address + 0x16, kasplat_z + box_size);
+					mainmemory.write_s16_be(box_address + z_min_offset, KasplatLocations[level][value_to_check][7]);
+					mainmemory.write_s16_be(box_address + z_max_offset, KasplatLocations[level][value_to_check][8]);
+					mainmemory.write_s16_be(agg_address + 0x4, KasplatLocations[level][value_to_check][7]);
+					mainmemory.write_s16_be(agg_address + 0x10, KasplatLocations[level][value_to_check][7]);
+					mainmemory.write_s16_be(agg_address + 0xA, KasplatLocations[level][value_to_check][8]);
+					mainmemory.write_s16_be(agg_address + 0x16, KasplatLocations[level][value_to_check][8]);
 				end
 				for i = 1, 4 do
-					mainmemory.write_s16_be(agg_address + (6 * i) - 4, kasplat_y + (2500 * (1 - (2 * (i % 2))))); 
+					mainmemory.write_s16_be(agg_address + (6 * i) - 4, kasplat_y); -- + (20 * (1 - (2 * (i % 2))))
 				end
 				mainmemory.write_s16_be(agg_address + 26, kasplat_y); 
 				mainmemory.write_s16_be(agg_address + 0x18, kasplat_x);
