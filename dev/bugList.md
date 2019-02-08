@@ -21,8 +21,6 @@ resolved
 - Arcade is broken upon exit
 - Turning on Lighthouse CS doesn't work properly
 - Free seal GB not obtainable
-- Boss Door remains shut upon re-entry if key has been collected, making it problematic for glitchless
-- T&Ses are closing, causing entrances to be closed off
 
 ## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps
@@ -60,3 +58,5 @@ resolved
 - Exiting Chunky Phase by victory randomises LZ
 - SDSS given on file select when it should be regular SS
 - Kasplat not spawning in Caves
+- T&Ses are closing, causing entrances to be closed off
+- Boss Door remains shut upon re-entry if key has been collected, making it problematic for glitchless

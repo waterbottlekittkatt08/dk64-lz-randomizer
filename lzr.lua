@@ -30,6 +30,7 @@ Mem = {
 	pexit = {0x76A174, 0x764C94, 0x76A364},
 	music = {0x7458DD, nil, nil},
 	insubmap = {0x76A160, nil, nil},
+	tnsdoor_header = {0x7446C0, nil, nil},
 };
 
 -------------------------------
@@ -96,6 +97,14 @@ end
 
 function getFlagBlockAddress()
 	return Mem.eeprom_copy_base[version] + getCurrentEEPROMSlot() * eeprom_slot_size;
+end
+
+function clearFlag(byte, bit)
+	local flags = getFlagBlockAddress();
+	if type(byte) == "number" and type(bit) == "number" and bit >= 0 and bit < 8 then
+		local currentValue = mainmemory.readbyte(flags + byte);
+		mainmemory.writebyte(flags + byte, clear_bit(currentValue, bit));
+	end
 end
 
 function setFlag(byte, bit)
@@ -293,21 +302,28 @@ function checkNewFile()
 	cutsceneActive = mainmemory.readbyte(Mem.cs_active[version]);
 	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
 	zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
-	if current_cmap == 80 and cutsceneActive == 6 and cutsceneValue == 19 and current_dmap == 176 and zipProg < 37 then -- Entering New File
-		if settings.all_moves == 1 then
-			giveMoves();
+	if current_cmap == 80 and cutsceneActive == 6 and cutsceneValue == 19 and zipProg < 37 then -- Entering New File
+		if settings.randomiser_regular == 1 then
+			setTnSDoorStuff();
 		end
-		if settings.all_kongs == 1 then
-			getAllKongs();
-		end
-		mainmemory.write_u32_be(Mem.dmap[version],0x22);
-		mainmemory.write_u32_be(Mem.dexit[version],0);
-		for i = 1, #newFileFlags do
-			setFlag(newFileFlags[i][1],newFileFlags[i][2]);
-		end
-		for i = 0, 4 do
-			selected_kong_header = Mem.kong_base[version] + (i * 0x5E);
-			mainmemory.writebyte(selected_kong_header + 1, 1); -- Slam
+		if current_dmap == 176 then -- New File
+			if settings.all_moves == 1 then
+				giveMoves();
+			end
+			if settings.all_kongs == 1 then
+				getAllKongs();
+			end
+			mainmemory.write_u32_be(Mem.dmap[version],0x22);
+			mainmemory.write_u32_be(Mem.dexit[version],0);
+			for i = 1, #newFileFlags do
+				setFlag(newFileFlags[i][1],newFileFlags[i][2]);
+			end
+			for i = 0, 4 do
+				selected_kong_header = Mem.kong_base[version] + (i * 0x5E);
+				mainmemory.writebyte(selected_kong_header + 1, 1); -- Slam
+			end
+		elseif current_dmap == 0x22 then -- Old File
+			-- If something needs to be set here
 		end
 	end
 end
@@ -442,6 +458,7 @@ function confirmSettings()
 		require "modules.randomiser_regular"
 		print("Randomiser On");
 		setAssortments();
+		setTnSDoorStuff();
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["Barrel Randomiser Checkbox"]) then
 		settings.randomiser_barrel = 1;

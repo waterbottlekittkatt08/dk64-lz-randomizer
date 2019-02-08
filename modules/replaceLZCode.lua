@@ -8,10 +8,12 @@ function randomise()
 		mode_value = mainmemory.readbyte(Mem.mode[version]);
 		if mode_value > 5 then -- Not Intro Stuff
 			transition_speed_value = mainmemory.readfloat(Mem.transition_speed[version], true);
+			zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
 			cutscene = mainmemory.read_u16_be(Mem.cs[version]);
 			cutsceneActive = mainmemory.readbyte(Mem.cs_active[version]);
 			current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
 			current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
+			current_pmap = mainmemory.read_u16_be(Mem.pmap[version]);
 			current_cexit = mainmemory.read_u32_be(Mem.cexit[version]);
 			dmapType = mapType(current_dmap);
 			cmapType = mapType(current_cmap);
@@ -32,7 +34,7 @@ function randomise()
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 						rando_happened = 1;
 					elseif dmapType == "boss_maps" and settings.randomiser == 1 then
-						new_destmap_to_write = getBossDestination(current_dmap);
+						new_destmap_to_write = getBossDestination(current_pmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 						rando_happened = 1;
 					elseif dmapType == "k_rool" and current_cmap ~= 0xD6 and settings.randomiser == 1 then

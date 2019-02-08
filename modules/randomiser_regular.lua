@@ -270,6 +270,16 @@ boss_map_table = {
 	[7] = 199
 };
 
+tns_parent_maps_table = {
+	[1] = {0x7}, -- Japes (Japes Main Map)
+	[2] = {0x26}, -- Aztec (Aztec Main, 
+	[3] = {0x1A}, -- Factory
+	[4] = {0x1E}, -- Galleon
+	[5] = {0x30}, -- Fungi
+	[6] = {0x48}, -- Caves
+	[7] = {0x57, 0x97, 0xB7}, -- Castle
+};
+
 k_rool_maps_table = {
 	[1] = {0xCB,5};
 	[2] = {0xCC,4};
@@ -277,6 +287,80 @@ k_rool_maps_table = {
 	[4] = {0xCE,4};
 	[5] = {0xCF,5};
 };
+
+keys = {
+	-- [key] = {obtained, {keyFlagByte, keyFlagBit}, {tnsFlagByte, tnsFlagBit}}
+	[1] = {0, {0x3,2}, {0x5,6}},
+	[2] = {0, {0x9,2}, {0xD,4}},
+	[3] = {0, {0x11,2}, {0x13,0}},
+	[4] = {0, {0x15,0}, {0x19,3}},
+	[5] = {0, {0x1D,4}, {0x20,2}},
+	[6] = {0, {0x24,5}, {0x25,6}},
+	[7] = {0, {0x27,5}, {0x2C,0}},
+	[8] = {0, {0x2F,4}, {0xFFFF,0}}, -- Dummy Flag used for T&S clear
+};
+
+boss_door_kong_permits = {
+	[1] = {1, 2, 3, 4, 5}, -- Army Dillo 1
+	[2] = {1, 2, 3, 4, 5}, -- Dogadon 1
+	[3] = {1, 2, 4, 5}, -- Mad Jack
+	[4] = {1, 2, 3, 4, 5}, -- Pufftoss
+	[5] = {5}, -- Dogadon 2
+	[6] = {1, 2, 3, 5}, -- Army Dillo 2
+	[7] = {1, 2, 3, 4, 5}, -- King Kut Out
+};
+
+boss_door_ranges = {
+	-- [level] = {minCBs, maxCBs},
+	[1] = {25, 200}, -- Japes
+	[2] = {35, 300}, -- Aztec
+	[3] = {50, 200}, -- Factory
+	[4] = {75, 250}, -- Galleon
+	[5] = {100, 300}, -- Fungi
+	[6] = {150, 350}, -- Caves
+	[7] = {200, 500}, -- Castle
+};
+
+key_take_occurred = 0;
+key_give_occurred = 0;
+
+function keySwap()
+	transition_speed_value = mainmemory.readfloat(Mem.transition_speed[version], true);
+	zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
+	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
+	if transition_speed_value < 0 then
+		if zipProg < 3 and key_take_occurred == 0 then
+			for i = 1, 8 do
+				if checkFlag(keys[i][2][1],keys[i][2][2]) then
+					keys[i][1] = 1;
+					clearFlag(keys[i][2][1], keys[i][2][2]);
+					--print("Set array for key "..i.." to 1");
+				else
+					--keys[i][1] = 0;
+					--print("Set array for key "..i.." to 0");
+				end
+			end
+			key_take_occurred = 1;
+			--print("Taken Keys");
+		elseif zipProg > 30 and zipProg < 40 and key_give_occurred == 0 and current_dmap ~= 42 then
+			for i = 1, 8 do
+				if keys[i][1] == 1 then
+					setFlag(keys[i][2][1], keys[i][2][2]);
+				end
+			end
+			key_give_occurred = 1;
+			--print("Returned Keys");
+		end
+	end
+	if transition_speed_value > 0 and zipProg < 3 then
+		key_take_occurred = 0;
+		key_give_occurred = 0;
+		for i = 1, 7 do
+			clearFlag(keys[i][3][1], keys[i][3][2]);
+		end
+		--print("Reset key swap bits");
+	end
+end
 
 function generateAssortment()
 	temporary_regular_map_assortment = {};
@@ -308,6 +392,28 @@ function generateBossAssortment()
 	end
 end
 
+function generateBossDoorAssortment()
+	boss_door_assortment = {};
+	boss_door_seedSetting = seedAsNumber + 5;
+	math.randomseed(boss_seedSetting);
+	for i = 1, #boss_door_kong_permits do
+		selected_temp_value = math.ceil(math.random() * #boss_door_kong_permits[i]);
+		boss_door_assortment[i] = boss_door_kong_permits[i][selected_temp_value];
+	end
+end
+
+function generateTnSNumberAssortment()
+	tns_number_assortment = {};
+	tns_number_seedSetting = seedAsNumber + 12;
+	math.randomseed(tns_number_seedSetting);
+	for i = 1, #boss_door_ranges do
+		difference = (boss_door_ranges[i][2] - boss_door_ranges[i][1]) + 1;
+		selected_temp_number = (boss_door_ranges[i][1] - 1) + math.ceil(math.random() * difference);
+		selected_number = selected_temp_number - (selected_temp_number % 5);
+		tns_number_assortment[i] = selected_number;
+	end
+end
+
 function generateKRoolOrder()
 	temporary_k_rool_table = {};
 	k_rool_assortment = {};
@@ -328,6 +434,8 @@ function setAssortments()
 	generateAssortment();
 	generateBossAssortment();
 	generateKRoolOrder();
+	generateBossDoorAssortment();
+	generateTnSNumberAssortment();
 end
 
 function getExitName(map_index, exit_index)
@@ -360,11 +468,13 @@ function getLoadingZone(destmap, destexit)
 	end
 end
 
-function getBossDestination(destmap)
+function getBossDestination(parent_map)
 	reference = nil;
-	for i = 1, #boss_map_table do
-		if boss_map_table[i] == destmap then
-			reference = i;
+	for i = 1, #tns_parent_maps_table do
+		for j = 1, #tns_parent_maps_table[i] do
+			if tns_parent_maps_table[i][j] == parent_map then
+				reference = i;
+			end
 		end
 	end
 	if reference == nil then
@@ -391,6 +501,15 @@ function getKRoolDestination(destmap)
 	end
 end
 
+function setTnSDoorStuff()
+	for i = 0, 6 do
+		mainmemory.write_u16_be(Mem.tnsdoor_header[version] + (2 * i), tns_number_assortment[i + 1]);
+	end
+	for i = 1, 7 do
+		mainmemory.writebyte(Mem.tnsdoor_header[version] + 0x30 + (boss_map_assortment[i] - 1), boss_door_assortment[boss_map_assortment[i]] - 1);
+	end
+end
+
 level_index_flags = {
 	[0] = {0x38,5}, -- Japes
 	[1] = {0x38,6}, -- Aztec
@@ -412,3 +531,5 @@ function checkMap(map_value)
 		end
 	end
 end
+
+event.onframestart(keySwap, "Swaps keys out to prevent T&S portal disappearing");
