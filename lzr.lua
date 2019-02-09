@@ -319,12 +319,6 @@ function checkNewFile()
 			setTnSDoorStuff();
 		end
 		if current_dmap == 176 then -- New File
-			if settings.all_moves == 1 then
-				giveMoves();
-			end
-			if settings.all_kongs == 1 then
-				getAllKongs();
-			end
 			mainmemory.write_u32_be(Mem.dmap[version],0x22);
 			mainmemory.write_u32_be(Mem.dexit[version],0);
 			for i = 1, #newFileFlags do
@@ -333,6 +327,12 @@ function checkNewFile()
 			for i = 0, 4 do
 				selected_kong_header = Mem.kong_base[version] + (i * 0x5E);
 				mainmemory.writebyte(selected_kong_header + 1, 1); -- Slam
+			end
+			if settings.all_moves == 1 then
+				giveMoves();
+			end
+			if settings.all_kongs == 1 then
+				getAllKongs();
 			end
 		elseif current_dmap == 0x22 then -- Old File
 			-- If something needs to be set here
