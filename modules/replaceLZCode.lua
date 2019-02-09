@@ -34,6 +34,9 @@ function randomise()
 							end
 							mainmemory.writebyte(player + 0x144, value);
 						end
+						if settings.randomiser == 1 then
+							setTnSDoorStuff();
+						end
 					end
 					if has_control == 1 or zipProg > 90 then
 						if isRDRAM(player) then
