@@ -167,6 +167,20 @@ function getActorPointers(actor_value)
 	return pointers
 end
 
+string.lpad = function(str, len, char)
+	if type(str) ~= "str" then
+		str = tostring(str);
+	end
+	if char == nil then char = ' ' end
+	return string.rep(char, len - #str)..str;
+end
+
+function toHexString(value, desiredLength, prefix)
+	value = string.format("%X", value or 0);
+	value = string.lpad(value, desiredLength or string.len(value), '0');
+	return (prefix or "0x")..value;
+end
+
 regular_maps = {4,6,7,12,13,14,16,17,19,20,21,22,23,24,26,27,29,30,31,33,34,36,37,38,39,41,43,44,45,46,47,48,49,51,52,54,55,56,57,58,59,60,61,62,63,64,70,71,72,82,84,85,86,87,88,89,90,91,92,93,94,95,97,98,100,105,106,108,110,112,113,114,151,163,164,166,167,168,169,170,171,173,174,175,176,178,179,183,185,186,187,188,189,193,194,195,200};
 global_maps = {1,5,15,25,42};
 boss_maps = {8,83,111,154,196,197,199};
