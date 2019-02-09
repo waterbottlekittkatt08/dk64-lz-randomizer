@@ -357,17 +357,6 @@ lobbies = {
 	[8] = 170, -- Helm
 };
 
-levels = {
-	[0] = "JAPES",
-	[1] = "AZTEC",
-	[2] = "FACTORY",
-	[3] = "GALLEON",
-	[4] = "FUNGI",
-	[5] = "CAVES",
-	[6] = "CASTLE",
-	[7] = "DK ISLES",
-};
-
 kongs = {
 	[1] = "DK",
 	[2] = "Diddy",

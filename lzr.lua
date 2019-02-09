@@ -31,6 +31,7 @@ Mem = {
 	music = {0x7458DD, nil, nil},
 	insubmap = {0x76A160, nil, nil},
 	tnsdoor_header = {0x7446C0, nil, nil},
+	player_pointer = {0x7FBB4C, 0x7FBA6C, 0x7FBFBC},
 };
 
 -------------------------------
@@ -134,6 +135,17 @@ function checkFlag(byte, bit)
 	else
 	end
 	return false;
+end
+
+function isLoading()
+	return mainmemory.read_u32_be(Mem.obj_model2_timer[version]) == 0;
+end
+
+function getPlayerObject() -- TODO: Cache this
+	if isLoading() then
+		return;
+	end
+	return dereferencePointer(Mem.player_pointer[version]);
 end
 
 client.pause();
@@ -517,6 +529,46 @@ end
 require 'settings';
 setSeed(previousSettings.seed);
 
+boss_fight_names = {
+	[1] = "Army Dillo I",
+	[2] = "Dogadon I",
+	[3] = "Mad Jack",
+	[4] = "Puftoss",
+	[5] = "Dogadon II",
+	[6] = "Army Dillo II",
+	[7] = "King Kut Out",
+};
+
+kongNames = {
+	[1] = "DK",
+	[2] = "Diddy",
+	[3] = "Lanky",
+	[4] = "Tiny",
+	[5] = "Chunky",
+};
+
+levels = {
+	[0] = "JAPES",
+	[1] = "AZTEC",
+	[2] = "FACTORY",
+	[3] = "GALLEON",
+	[4] = "FUNGI",
+	[5] = "CAVES",
+	[6] = "CASTLE",
+	[7] = "DK ISLES",
+};
+
+levelsLower = {
+	[0] = "Japes",
+	[1] = "Aztec",
+	[2] = "Factory",
+	[3] = "Galleon",
+	[4] = "Fungi",
+	[5] = "Caves",
+	[6] = "Castle",
+	[7] = "DK Isles",
+};
+
 function Spoiler()
 	print("Writing spoiler to file...");
 	file = io.open("spoiler.txt", "w+")
@@ -531,6 +583,7 @@ function Spoiler()
 			lz_exit_in = regular_map_table[i] - (256 * lz_map_in);
 			lz_map_out = math.floor(regular_map_table[regular_map_assortment[i]] / 256);
 			lz_exit_out = regular_map_table[regular_map_assortment[i]] - (256 * lz_map_out);
+			--print(i);
 			file:write("\n");
 			file:write("LZ to: "..maps[lz_map_in + 1].." (Exit "..getExitName(lz_map_in, lz_exit_in)..")", "\n");
 			file:write("Goes to: "..maps[lz_map_out + 1].." (Exit "..getExitName(lz_map_out, lz_exit_out)..")", "\n");
@@ -543,6 +596,18 @@ function Spoiler()
 			file:write("\n");
 			file:write("LZ to: "..maps[lz_map_in + 1], "\n");
 			file:write("Goes to: "..maps[lz_map_out + 1], "\n");
+		end
+		file:write("\n");
+		file:write("T&S DOOR ASSORTMENT", "\n");
+		for i = 1, #tns_number_assortment do
+			file:write("\n");
+			file:write(levelsLower[i - 1]..": "..tns_number_assortment[i], "\n");
+		end
+		file:write("\n");
+		file:write("BOSS FIGHT KONG ASSORTMENT", "\n");
+		for i = 1, #boss_door_assortment do
+			file:write("\n");
+			file:write(boss_fight_names[i]..": "..kongNames[boss_door_assortment[i]], "\n");
 		end
 	end
 	if settings.randomiser_barrel == 1 then

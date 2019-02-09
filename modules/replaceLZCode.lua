@@ -18,8 +18,34 @@ function randomise()
 			dmapType = mapType(current_dmap);
 			cmapType = mapType(current_cmap);
 			previous_msb_value = mainmemory.readbyte(Mem.map_state[version]);
+			player = getPlayerObject();
+			has_control = mainmemory.readbyte(player + 0x373); -- Might be 0x37B. Changes on same frame
 			if transition_speed_value < 0 then
 				rando_happened = 0;
+				if has_control == 0 then
+					if isRDRAM(player) then
+						local value = mainmemory.readbyte(player + 0x144);
+						if bit.check(value, 2) then
+							value = value - 4;
+						end
+						if bit.check(value, 3) then
+							value = value - 8;
+						end
+						mainmemory.writebyte(player + 0x144, value);
+					end
+				end
+				if has_control == 1 or zipProg > 90 then
+					if isRDRAM(player) then
+						local value = mainmemory.readbyte(player + 0x144);
+						if not bit.check(value, 2) then
+							value = value + 4;
+						end
+						if not bit.check(value, 3) then
+							value = value + 8;
+						end
+						mainmemory.writebyte(player + 0x144, value);
+					end
+				end
 			end
 			--if dmapType == "regular_maps" then
 			--	mainmemory.writebyte(Mem.insubmap[version], 0);

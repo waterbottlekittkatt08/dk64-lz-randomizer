@@ -16,9 +16,9 @@ regular_map_table = {
 	[15] = 0x0C00,
 	[16] = 0x0D00,
 	[17] = 0x0E00,
-	[18] = 0x1000,
+	[18] = 0x7001,
 	[19] = 0x1300,
-	[20] = 0x1400,
+	[20] = 0x2203,
 	[21] = 0x1500,
 	[22] = 0x1600,
 	[23] = 0x1700,
@@ -258,6 +258,9 @@ regular_map_table = {
 	[257] = 0xC300,
 	[258] = 0xC301,
 	[259] = 0xC800,
+	[260] = 0x570F,
+	[261] = 0x570B,
+	[262] = 0x1A08,
 };
 
 boss_map_table = {
@@ -310,15 +313,9 @@ boss_door_kong_permits = {
 	[7] = {1, 2, 3, 4, 5}, -- King Kut Out
 };
 
-boss_door_ranges = {
-	-- [level] = {minCBs, maxCBs},
-	[1] = {25, 200}, -- Japes
-	[2] = {35, 300}, -- Aztec
-	[3] = {50, 200}, -- Factory
-	[4] = {75, 250}, -- Galleon
-	[5] = {100, 300}, -- Fungi
-	[6] = {150, 350}, -- Caves
-	[7] = {200, 500}, -- Castle
+boss_door_range = { -- Normal amount is 1680
+	[1] = 1000, -- Min
+	[2] = 2000, -- Max
 };
 
 key_take_occurred = 0;
@@ -372,8 +369,12 @@ function generateAssortment()
 	math.randomseed(regular_seedSetting);
 	for i = 1, #regular_map_table do
 		selected_temp_value = math.ceil(math.random() * #temporary_regular_map_assortment);
+		if selected_temp_value == 0 then
+			selected_temp_value = 1;
+		end
 		regular_map_assortment[i] = temporary_regular_map_assortment[selected_temp_value];
 		table.remove(temporary_regular_map_assortment, selected_temp_value);
+		--print("RMS: Entry "..i..", selected random value "..selected_temp_value);
 	end
 end
 
@@ -387,6 +388,9 @@ function generateBossAssortment()
 	math.randomseed(boss_seedSetting);
 	for i = 1, #boss_map_table do
 		selected_temp_value = math.ceil(math.random() * #temporary_boss_map_assortment);
+		if selected_temp_value == 0 then
+			selected_temp_value = 1;
+		end
 		boss_map_assortment[i] = temporary_boss_map_assortment[selected_temp_value];
 		table.remove(temporary_boss_map_assortment, selected_temp_value);
 	end
@@ -398,19 +402,122 @@ function generateBossDoorAssortment()
 	math.randomseed(boss_seedSetting);
 	for i = 1, #boss_door_kong_permits do
 		selected_temp_value = math.ceil(math.random() * #boss_door_kong_permits[i]);
+		if selected_temp_value == 0 then
+			selected_temp_value = 1;
+		end
 		boss_door_assortment[i] = boss_door_kong_permits[i][selected_temp_value];
+	end
+end
+
+function validateData(value)
+	for i = 1, #regular_map_assortment do
+		if regular_map_assortment[i] == value then
+			print(i)
+		end
+	end
+end
+
+function testRegularMapAssortment()
+	temp_table = {};
+	for i = 1, #regular_map_table do
+		temp_table[i] = i;
+	end
+	temp_removal_table = {};
+	temp_removal_counter = 0;
+	for i = 1, #regular_map_table do
+		for j = 1, #regular_map_table do
+			if regular_map_assortment[i] == j then
+				temp_removal_counter = temp_removal_counter + 1;
+				temp_removal_table[temp_removal_counter] = j;
+			end
+		end
+	end
+	for i = temp_removal_counter, 1, -1 do
+		table.remove(temp_table, i);
+	end
+	if #temp_table > 0 then
+		for i = 1, #temp_table do
+			print("Table Entry "..temp_table[i].." missing from regular map assortment");
+		end
 	end
 end
 
 function generateTnSNumberAssortment()
 	tns_number_assortment = {};
-	tns_number_seedSetting = seedAsNumber + 12;
+	for i = 1, 7 do
+		tns_number_assortment[i] = 0;
+	end
+	tns_priority = {};
+	tns_temp_priority = {};
+	for i = 1, 7 do
+		tns_temp_priority[i] = i;
+	end
+	tns_number_seedSetting = seedAsNumber + 120;
 	math.randomseed(tns_number_seedSetting);
-	for i = 1, #boss_door_ranges do
-		difference = (boss_door_ranges[i][2] - boss_door_ranges[i][1]) + 1;
-		selected_temp_number = (boss_door_ranges[i][1] - 1) + math.ceil(math.random() * difference);
-		selected_number = selected_temp_number - (selected_temp_number % 5);
-		tns_number_assortment[i] = selected_number;
+	for i = 1, 7 do
+		selected_value = math.ceil(math.random() * #tns_temp_priority);
+		if selected_value == 0 then
+			selected_value = 1;
+		end
+		selected_value2 = tns_temp_priority[selected_value];
+		tns_priority[i] = selected_value2;
+	end
+	tns_probability_array = {};
+	tns_array_counter = 0;
+	for i = 1, 7 do
+		for j = 1, tns_priority[i] do
+			tns_array_counter = tns_array_counter + 1;
+			tns_probability_array[tns_array_counter] = i;
+		end
+	end
+	difference = (boss_door_range[2] - boss_door_range[1]) + 1;
+	tns_total_temp = (boss_door_range[1] - 1) + math.ceil(math.random() * difference);
+	if tns_total_temp < boss_door_range[1] then
+		tns_total_temp = boss_door_range[1];
+	end
+	tns_total = tns_total_temp - (tns_total_temp % 5);
+	tns_running_total = tns_total;
+	for i = 1, (tns_total / 5) do
+		selected_level_value = math.ceil(math.random() * #tns_probability_array);
+		if selected_level_value == 0 then
+			selected_level_value = 1;
+		end
+		selected_level = tns_probability_array[selected_level_value];
+		tns_number_assortment[selected_level] = tns_number_assortment[selected_level] + 5;
+		tns_running_total = tns_running_total - 5;
+		list_to_remove = {};
+		removal_count_tns = 0;
+		if tns_number_assortment[1] == 200 then -- Japes at 200
+			for j = 1, #tns_probability_array do
+				if tns_probability_array[j] == 1 then
+					removal_count_tns = removal_count_tns + 1;
+					list_to_remove[removal_count_tns] = j;
+				end
+			end
+		end
+		if tns_number_assortment[2] == 400 then -- Aztec at 400
+			for j = 1, #tns_probability_array do
+				if tns_probability_array[j] == 2 then
+					removal_count_tns = removal_count_tns + 1;
+					list_to_remove[removal_count_tns] = j;
+				end
+			end
+		end
+		for k = 3, 7 do
+			if tns_number_assortment[k] == 500 then -- Aztec at 400
+				for j = 1, #tns_probability_array do
+					if tns_probability_array[j] == k then
+						removal_count_tns = removal_count_tns + 1;
+						list_to_remove[removal_count_tns] = j;
+					end
+				end
+			end
+		end
+		if #list_to_remove > 0 then
+			for j = #list_to_remove, 1, -1 do
+				table.remove(tns_probability_array, j);
+			end
+		end
 	end
 end
 
@@ -424,6 +531,9 @@ function generateKRoolOrder()
 	math.randomseed(k_rool_seedSetting);
 	for i = 1, 4 do
 		selected_temp_value = math.ceil(math.random() * #temporary_k_rool_table);
+		if selected_temp_value == 0 then
+			selected_temp_value = 1;
+		end
 		k_rool_assortment[i] = temporary_k_rool_table[selected_temp_value];
 		table.remove(temporary_k_rool_table, selected_temp_value);
 	end
