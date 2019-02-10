@@ -1,3 +1,5 @@
+require "modules.mapAndExitNames";
+
 regular_map_table = {
 	[1] = 0x0400,
 	[2] = 0x0600,
@@ -723,6 +725,148 @@ function generateAssortment()
 	end
 end
 
+function generateAssortmentWithLogic()
+	regular_seedSetting = seedAsNumber * 1000;
+	math.randomseed(regular_seedSetting);
+	
+	regular_map_assortment = {};
+	inverted_map_assortment = {};
+	
+	exits_remaining = {};
+	for key, value in pairs(regular_map_table) do
+		exits_remaining[key] = value
+	end
+	
+	--Handle tag-less maps first
+	for i = 1, #tagless_map_table do
+		dest_map = tagless_map_table[i][1];
+		kong_array = tagless_map_table[i][2];
+		
+		--Start with copy of regular map table
+		accessible_exits = {};
+        for key, value in pairs(exits_remaining) do
+            accessible_exits[key] = value
+        end
+		
+		--subtract inaccessible maps for each required kong in kong_array
+		if findInTable(1, kong_array) then
+			accessible_exits = difference(accessible_exits, inaccessible_map_table_DK);
+		end
+		if findInTable(2, kong_array) then
+			accessible_exits = difference(accessible_exits, inaccessible_map_table_Diddy);
+		end
+		if findInTable(3, kong_array) then
+			accessible_exits = difference(accessible_exits, inaccessible_map_table_Lanky);
+		end
+		if findInTable(4, kong_array) then
+			accessible_exits = difference(accessible_exits, inaccessible_map_table_Tiny);
+		end
+		if findInTable(5, kong_array) then
+			accessible_exits = difference(accessible_exits, inaccessible_map_table_Chunky);
+		end
+		
+		--TODO: handle special cases
+		--Check if it has multiple exits
+		hasMultipleExits = 0;
+		for j = 1, #mapsWithMultipleExits  do
+			if dest_map == mapsWithMultipleExits[j] then
+				hasMultipleExits = 1;
+				break;
+			end
+		end
+		if hasMultipleExits == 0 then
+			dest_exit = 0;
+		else
+			--TODO: choose one of the map's exits randomly
+			dest_exit = 0;
+		end
+		
+		dest_val = getLzValue(dest_map, dest_exit);
+		
+		--if it's in the randomization pool
+		if dest_val ~= nil then 
+			selected_temp_value = math.ceil(math.random() * #accessible_exits);
+			if selected_temp_value == 0 then
+				selected_temp_value = 1;
+			end
+			origin_lz = accessible_exits[selected_temp_value];
+			origin_map = math.floor(origin_lz / 256);
+			origin_exit = origin_lz - (256 * origin_map);
+			
+			
+			orig_val = getLzValue(origin_map, origin_exit);
+			
+			if inverted_map_assortment[dest_val] ~= nil then
+				print("Error! An assignment is being overwritten.");
+				print("for destination:"..dest_val);
+				print("Previous assignment: "..inverted_map_assortment[dest_val]);
+				print("New assignment: "..orig_val);
+			end
+			inverted_map_assortment[dest_val] = orig_val;
+			
+			key_to_remove = nil;
+			for key,val in ipairs(exits_remaining) do
+				if val == origin_lz then 
+					key_to_remove = key;
+				end
+			end
+			table.remove(exits_remaining, key_to_remove);
+		end
+	end
+	--Fill out rest of randomization
+	for i = 1, #regular_map_table do
+		if inverted_map_assortment[i] == nil then
+			selected_temp_value = math.ceil(math.random() * #exits_remaining);
+			if selected_temp_value == 0 then
+				selected_temp_value = 1;
+			end
+			origin_lz = exits_remaining[selected_temp_value];
+			origin_map = math.floor(origin_lz / 256);
+			origin_exit = origin_lz - (256 * origin_map);
+			
+			orig_val = getLzValue(origin_map, origin_exit)
+			
+			inverted_map_assortment[i] = orig_val;
+			table.remove(exits_remaining, selected_temp_value);
+		end
+	end
+	
+	regular_map_assortment = table_invert(inverted_map_assortment);
+	
+	assert(#inverted_map_assortment == #regular_map_assortment, "Assortment contains repeating pathways");
+end
+
+function getLzValue(map_id, exit_id)
+	reference = nil;
+	lookup_value = (map_id * 256) + exit_id;
+	for i = 1, #regular_map_table do
+		if regular_map_table[i] == lookup_value then
+			reference = i;
+		end
+	end
+	return reference;
+end	
+
+function table_invert(t)
+   local s={}
+   for k,v in pairs(t) do
+	 s[v]=k
+   end
+   return s
+end
+
+function findInTable(a, tbl)
+	for key,val in ipairs(tbl) do if val==a then return true end end
+end
+
+function difference(setA,setB)
+	local ret = {}
+	for key,val in ipairs(setA) do
+		if not findInTable(val,setB) then table.insert(ret, val) end
+	end
+	return ret
+end
+
 function generateBossAssortment()
 	temporary_boss_map_assortment = {};
 	boss_map_assortment = {};
@@ -886,7 +1030,7 @@ function generateKRoolOrder()
 end
 
 function setAssortments()
-	generateAssortment();
+	generateAssortmentWithLogic();
 	generateBossAssortment();
 	generateKRoolOrder();
 	generateBossDoorAssortment();
