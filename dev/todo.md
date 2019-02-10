@@ -12,7 +12,6 @@
 - Change K Rool trigger for being key 3 & 8
 - Bonus Barrel Rando separate to general LZ Rando
 - Patch Fake Key
-- Exits in Spoiler Log
 
 
 - Test Crown Door in Helm
