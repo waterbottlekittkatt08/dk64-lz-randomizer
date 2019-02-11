@@ -567,3 +567,24 @@ exitTable = {
 		"From DK Isles"
 	},
 };
+
+function getMapName(map_id)
+	return maps[map_id + 1];
+end
+
+function getExitName(map_index, exit_index)
+	for i = 1, #mapsWithMultipleExits  do
+        if map_index == mapsWithMultipleExits[i] then
+			local exitName = exitTable[map_index][exit_index + 1];
+			assert(exitName ~= nil, "Invalid or unknown exit! Map: "..maps[map_index + 1]..", Exit: " ..exit_index);
+			return exitName;
+		end
+    end
+    return exit_index;
+end
+
+function getFullName(lz_id)
+	map_id = math.floor(lz_id / 256)
+	exit_id = lz_id - (map_id * 256)
+	return getMapName(map_id), getExitName(map_id, exit_id)
+end

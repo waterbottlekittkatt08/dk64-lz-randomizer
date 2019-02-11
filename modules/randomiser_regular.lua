@@ -1,210 +1,208 @@
 require "modules.mapAndExitNames";
 
 regular_map_table = {
-	[1] = 0x0400,
-	[2] = 0x0600,
-	[3] = 0x0701,
-	[4] = 0x0702,
-	[5] = 0x0705,
-	[6] = 0x0708,
-	[7] = 0x070E,
-	[8] = 0x070F,
-	[9] = 0x0C00,
-	[10] = 0x0D00,
-	[11] = 0x0E00,
-	[12] = 0x7001,
-	[13] = 0x1300,
-	[14] = 0x2203,
-	[15] = 0x1500,
-	[16] = 0x1600,
-	[17] = 0x1700,
-	[18] = 0x1800,
-	[19] = 0x1A00,
-	[20] = 0x1A03,
-	[21] = 0x1A10,
-	[22] = 0x1B00,
-	[23] = 0x1D00,
-	[24] = 0x1E00,
-	[25] = 0x1E01,
-	[26] = 0x1E02,
-	[27] = 0x1E03,
-	[28] = 0x1E04,
-	[29] = 0x1E05,
-	[30] = 0x1E06,
-	[31] = 0x1E07,
-	[32] = 0x1E08,
-	[33] = 0x1E09,
-	[34] = 0x1E0A,
-	[35] = 0x1E0B,
-	[36] = 0x1E13,
-	[37] = 0x1E14,
-	[38] = 0x1E15,
-	[39] = 0x1F00,
-	[40] = 0x2100,
-	[41] = 0x2202,
-	[42] = 0x2204,
-	[43] = 0x2205,
-	[44] = 0x2206,
-	[45] = 0x2207,
-	[46] = 0x2208,
-	[47] = 0x2209,
-	[48] = 0x220A,
-	[49] = 0x220B,
-	[50] = 0x220D,
-	[51] = 0x2400,
-	[52] = 0x2500,
-	[53] = 0x2600,
-	[54] = 0x2601,
-	[55] = 0x2602,
-	[56] = 0x2603,
-	[57] = 0x2604,
-	[58] = 0x2605,
-	[59] = 0x2606,
-	[60] = 0x2607,
-	[61] = 0x2611,
-	[62] = 0x2613,
-	[63] = 0x2700,
-	[64] = 0x2900,
-	[65] = 0x2B00,
-	[66] = 0x2B01,
-	[67] = 0x2B02,
-	[68] = 0x2C00,
-	[69] = 0x2D00,
-	[70] = 0x2E00,
-	[71] = 0x2E01,
-	[72] = 0x2F00,
-	[73] = 0x2F01,
-	[74] = 0x3000,
-	[75] = 0x3001,
-	[76] = 0x3002,
-	[77] = 0x3003,
-	[78] = 0x3004,
-	[79] = 0x3005,
-	[80] = 0x3006,
-	[81] = 0x3007,
-	[82] = 0x3008,
-	[83] = 0x3009,
-	[84] = 0x300A,
-	[85] = 0x300B,
-	[86] = 0x300C,
-	[87] = 0x300D,
-	[88] = 0x300E,
-	[89] = 0x300F,
-	[90] = 0x3010,
-	[91] = 0x3017,
-	[92] = 0x3100,
-	[93] = 0x3300,
-	[94] = 0x3400,
-	[95] = 0x3600,
-	[96] = 0x3700,
-	[97] = 0x3800,
-	[98] = 0x3900,
-	[99] = 0x3A00,
-	[100] = 0x3B00,
-	[101] = 0x3C00,
-	[102] = 0x3D00,
-	[103] = 0x3D01,
-	[104] = 0x3E00,
-	[105] = 0x3E01,
-	[106] = 0x3E02,
-	[107] = 0x3E03,
-	[108] = 0x3F00,
-	[109] = 0x4000,
-	[110] = 0x4001,
-	[111] = 0x4002,
-	[112] = 0x4003,
-	[113] = 0x4004,
-	[114] = 0x4600,
-	[115] = 0x4700,
-	[116] = 0x4800,
-	[117] = 0x4801,
-	[118] = 0x4802,
-	[119] = 0x4803,
-	[120] = 0x4804,
-	[121] = 0x4805,
-	[122] = 0x4806,
-	[123] = 0x480E,
-	[124] = 0x480F,
-	[125] = 0x4810,
-	[126] = 0x4811,
-	[127] = 0x4812,
-	[128] = 0x4813,
-	[129] = 0x4814,
-	[130] = 0x481E,
-	[131] = 0x5200,
-	[132] = 0x5400,
-	[133] = 0x5500,
-	[134] = 0x5600,
-	[135] = 0x5700,
-	[136] = 0x5701,
-	[137] = 0x5702,
-	[138] = 0x5704,
-	[139] = 0x5705,
-	[140] = 0x5707,
-	[141] = 0x5708,
-	[142] = 0x5709,
-	[143] = 0x570C,
-	[144] = 0x570D,
-	[145] = 0x570E,
-	[146] = 0x5710,
-	[147] = 0x5714,
-	[148] = 0x5800,
-	[149] = 0x5801,
-	[150] = 0x5900,
-	[151] = 0x5A00,
-	[152] = 0x5B00,
-	[153] = 0x5C00,
-	[154] = 0x5D00,
-	[155] = 0x5E00,
-	[156] = 0x5F00,
-	[157] = 0x6200,
-	[158] = 0x6400,
-	[159] = 0x6900,
-	[160] = 0x6A00,
-	[161] = 0x6C00,
-	[162] = 0x6E00,
-	[163] = 0x7000,
-	[164] = 0x7100,
-	[165] = 0x7101,
-	[166] = 0x7102,
-	[167] = 0x7200,
-	[168] = 0x7201,
-	[169] = 0x9700,
-	[170] = 0x9702,
-	[171] = 0x9704,
-	[172] = 0xA300,
-	[173] = 0xA400,
-	[174] = 0xA600,
-	[175] = 0xA700,
-	[176] = 0xA800,
-	[177] = 0xA900,
-	[178] = 0xA901,
-	[179] = 0xAD00,
-	[180] = 0xAD01,
-	[181] = 0xAE00,
-	[182] = 0xAE01,
-	[183] = 0xAF00,
-	[184] = 0xAF01,
-	[185] = 0xB200,
-	[186] = 0xB201,
-	[187] = 0xB300,
-	[188] = 0xB700,
-	[189] = 0xB703,
-	[190] = 0xB704,
-	[191] = 0xB900,
-	[192] = 0xBA00,
-	[193] = 0xBB00,
-	[194] = 0xBC00,
-	[195] = 0xBD00,
-	[196] = 0xC100,
-	[197] = 0xC101,
-	[198] = 0xC200,
-	[199] = 0xC201,
-	[200] = 0xC300,
-	[201] = 0xC800,
-	[202] = 0x570F,
-	[203] = 0x570B,
-	[204] = 0x1A08,
+	0x0400,
+	0x0600,
+	0x0701,
+	0x0702,
+	0x0705,
+	0x0708,
+	0x070E,
+	0x070F,
+	0x0C00,
+	0x0D00,
+	0x0E00,
+	0x7001,
+	0x1300,
+	0x2203,
+	0x1500,
+	0x1600,
+	0x1700,
+	0x1800,
+	0x1A00,
+	0x1A03,
+	0x1A10,
+	0x1B00,
+	0x1D00,
+	0x1E00,
+	0x1E01,
+	0x1E02,
+	0x1E03,
+	0x1E04,
+	0x1E05,
+	0x1E06,
+	0x1E07,
+	0x1E08,
+	0x1E09,
+	0x1E0A,
+	0x1E0B,
+	0x1E13,
+	0x1E15,
+	0x1F00,
+	0x2100,
+	0x2202,
+	0x2204,
+	0x2205,
+	0x2206,
+	0x2207,
+	0x2208,
+	0x2209,
+	0x220A,
+	0x220B,
+	0x2400,
+	0x2500,
+	0x2600,
+	0x2601,
+	0x2602,
+	0x2603,
+	0x2604,
+	0x2605,
+	0x2606,
+	0x2607,
+	0x2611,
+	0x2613,
+	0x2700,
+	0x2900,
+	0x2B00,
+	0x2B01,
+	0x2B02,
+	0x2C00,
+	0x2D00,
+	0x2E00,
+	0x2E01,
+	0x2F00,
+	0x2F01,
+	0x3000,
+	0x3001,
+	0x3002,
+	0x3003,
+	0x3004,
+	0x3005,
+	0x3006,
+	0x3007,
+	0x3008,
+	0x3009,
+	0x300A,
+	0x300B,
+	0x300C,
+	0x300D,
+	0x300E,
+	0x300F,
+	0x3010,
+	0x3017,
+	0x3100,
+	0x3300,
+	0x3400,
+	0x3600,
+	0x3700,
+	0x3800,
+	0x3900,
+	0x3A00,
+	0x3B00,
+	0x3C00,
+	0x3D00,
+	0x3D01,
+	0x3E00,
+	0x3E01,
+	0x3E02,
+	0x3E03,
+	0x3F00,
+	0x4000,
+	0x4001,
+	0x4002,
+	0x4003,
+	0x4004,
+	0x4600,
+	0x4700,
+	0x4800,
+	0x4801,
+	0x4802,
+	0x4803,
+	0x4804,
+	0x4805,
+	0x4806,
+	0x480E,
+	0x480F,
+	0x4810,
+	0x4811,
+	0x4812,
+	0x4813,
+	0x4814,
+	0x481E,
+	0x5200,
+	0x5400,
+	0x5500,
+	0x5600,
+	0x5700,
+	0x5701,
+	0x5702,
+	0x5704,
+	0x5705,
+	0x5707,
+	0x5708,
+	0x5709,
+	0x570C,
+	0x570D,
+	0x570E,
+	0x5710,
+	0x5714,
+	0x5800,
+	0x5801,
+	0x5900,
+	0x5A00,
+	0x5B00,
+	0x5C00,
+	0x5D00,
+	0x5E00,
+	0x5F00,
+	0x6200,
+	0x6400,
+	0x6900,
+	0x6A00,
+	0x6C00,
+	0x6E00,
+	0x7000,
+	0x7100,
+	0x7101,
+	0x7102,
+	0x7200,
+	0x7201,
+	0x9700,
+	0x9702,
+	0x9704,
+	0xA300,
+	0xA400,
+	0xA600,
+	0xA700,
+	0xA800,
+	0xA900,
+	0xA901,
+	0xAD00,
+	0xAD01,
+	0xAE00,
+	0xAE01,
+	0xAF00,
+	0xAF01,
+	0xB200,
+	0xB201,
+	0xB300,
+	0xB700,
+	0xB703,
+	0xB704,
+	0xB900,
+	0xBA00,
+	0xBB00,
+	0xBC00,
+	0xBD00,
+	0xC100,
+	0xC101,
+	0xC200,
+	0xC201,
+	0xC300,
+	0xC800,
+	0x570F,
+	0x570B,
+	0x1A08,
 };
 
 inaccessible_map_table_DK = {
@@ -265,7 +263,7 @@ inaccessible_map_table_DK = {
 	0xB900,
 	0xBD00,
 	0xC800,
-}
+};
 
 inaccessible_map_table_Diddy = {
 	0x0C00,
@@ -335,7 +333,7 @@ inaccessible_map_table_Diddy = {
 	0xBB00,
 	0xBC00,
 	0xBD00,
-}
+};
 
 inaccessible_map_table_Lanky = {
 	0x0400,
@@ -401,7 +399,7 @@ inaccessible_map_table_Lanky = {
 	0xBC00,
 	0xBD00,
 	0xC800,
-}
+};
 
 inaccessible_map_table_Tiny = {
 	0x0400,
@@ -457,7 +455,7 @@ inaccessible_map_table_Tiny = {
 	0xBB00,
 	0xBC00,
 	0xC800,
-}
+};
 
 inaccessible_map_table_Chunky = {
 	0x0400,
@@ -525,7 +523,7 @@ inaccessible_map_table_Chunky = {
 	0xBC00,
 	0xBD00,
 	0xC800,
-}
+};
 
 --Key is map ID, value is list of kong IDs that need access
 tagless_map_table = {
@@ -598,7 +596,217 @@ tagless_map_table = {
 	{187, {1}},
 	{188, {1}},
 	{189, {4}}
-}
+};
+
+--Table gives origin maps for any given exit in the rando pool
+lz_origin_map_table = {
+	[0x0400] = {7},
+	[0x0600] = {4,6},
+	[0x0701] = {12},
+	[0x0702] = {4},
+	[0x0705] = {13},
+	[0x0708] = {33},
+	[0x070E] = {6},
+	[0x070F] = {169,7},
+	[0x0C00] = {7},
+	[0x0D00] = {7},
+	[0x0E00] = {38,14},
+	[0x1300] = {38},
+	[0x2203] = {173},
+	[0x1500] = {38},
+	[0x1600] = {38},
+	[0x1700] = {38},
+	[0x1800] = {38},
+	[0x1A00] = {175,26},
+	[0x1A03] = {29},
+	[0x1A08] = {36},
+	[0x1A10] = {27},
+	[0x1B00] = {26,27},
+	[0x1D00] = {26},
+	[0x1E00] = {174,30},
+	[0x1E04] = {44},
+	[0x1E05] = {45},
+	[0x1E0A] = {49},
+	[0x1E0B] = {31},
+	[0x1E13] = {39},
+	[0x1E15] = {179},
+	[0x1F00] = {30},
+	[0x2100] = {7,33},
+	[0x2202] = {169},
+	[0x2204] = {175},
+	[0x2205] = {174},
+	[0x2206] = {178},
+	[0x2207] = {170},
+	[0x2208] = {189},
+	[0x2209] = {195},
+	[0x220A] = {194},
+	[0x220B] = {193},
+	[0x2400] = {26},
+	[0x2500] = {7},
+	[0x2600] = {173,38},
+	[0x2601] = {16},
+	[0x2602] = {20},
+	[0x2603] = {22},
+	[0x2604] = {24},
+	[0x2605] = {19},
+	[0x2606] = {21},
+	[0x2607] = {23},
+	[0x2611] = {14},
+	[0x2613] = {173},
+	[0x2700] = {30,39},
+	[0x2900] = {38},
+	[0x2B00] = {30},
+	[0x2B01] = {30},
+	[0x2B02] = {30},
+	[0x2C00] = {30},
+	[0x2D00] = {30},
+	[0x2E00] = {30},
+	[0x2E01] = {30},
+	[0x2F00] = {30},
+	[0x2F01] = {30},
+	[0x3000] = {178,48},
+	[0x3001] = {58},
+	[0x3002] = {57},
+	[0x3003] = {56},
+	[0x3004] = {59},
+	[0x3005] = {62},
+	[0x3006] = {61},
+	[0x3007] = {62},
+	[0x3008] = {64},
+	[0x3009] = {64},
+	[0x300A] = {64},
+	[0x300B] = {64},
+	[0x300C] = {64},
+	[0x300D] = {71},
+	[0x300E] = {63},
+	[0x300F] = {70},
+	[0x3010] = {55},
+	[0x3017] = {52},
+	[0x3100] = {30},
+	[0x3300] = {30},
+	[0x3400] = {48},
+	[0x3600] = {30},
+	[0x3700] = {48,55},
+	[0x3800] = {48},
+	[0x3900] = {48,57},
+	[0x3A00] = {48},
+	[0x3B00] = {48},
+	[0x3C00] = {62},
+	[0x3D00] = {48},
+	[0x3D01] = {62},
+	[0x3E00] = {48},
+	[0x3E01] = {60},
+	[0x3E02] = {61},
+	[0x3E03] = {48},
+	[0x3F00] = {48},
+	[0x4000] = {48},
+	[0x4001] = {48},
+	[0x4002] = {48},
+	[0x4003] = {48},
+	[0x4004] = {48},
+	[0x4600] = {48},
+	[0x4700] = {48},
+	[0x4800] = {194,48},
+	[0x4801] = {100},
+	[0x4802] = {86},
+	[0x4803] = {85},
+	[0x4804] = {95},
+	[0x4805] = {84},
+	[0x4806] = {82},
+	[0x480E] = {91},
+	[0x480F] = {90},
+	[0x4810] = {93},
+	[0x4811] = {92},
+	[0x4812] = {200},
+	[0x4813] = {89},
+	[0x4814] = {94},
+	[0x481E] = {98},
+	[0x5200] = {72,82},
+	[0x5400] = {72,84},
+	[0x5500] = {72}, --check respawn
+	[0x5600] = {72,86},
+	[0x5700] = {193,87},
+	[0x5701] = {164},
+	[0x5702] = {151},
+	[0x5704] = {183},
+	[0x5705] = {151},
+	[0x5707] = {113},
+	[0x5708] = {168},
+	[0x5709] = {166},
+	[0x570B] = {88},
+	[0x570C] = {114},
+	[0x570D] = {114},
+	[0x570E] = {105},
+	[0x570F] = {164},
+	[0x5710] = {167},
+	[0x5714] = {168},
+	[0x5800] = {87},
+	[0x5801] = {113},
+	[0x5900] = {72},
+	[0x5A00] = {72,90},
+	[0x5B00] = {72,91},
+	[0x5C00] = {72}, --check respawn
+	[0x5D00] = {72,93},
+	[0x5E00] = {72},
+	[0x5F00] = {72},
+	[0x6200] = {72},
+	[0x6400] = {72},
+	[0x6900] = {87},
+	[0x6A00] = {112,106},
+	[0x6C00] = {183,108},
+	[0x6E00] = {26},
+	[0x7000] = {183},
+	[0x7001] = {106},
+	[0x7100] = {87},
+	[0x7101] = {185},
+	[0x7102] = {88},
+	[0x7200] = {87},
+	[0x9700] = {87},
+	[0x9702] = {87},
+	[0x9704] = {163},
+	[0xA300] = {151},
+	[0xA400] = {87},
+	[0xA600] = {87},
+	[0xA700] = {87},
+	[0xA800] = {87},
+	[0xA900] = {34},
+	[0xA901] = {7},
+	[0xAD00] = {34},
+	[0xAD01] = {38},
+	[0xAE00] = {34},
+	[0xAE01] = {30},
+	[0xAF00] = {34},
+	[0xAF01] = {26},
+	[0xB200] = {34},
+	[0xB201] = {48},
+	[0xB300] = {30},
+	[0xB700] = {87},
+	[0xB703] = {112},
+	[0xB704] = {108},
+	[0xB900] = {113,185},
+	[0xBA00] = {72},
+	[0xBB00] = {87},
+	[0xBC00] = {48},
+	[0xBD00] = {34},
+	[0xC100] = {34},
+	[0xC101] = {87},
+	[0xC200] = {34},
+	[0xC201] = {72},
+	[0xC300] = {34},
+	[0xC800] = {72},
+};
+
+--For special cases where origin is exit-specific
+lz_origin_exceptions_table = {
+	[0x1E01] = {0x2B00},
+	[0x1E02] = {0x2B01},
+	[0x1E03] = {0x2B02},
+	[0x1E06] = {0x2E01},
+	[0x1E07] = {0x2E00},
+	[0x1E08] = {0x2F00},
+	[0x1E09] = {0x2F01},
+	[0x7201] = {0x570D},
+};
 
 boss_map_table = {
 	[1] = 8,
@@ -715,10 +923,7 @@ function generateAssortment()
 	end
 	math.randomseed(regular_seedSetting);
 	for i = 1, #regular_map_table do
-		selected_temp_value = math.ceil(math.random() * #temporary_regular_map_assortment);
-		if selected_temp_value == 0 then
-			selected_temp_value = 1;
-		end
+		selected_temp_value = chooseRandomIndex(temporary_regular_map_assortment);
 		regular_map_assortment[i] = temporary_regular_map_assortment[selected_temp_value];
 		table.remove(temporary_regular_map_assortment, selected_temp_value);
 		--print("RMS: Entry "..i..", selected random value "..selected_temp_value);
@@ -726,108 +931,42 @@ function generateAssortment()
 end
 
 function generateAssortmentWithLogic()
-	regular_seedSetting = seedAsNumber * 1000;
+	file = io.open("logicDebug.txt", "w+")
+	file:write("~~~~~~~~~~~~~", "\n");
+	file:write("START generateAssortmentWithLogic", "\n");
+	local regular_seedSetting = seedAsNumber * 1000;
 	math.randomseed(regular_seedSetting);
 	
 	regular_map_assortment = {};
 	inverted_map_assortment = {};
 	
-	exits_remaining = {};
+	origins_remaining = {};
+	destinations_remaining = {};
 	for key, value in pairs(regular_map_table) do
-		exits_remaining[key] = value
+		origins_remaining[key] = value
+		destinations_remaining[key] = value;
 	end
 	
+	tagless_maps_done = {};
+
 	--Handle tag-less maps first
 	for i = 1, #tagless_map_table do
-		dest_map = tagless_map_table[i][1];
-		kong_array = tagless_map_table[i][2];
+		--step a) identify map and which kongs need access
+		local dest_map = tagless_map_table[i][1];
+		local kong_array = tagless_map_table[i][2];
 		
-		--Start with copy of regular map table
-		accessible_exits = {};
-        for key, value in pairs(exits_remaining) do
-            accessible_exits[key] = value
-        end
-		
-		--subtract inaccessible maps for each required kong in kong_array
-		if findInTable(1, kong_array) then
-			accessible_exits = difference(accessible_exits, inaccessible_map_table_DK);
-		end
-		if findInTable(2, kong_array) then
-			accessible_exits = difference(accessible_exits, inaccessible_map_table_Diddy);
-		end
-		if findInTable(3, kong_array) then
-			accessible_exits = difference(accessible_exits, inaccessible_map_table_Lanky);
-		end
-		if findInTable(4, kong_array) then
-			accessible_exits = difference(accessible_exits, inaccessible_map_table_Tiny);
-		end
-		if findInTable(5, kong_array) then
-			accessible_exits = difference(accessible_exits, inaccessible_map_table_Chunky);
-		end
-		
-		--TODO: handle special cases
-		--Check if it has multiple exits
-		hasMultipleExits = 0;
-		for j = 1, #mapsWithMultipleExits  do
-			if dest_map == mapsWithMultipleExits[j] then
-				hasMultipleExits = 1;
-				break;
-			end
-		end
-		if hasMultipleExits == 0 then
-			dest_exit = 0;
-		else
-			--TODO: choose one of the map's exits randomly
-			dest_exit = 0;
-		end
-		
-		dest_val = getLzValue(dest_map, dest_exit);
-		
-		--if it's in the randomization pool
-		if dest_val ~= nil then 
-			selected_temp_value = math.ceil(math.random() * #accessible_exits);
-			if selected_temp_value == 0 then
-				selected_temp_value = 1;
-			end
-			origin_lz = accessible_exits[selected_temp_value];
-			origin_map = math.floor(origin_lz / 256);
-			origin_exit = origin_lz - (256 * origin_map);
-			
-			
-			orig_val = getLzValue(origin_map, origin_exit);
-			
-			if inverted_map_assortment[dest_val] ~= nil then
-				print("Error! An assignment is being overwritten.");
-				print("for destination:"..dest_val);
-				print("Previous assignment: "..inverted_map_assortment[dest_val]);
-				print("New assignment: "..orig_val);
-			end
-			inverted_map_assortment[dest_val] = orig_val;
-			
-			key_to_remove = nil;
-			for key,val in ipairs(exits_remaining) do
-				if val == origin_lz then 
-					key_to_remove = key;
-				end
-			end
-			table.remove(exits_remaining, key_to_remove);
-		end
+		handle_tagless_map(dest_map, kong_array);
+		file:write("\n");
 	end
 	--Fill out rest of randomization
 	for i = 1, #regular_map_table do
 		if inverted_map_assortment[i] == nil then
-			selected_temp_value = math.ceil(math.random() * #exits_remaining);
-			if selected_temp_value == 0 then
-				selected_temp_value = 1;
-			end
-			origin_lz = exits_remaining[selected_temp_value];
-			origin_map = math.floor(origin_lz / 256);
-			origin_exit = origin_lz - (256 * origin_map);
+			local selected_temp_value = chooseRandomIndex(origins_remaining);
+			local origin_lz = origins_remaining[selected_temp_value];
+			local origin_ref = getLzReference(origin_lz);
 			
-			orig_val = getLzValue(origin_map, origin_exit)
-			
-			inverted_map_assortment[i] = orig_val;
-			table.remove(exits_remaining, selected_temp_value);
+			inverted_map_assortment[i] = origin_ref;
+			table.remove(origins_remaining, selected_temp_value);
 		end
 	end
 	
@@ -836,16 +975,160 @@ function generateAssortmentWithLogic()
 	assert(#inverted_map_assortment == #regular_map_assortment, "Assortment contains repeating pathways");
 end
 
-function getLzValue(map_id, exit_id)
+function handle_tagless_map(dest_map,kong_array)
+	--if this map isn't done yet
+	if(tagless_maps_done[dest_map] == nil) then
+		--Choose one of its exits as destination
+		--TODO: handle special cases
+		file:write("assigning map: "..maps[dest_map + 1], "\n");
+		
+		local possibleExits = {};
+		for i = 1, #destinations_remaining do
+			local lz = destinations_remaining[i];
+			if dest_map == math.floor(lz / 256) then
+				file:write("inserting possible exit: "..lz, "\n");
+				table.insert(possibleExits, lz);
+			end
+		end
+		if #possibleExits == 0 then
+			file:write("No possible exit left for map "..dest_map.." go choose another origin!", "\n");
+			return false;
+		end
+		
+		local dest_lz = possibleExits[chooseRandomIndex(possibleExits)];
+		local dest_ref = getLzReference(dest_lz);
+		
+		local dest_exit = dest_lz - (dest_map * 256);
+		file:write("chosen dest: "..getMapName(dest_map).." (Exit "..getExitName(dest_map, dest_exit)..")", "\n");
+		file:write("kong array:");
+		for key,val in ipairs(kong_array) do
+			file:write(val);
+			file:write(",");
+		end
+		file:write("\n");
+		
+		--if it's in the randomization pool
+		if dest_ref ~= nil then
+			local origin_lz = nil;
+			local origin_map = nil;
+			local origin_ref = nil;
+			
+			local no_repeat = true;
+			repeat
+				--step c) choose origin from remaining accessible locations
+				origin_lz = chooseAccessibleOrigin(kong_array, origins_remaining)
+				origin_map = math.floor(origin_lz / 256);
+				origin_ref = getLzReference(origin_lz);
+				
+				local origin_exit = origin_lz - (origin_map * 256);
+				file:write("chosen origin: "..getMapName(origin_map).." (Exit "..getExitName(origin_map, origin_exit)..")", "\n");
+				
+				if inverted_map_assortment[dest_ref] ~= nil then
+					print("Error! An assignment is being overwritten.");
+					print("for destination:"..dest_ref);
+					print("Previous assignment: "..inverted_map_assortment[dest_ref]);
+					print("New assignment: "..origin_ref);
+				end
+				
+				--step d) If map leading to origin-lz is tag-less, prepare to repeat for new map
+				local maps_to_origin = lz_origin_map_table[origin_lz];
+				if maps_to_origin ~= nil  then
+					local map_to_origin = maps_to_origin[chooseRandomIndex(maps_to_origin)];
+					file:write("Checking map to origin: "..getMapName(map_to_origin), "\n");
+					
+					local tag_reached = true;
+					for i = 1, #tagless_map_table do
+						if tagless_map_table[i][1] == map_to_origin then
+							tag_reached = false;
+							kong_array = unionOfSets(kong_array, tagless_map_table[i][2]);
+							no_repeat = handle_tagless_map(tagless_map_table[i][1], kong_array);
+							break;
+						end
+					end
+					if tag_reached then
+						file:write("Tag barrel reached!\n");
+					end
+				else
+					file:write("no map to origin exists for "..origin_lz, "\n");
+				end
+				
+				if no_repeat == false then 
+					file:write("trying new origin...", "\n")
+				end;
+			until(no_repeat)
+			
+			--Assign the chosen origin to the destination
+			inverted_map_assortment[dest_ref] = origin_ref;
+			
+			--Remove destination and origin from their respective tables
+			local key_to_remove = nil;
+			for key,val in ipairs(origins_remaining) do
+				if val == origin_lz then
+					key_to_remove = key;
+				end
+			end
+			table.remove(origins_remaining, key_to_remove);
+			
+			key_to_remove = nil;
+			for key,val in ipairs(destinations_remaining) do
+				if val == dest_lz then
+					key_to_remove = key;
+				end
+			end
+			table.remove(destinations_remaining, key_to_remove);
+			
+			tagless_maps_done[dest_map] = true;
+		end
+		return true;
+	else
+		file:write("this map was already handled, we cannot re-assign it.\n");
+		return false;
+	end
+end
+
+function chooseAccessibleOrigin(kong_array, origins_remaining)
+	local accessible_exits = {};
+	for key, value in pairs(origins_remaining) do
+		accessible_exits[key] = value
+	end
+	
+	--subtract inaccessible maps for each required kong in kong_array
+	if isValInTable(1, kong_array) then
+		accessible_exits = differenceOfSets(accessible_exits, inaccessible_map_table_DK);
+	end
+	if isValInTable(2, kong_array) then
+		accessible_exits = differenceOfSets(accessible_exits, inaccessible_map_table_Diddy);
+	end
+	if isValInTable(3, kong_array) then
+		accessible_exits = differenceOfSets(accessible_exits, inaccessible_map_table_Lanky);
+	end
+	if isValInTable(4, kong_array) then
+		accessible_exits = differenceOfSets(accessible_exits, inaccessible_map_table_Tiny);
+	end
+	if isValInTable(5, kong_array) then
+		accessible_exits = differenceOfSets(accessible_exits, inaccessible_map_table_Chunky);
+	end
+	
+	return accessible_exits[chooseRandomIndex(accessible_exits)];
+end
+
+function chooseRandomIndex(tbl)
+	local random_index = math.ceil(math.random() * #tbl);
+	if random_index == 0 then
+		random_index = 1;
+	end
+	return random_index;
+end
+
+function getLzReference(lz)
 	reference = nil;
-	lookup_value = (map_id * 256) + exit_id;
 	for i = 1, #regular_map_table do
-		if regular_map_table[i] == lookup_value then
+		if regular_map_table[i] == lz then
 			reference = i;
 		end
 	end
 	return reference;
-end	
+end
 
 function table_invert(t)
    local s={}
@@ -855,14 +1138,25 @@ function table_invert(t)
    return s
 end
 
-function findInTable(a, tbl)
-	for key,val in ipairs(tbl) do if val==a then return true end end
+function isValInTable(v, tbl)
+	for key,val in ipairs(tbl) do if val==v then return true end end
 end
 
-function difference(setA,setB)
+function differenceOfSets(setA,setB)
 	local ret = {}
 	for key,val in ipairs(setA) do
-		if not findInTable(val,setB) then table.insert(ret, val) end
+		if not isValInTable(val,setB) then table.insert(ret, val) end
+	end
+	return ret
+end
+
+function unionOfSets(setA,setB)
+	local ret = {}
+	for key,val in ipairs(setA) do
+		table.insert(ret, val);
+	end
+	for key,val in ipairs(setB) do
+		if not isValInTable(val,setA) then table.insert(ret, val) end
 	end
 	return ret
 end
@@ -876,10 +1170,7 @@ function generateBossAssortment()
 	end
 	math.randomseed(boss_seedSetting);
 	for i = 1, #boss_map_table do
-		selected_temp_value = math.ceil(math.random() * #temporary_boss_map_assortment);
-		if selected_temp_value == 0 then
-			selected_temp_value = 1;
-		end
+		selected_temp_value = chooseRandomIndex(temporary_boss_map_assortment);
 		boss_map_assortment[i] = temporary_boss_map_assortment[selected_temp_value];
 		table.remove(temporary_boss_map_assortment, selected_temp_value);
 	end
@@ -944,10 +1235,7 @@ function generateTnSNumberAssortment()
 	tns_number_seedSetting = seedAsNumber + 120;
 	math.randomseed(tns_number_seedSetting);
 	for i = 1, 7 do
-		selected_value = math.ceil(math.random() * #tns_temp_priority);
-		if selected_value == 0 then
-			selected_value = 1;
-		end
+		selected_value = chooseRandomIndex(tns_temp_priority);
 		selected_value2 = tns_temp_priority[selected_value];
 		tns_priority[i] = selected_value2;
 	end
@@ -967,10 +1255,7 @@ function generateTnSNumberAssortment()
 	tns_total = tns_total_temp - (tns_total_temp % 5);
 	tns_running_total = tns_total;
 	for i = 1, (tns_total / 5) do
-		selected_level_value = math.ceil(math.random() * #tns_probability_array);
-		if selected_level_value == 0 then
-			selected_level_value = 1;
-		end
+		selected_level_value = chooseRandomIndex(tns_probability_array);
 		selected_level = tns_probability_array[selected_level_value];
 		tns_number_assortment[selected_level] = tns_number_assortment[selected_level] + 5;
 		tns_running_total = tns_running_total - 5;
@@ -1019,10 +1304,7 @@ function generateKRoolOrder()
 	end
 	math.randomseed(k_rool_seedSetting);
 	for i = 1, 4 do
-		selected_temp_value = math.ceil(math.random() * #temporary_k_rool_table);
-		if selected_temp_value == 0 then
-			selected_temp_value = 1;
-		end
+		selected_temp_value = chooseRandomIndex(temporary_k_rool_table);
 		k_rool_assortment[i] = temporary_k_rool_table[selected_temp_value];
 		table.remove(temporary_k_rool_table, selected_temp_value);
 	end
@@ -1030,22 +1312,11 @@ function generateKRoolOrder()
 end
 
 function setAssortments()
-	generateAssortmentWithLogic();
+	generateAssortment();
 	generateBossAssortment();
 	generateKRoolOrder();
 	generateBossDoorAssortment();
 	generateTnSNumberAssortment();
-end
-
-function getExitName(map_index, exit_index)
-	for i = 1, #mapsWithMultipleExits  do
-        if map_index == mapsWithMultipleExits[i] then
-			local exitName = exitTable[map_index][exit_index + 1];
-			assert(exitName ~= nil, "Invalid or unknown exit! Map: "..maps[map_index + 1]..", Exit: " ..exit_index);
-			return exitName;
-		end
-    end
-    return exit_index;
 end
 
 function getLoadingZone(destmap, destexit)
