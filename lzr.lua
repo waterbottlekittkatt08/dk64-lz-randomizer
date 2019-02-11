@@ -32,6 +32,7 @@ Mem = {
 	insubmap = {0x76A160, nil, nil},
 	tnsdoor_header = {0x7446C0, nil, nil},
 	player_pointer = {0x7FBB4C, 0x7FBA6C, 0x7FBFBC},
+	insubmap_b = {0x7F5A6B, nil, nil},
 };
 
 -------------------------------
