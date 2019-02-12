@@ -5,7 +5,7 @@
 <p align="center">
 A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 <br>
-[Discord Invite](https://discordapp.com/invite/6GCuY7B)
+<a href="https://discordapp.com/invite/6GCuY7B">Discord Invite</a>
 </p>
 
 <br>
