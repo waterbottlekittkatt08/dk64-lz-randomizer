@@ -15,7 +15,6 @@ resolved
 - Crashes from invalid exit values exiting global maps
 - Spawning Japes Mountain GB not working
 - Tiny Caves Bonus not working
-- Softlocks are occuring
 - [Glitchless] T&S for Fungi Boss showing non-Chunky Kong
 - [Glitchless] T&S for Factory Boss showing Lanky Kong
 - Arcade is broken upon exit
@@ -60,3 +59,4 @@ resolved
 - Kasplat not spawning in Caves
 - T&Ses are closing, causing entrances to be closed off
 - Boss Door remains shut upon re-entry if key has been collected, making it problematic for glitchless
+- Softlocks are occuring

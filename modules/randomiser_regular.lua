@@ -1125,10 +1125,7 @@ function chooseAccessibleOrigin(kong_array, origins_remaining)
 end
 
 function chooseRandomIndex(tbl)
-	local random_index = math.ceil(math.random() * #tbl);
-	if random_index == 0 then
-		random_index = 1;
-	end
+	local random_index = randomBetween(1,#tbl);
 	return random_index;
 end
 
@@ -1193,10 +1190,7 @@ function generateBossDoorAssortment()
 	boss_door_seedSetting = seedAsNumber + 5;
 	math.randomseed(boss_seedSetting);
 	for i = 1, #boss_door_kong_permits do
-		selected_temp_value = math.ceil(math.random() * #boss_door_kong_permits[i]);
-		if selected_temp_value == 0 then
-			selected_temp_value = 1;
-		end
+		selected_temp_value = randomBetween(1,#boss_door_kong_permits[i]);
 		boss_door_assortment[i] = boss_door_kong_permits[i][selected_temp_value];
 	end
 end
@@ -1259,11 +1253,7 @@ function generateTnSNumberAssortment()
 			tns_probability_array[tns_array_counter] = i;
 		end
 	end
-	difference = (boss_door_range[2] - boss_door_range[1]) + 1;
-	tns_total_temp = (boss_door_range[1] - 1) + math.ceil(math.random() * difference);
-	if tns_total_temp < boss_door_range[1] then
-		tns_total_temp = boss_door_range[1];
-	end
+	tns_total_temp = randomBetween(boss_door_range[1],boss_door_range[2]));
 	tns_total = tns_total_temp - (tns_total_temp % 5);
 	tns_running_total = tns_total;
 	for i = 1, (tns_total / 5) do

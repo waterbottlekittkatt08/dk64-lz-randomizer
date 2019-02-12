@@ -4,6 +4,8 @@
 
 <p align="center">
 A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
+<br>
+[Discord Invite](https://discordapp.com/invite/6GCuY7B)
 </p>
 
 <br>
@@ -76,17 +78,24 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 		- This allows you to go in all directions, not just the 8 ordinal/cardinal points.
 	
 ![devs](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20devs.png)
-- [theballaam96](https://www.youtube.com/c/theballaam96srl)
-- [2dos](http://www.twitch.tv/2dos)
-- [Mittenz](http://twitch.tv/mittenzsrl)
-- [Isotarge](http://twitter.com/isotarge) & [ScriptHawk](https://github.com/Isotarge/ScriptHawk)
-- [EmoArbiter](http://twitch.tv/emoarbiter)
-- [Obiyo](https://www.twitch.tv/obiyosrl)
-- [Bismuth](https://www.youtube.com/c/Bismuth9)
-- [Znernicus](https://www.twitch.tv/znernicus)
-- [KaptainKohl](https://www.twitch.tv/kaptainkohl)
-- [Connor75](https://www.twitch.tv/connor75)
-- [GloriousLiar](https://www.twitch.tv/gloriousliar)
-- [Ciyon](https://www.twitch.tv/ciyon)
-- [Cfox](https://www.twitch.tv/cfox)
-- [Jag](https://www.twitch.tv/jaguar_002/)
+- Developers
+	- [theballaam96](https://www.youtube.com/c/theballaam96srl)
+	- [Bismuth](https://www.youtube.com/c/Bismuth9)
+	- [Znernicus](https://www.twitch.tv/znernicus)
+	- [Mittenz](http://twitch.tv/mittenzsrl)
+- Some of the code
+	- [Isotarge](http://twitter.com/isotarge) & [ScriptHawk](https://github.com/Isotarge/ScriptHawk)
+- Playtesters
+	- [2dos](http://www.twitch.tv/2dos)
+	- [EmoArbiter](http://twitch.tv/emoarbiter)
+	- [Obiyo](https://www.twitch.tv/obiyosrl)
+	- [KaptainKohl](https://www.twitch.tv/kaptainkohl)
+	- [Connor75](https://www.twitch.tv/connor75)
+	- [GloriousLiar](https://www.twitch.tv/gloriousliar)
+	- [Ciyon](https://www.twitch.tv/ciyon)
+	- [Cfox](https://www.twitch.tv/cfox)
+	- [Jag](https://www.twitch.tv/jaguar_002/)
+	- [Mouse](https://www.twitch.tv/mouse1093)
+	- [NamajnaG](https://www.twitch.tv/naramgamjan)
+	- [Youngster_Joey](https://www.twitch.tv/yungster_joey)
+	- [KiwiKiller67](https://www.twitch.tv/kiwikiller67)

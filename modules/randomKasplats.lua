@@ -165,7 +165,7 @@ function generateKasplatAssortment()
 			if i == 7 and k == 4 then
 			
 			else
-				selected_temp_value = math.ceil(math.random() * #temporary_kasplat_assortment);
+				selected_temp_value = randomBetween(1, #temporary_kasplat_assortment);
 				kasplat_assortment[i][k] = temporary_kasplat_assortment[selected_temp_value];
 				table.remove(temporary_kasplat_assortment, selected_temp_value);
 			end
@@ -348,18 +348,6 @@ function writeKasplats(level)
 end
 
 kasplat_rando_happened = 0;
-
-lobbies = {
-	[0] = 169, -- Japes
-	[1] = 173, -- Aztec
-	[2] = 175, -- Factory
-	[3] = 174, -- Galleon
-	[4] = 178, -- Fungi
-	[5] = 194, -- Caves
-	[6] = 193, -- Castle
-	[7] = 217, -- Isles (Value doesn't exist, so gets unused. Value is set to prevent exception error)
-	[8] = 170, -- Helm
-};
 
 kongs = {
 	[1] = "DK",

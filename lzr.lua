@@ -33,6 +33,9 @@ Mem = {
 	tnsdoor_header = {0x7446C0, nil, nil},
 	player_pointer = {0x7FBB4C, 0x7FBA6C, 0x7FBFBC},
 	insubmap_b = {0x7F5A6B, nil, nil},
+	cutscene_type = {0x7476FC, 0x741E5C, 0x746FBC},
+	cutscene_type_map = {0x7F5B10, 0x7F5A30, 0x7F5F80},
+	cutscene_type_kong = {0x7F5BF0, 0x7F5B10, 0x7F6060},
 };
 
 -------------------------------
@@ -541,6 +544,17 @@ function setSeed(value)
 	end
 end
 
+function randomBetween(min_rand,max_rand)
+	rand_diff = max_rand - min_rand + 1;
+	rand_numb = (min_rand - 1) + math.ceil(math.random() * rand_diff);
+	if rand_numb < (min_rand + 1) then
+		rand_numb = min_rand;
+	elseif rand_numb > max_rand then
+		rand_numb = max_rand;
+	end
+	return rand_numb;
+end
+
 require 'settings';
 setSeed(previousSettings.seed);
 
@@ -582,6 +596,18 @@ levelsLower = {
 	[5] = "Caves",
 	[6] = "Castle",
 	[7] = "DK Isles",
+};
+
+lobbies = {
+	[0] = 169, -- Japes
+	[1] = 173, -- Aztec
+	[2] = 175, -- Factory
+	[3] = 174, -- Galleon
+	[4] = 178, -- Fungi
+	[5] = 194, -- Caves
+	[6] = 193, -- Castle
+	[7] = 217, -- Isles (Value doesn't exist, so gets unused. Value is set to prevent exception error)
+	[8] = 170, -- Helm
 };
 
 function Spoiler()
@@ -668,7 +694,7 @@ function WriteSettings()
 end
 
 function randomiseSeedValue()
-	seedAsNumber = math.floor(math.random() * 100000);
+	seedAsNumber = randomBetween(0,99999);
 	setSeed(seedAsNumber);
 	realTime();
 	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "SETTINGS NOT SET YET");
