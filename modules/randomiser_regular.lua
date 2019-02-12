@@ -958,12 +958,19 @@ function generateAssortmentWithLogic()
 		handle_tagless_map(dest_map, kong_array);
 		file:write("\n");
 	end
+	
+	file:write("Finished all tag-less maps!\n");
+	
 	--Fill out rest of randomization
 	for i = 1, #regular_map_table do
 		if inverted_map_assortment[i] == nil then
 			local selected_temp_value = chooseRandomIndex(origins_remaining);
 			local origin_lz = origins_remaining[selected_temp_value];
 			local origin_ref = getLzReference(origin_lz);
+			
+			if origin_ref == nil then
+				print("Error! No origins remaining!");
+			end
 			
 			inverted_map_assortment[i] = origin_ref;
 			table.remove(origins_remaining, selected_temp_value);
@@ -973,16 +980,16 @@ function generateAssortmentWithLogic()
 	
 	regular_map_assortment = table_invert(inverted_map_assortment);
 	
-	assert(#inverted_map_assortment == #regular_map_assortment, "Assortment contains repeating pathways");
+	--validate nothing went wrong
+	assert(#inverted_map_assortment == #regular_map_assortment, "Assortment contains repeated or missing pathways");
 end
 
 function handle_tagless_map(dest_map,kong_array)
+	file:write("handling map: "..getMapName(dest_map), "\n");
 	--if this map isn't done yet
 	if(tagless_maps_done[dest_map] == nil) then
 		--Choose one of its exits as destination
 		--TODO: handle special cases
-		file:write("assigning map: "..maps[dest_map + 1], "\n");
-		
 		local possibleExits = {};
 		for i = 1, #destinations_remaining do
 			local lz = destinations_remaining[i];
@@ -997,7 +1004,6 @@ function handle_tagless_map(dest_map,kong_array)
 		
 		local dest_lz = possibleExits[chooseRandomIndex(possibleExits)];
 		local dest_ref = getLzReference(dest_lz);
-		
 		local dest_exit = dest_lz - (dest_map * 256);
 		file:write("chosen dest: "..getFullName(dest_lz), "\n");
 		file:write("kong array:");
@@ -1006,6 +1012,16 @@ function handle_tagless_map(dest_map,kong_array)
 			file:write(",");
 		end
 		file:write("\n");
+		
+		--Remove chosen destination so it won't be selected again
+		local dest_key = nil;
+		for key,val in ipairs(destinations_remaining) do
+			if val == dest_lz then
+				dest_key = key;
+			end
+		end
+		table.remove(destinations_remaining, dest_key);
+		file:write("Removed destination "..getFullName(dest_lz), "\n");
 		
 		local origin_lz = nil;
 		local origin_map = nil;
@@ -1022,14 +1038,17 @@ function handle_tagless_map(dest_map,kong_array)
 			local origin_exit = origin_lz - (origin_map * 256);
 			file:write("chosen origin: "..getFullName(origin_lz), "\n");
 			
-			if inverted_map_assortment[dest_ref] ~= nil then
-				print("Error! An assignment is being overwritten.");
-				print("for destination:"..dest_ref);
-				print("Previous assignment: "..inverted_map_assortment[dest_ref]);
-				print("New assignment: "..origin_ref);
+			--Remove chosen origin so it won't be selected again
+			local origin_key = nil;
+			for key,val in ipairs(origins_remaining) do
+				if val == origin_lz then
+					origin_key = key;
+				end
 			end
+			table.remove(origins_remaining, origin_key);
+			file:write("Removed origin "..getFullName(origin_lz), "\n");
 			
-			--step d) If map leading to origin-lz is tag-less, prepare to repeat for new map
+			--step d) If map leading to origin_lz is tag-less, prepare to repeat for new map
 			local maps_to_origin = lz_origin_map_table[origin_lz];
 			if maps_to_origin ~= nil  then
 				local map_to_origin = maps_to_origin[chooseRandomIndex(maps_to_origin)];
@@ -1052,31 +1071,22 @@ function handle_tagless_map(dest_map,kong_array)
 			end
 			
 			if no_repeat == false then 
+				--Since we have to try a different origin, we must add back the selected origin to origins_remaining
+				table.insert(origins_remaining, origin_key, origin_lz);
+				file:write("doesn't work, re-adding origin "..getFullName(origin_lz), "\n");
 				file:write("trying new origin...", "\n")
 			end;
 		until(no_repeat)
 		
 		--Assign the chosen origin to the destination
+		if inverted_map_assortment[dest_ref] ~= nil then
+			file:write("Error! An assignment is being overwritten.\n");
+			file:write("for destination:"..getFullName(regular_map_table[dest_ref]), "\n");
+			file:write("Previous assignment: "..getFullName(regular_map_table[inverted_map_assortment[dest_ref]]), "\n");
+			file:write("New assignment: "..getFullName(regular_map_table[origin_ref]), "\n");
+		end
+		
 		inverted_map_assortment[dest_ref] = origin_ref;
-		
-		--Remove destination and origin from their respective tables
-		local key_to_remove = nil;
-		for key,val in ipairs(origins_remaining) do
-			if val == origin_lz then
-				key_to_remove = key;
-			end
-		end
-		table.remove(origins_remaining, key_to_remove);
-		file:write("Removed origin "..getFullName(origin_lz), "\n");
-		
-		key_to_remove = nil;
-		for key,val in ipairs(destinations_remaining) do
-			if val == dest_lz then
-				key_to_remove = key;
-			end
-		end
-		table.remove(destinations_remaining, key_to_remove);
-		file:write("Removed destination "..getFullName(dest_lz), "\n");
 		
 		tagless_maps_done[dest_map] = true;
 		file:write("Marked "..getMapName(dest_map).." as done.\n");
@@ -1314,7 +1324,7 @@ function generateKRoolOrder()
 end
 
 function setAssortments()
-	generateAssortment();
+	generateAssortmentWithLogic();
 	generateBossAssortment();
 	generateKRoolOrder();
 	generateBossDoorAssortment();
