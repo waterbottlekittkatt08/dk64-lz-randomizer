@@ -20,6 +20,7 @@ resolved
 - Arcade is broken upon exit
 - Turning on Lighthouse CS doesn't work properly
 - Free seal GB not obtainable
+- Kasplat pens use the spawn coordinates as xmin and zmin
 
 ## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps
