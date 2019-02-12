@@ -594,14 +594,12 @@ function Spoiler()
 	if settings.randomiser == 1 then
 		file:write("REGULAR MAP ASSORTMENT", "\n");
 		for i = 1, #regular_map_assortment do
-			lz_map_in = math.floor(regular_map_table[i] / 256);
-			lz_exit_in = regular_map_table[i] - (256 * lz_map_in);
-			lz_map_out = math.floor(regular_map_table[regular_map_assortment[i]] / 256);
-			lz_exit_out = regular_map_table[regular_map_assortment[i]] - (256 * lz_map_out);
+			lz_in = regular_map_table[i];
+			lz_out = regular_map_table[regular_map_assortment[i]];
 			--print(i);
 			file:write("\n");
-			file:write("LZ to: "..maps[lz_map_in + 1].." (Exit "..getExitName(lz_map_in, lz_exit_in)..")", "\n");
-			file:write("Goes to: "..maps[lz_map_out + 1].." (Exit "..getExitName(lz_map_out, lz_exit_out)..")", "\n");
+			file:write("LZ to: "..getFullName(lz_in), "\n");
+			file:write("Goes to: "..getFullName(lz_out), "\n");
 		end
 		file:write("\n");
 		file:write("BOSS MAP ASSORTMENT", "\n");
@@ -609,8 +607,8 @@ function Spoiler()
 			lz_map_in = boss_map_table[i];
 			lz_map_out = boss_map_table[boss_map_assortment[i]];
 			file:write("\n");
-			file:write("LZ to: "..maps[lz_map_in + 1], "\n");
-			file:write("Goes to: "..maps[lz_map_out + 1], "\n");
+			file:write("LZ to: "..getMapName(lz_map_in), "\n");
+			file:write("Goes to: "..getMapName(lz_map_out), "\n");
 		end
 		file:write("\n");
 		file:write("T&S DOOR ASSORTMENT", "\n");
@@ -632,8 +630,8 @@ function Spoiler()
 			lz_map_in = bonus_map_table[i];
 			lz_map_out = bonus_map_table[bonus_map_assortment[i]];
 			file:write("\n");
-			file:write("LZ to: "..maps[lz_map_in + 1], "\n");
-			file:write("Goes to: "..maps[lz_map_out + 1], "\n");
+			file:write("LZ to: "..getMapName(lz_map_in), "\n");
+			file:write("Goes to: "..getMapName(lz_map_out), "\n");
 		end
 	end
 	if settings.random_kasplats == 1 then

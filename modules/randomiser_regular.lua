@@ -969,6 +969,7 @@ function generateAssortmentWithLogic()
 			table.remove(origins_remaining, selected_temp_value);
 		end
 	end
+	file:close();
 	
 	regular_map_assortment = table_invert(inverted_map_assortment);
 	
@@ -986,7 +987,6 @@ function handle_tagless_map(dest_map,kong_array)
 		for i = 1, #destinations_remaining do
 			local lz = destinations_remaining[i];
 			if dest_map == math.floor(lz / 256) then
-				file:write("inserting possible exit: "..lz, "\n");
 				table.insert(possibleExits, lz);
 			end
 		end
@@ -999,7 +999,7 @@ function handle_tagless_map(dest_map,kong_array)
 		local dest_ref = getLzReference(dest_lz);
 		
 		local dest_exit = dest_lz - (dest_map * 256);
-		file:write("chosen dest: "..getMapName(dest_map).." (Exit "..getExitName(dest_map, dest_exit)..")", "\n");
+		file:write("chosen dest: "..getFullName(dest_lz), "\n");
 		file:write("kong array:");
 		for key,val in ipairs(kong_array) do
 			file:write(val);
@@ -1007,78 +1007,80 @@ function handle_tagless_map(dest_map,kong_array)
 		end
 		file:write("\n");
 		
-		--if it's in the randomization pool
-		if dest_ref ~= nil then
-			local origin_lz = nil;
-			local origin_map = nil;
-			local origin_ref = nil;
+		local origin_lz = nil;
+		local origin_map = nil;
+		local origin_ref = nil;
+		
+		local no_repeat = true;
+		repeat
+			no_repeat = true;
+			--step c) choose origin from remaining accessible locations
+			origin_lz = chooseAccessibleOrigin(kong_array, origins_remaining)
+			origin_map = math.floor(origin_lz / 256);
+			origin_ref = getLzReference(origin_lz);
 			
-			local no_repeat = true;
-			repeat
-				--step c) choose origin from remaining accessible locations
-				origin_lz = chooseAccessibleOrigin(kong_array, origins_remaining)
-				origin_map = math.floor(origin_lz / 256);
-				origin_ref = getLzReference(origin_lz);
-				
-				local origin_exit = origin_lz - (origin_map * 256);
-				file:write("chosen origin: "..getMapName(origin_map).." (Exit "..getExitName(origin_map, origin_exit)..")", "\n");
-				
-				if inverted_map_assortment[dest_ref] ~= nil then
-					print("Error! An assignment is being overwritten.");
-					print("for destination:"..dest_ref);
-					print("Previous assignment: "..inverted_map_assortment[dest_ref]);
-					print("New assignment: "..origin_ref);
-				end
-				
-				--step d) If map leading to origin-lz is tag-less, prepare to repeat for new map
-				local maps_to_origin = lz_origin_map_table[origin_lz];
-				if maps_to_origin ~= nil  then
-					local map_to_origin = maps_to_origin[chooseRandomIndex(maps_to_origin)];
-					file:write("Checking map to origin: "..getMapName(map_to_origin), "\n");
-					
-					local tag_reached = true;
-					for i = 1, #tagless_map_table do
-						if tagless_map_table[i][1] == map_to_origin then
-							tag_reached = false;
-							kong_array = unionOfSets(kong_array, tagless_map_table[i][2]);
-							no_repeat = handle_tagless_map(tagless_map_table[i][1], kong_array);
-							break;
-						end
-					end
-					if tag_reached then
-						file:write("Tag barrel reached!\n");
-					end
-				else
-					file:write("no map to origin exists for "..origin_lz, "\n");
-				end
-				
-				if no_repeat == false then 
-					file:write("trying new origin...", "\n")
-				end;
-			until(no_repeat)
+			local origin_exit = origin_lz - (origin_map * 256);
+			file:write("chosen origin: "..getFullName(origin_lz), "\n");
 			
-			--Assign the chosen origin to the destination
-			inverted_map_assortment[dest_ref] = origin_ref;
-			
-			--Remove destination and origin from their respective tables
-			local key_to_remove = nil;
-			for key,val in ipairs(origins_remaining) do
-				if val == origin_lz then
-					key_to_remove = key;
-				end
+			if inverted_map_assortment[dest_ref] ~= nil then
+				print("Error! An assignment is being overwritten.");
+				print("for destination:"..dest_ref);
+				print("Previous assignment: "..inverted_map_assortment[dest_ref]);
+				print("New assignment: "..origin_ref);
 			end
-			table.remove(origins_remaining, key_to_remove);
 			
-			key_to_remove = nil;
-			for key,val in ipairs(destinations_remaining) do
-				if val == dest_lz then
-					key_to_remove = key;
+			--step d) If map leading to origin-lz is tag-less, prepare to repeat for new map
+			local maps_to_origin = lz_origin_map_table[origin_lz];
+			if maps_to_origin ~= nil  then
+				local map_to_origin = maps_to_origin[chooseRandomIndex(maps_to_origin)];
+				file:write("Checking map to origin: "..getMapName(map_to_origin), "\n");
+				
+				local tag_reached = true;
+				for i = 1, #tagless_map_table do
+					if tagless_map_table[i][1] == map_to_origin then
+						tag_reached = false;
+						local new_kong_array = unionOfSets(kong_array, tagless_map_table[i][2]);
+						no_repeat = handle_tagless_map(tagless_map_table[i][1], new_kong_array);
+						break;
+					end
 				end
+				if tag_reached then
+					file:write("Tag barrel reached!\n");
+				end
+			else
+				file:write("no map to origin exists for "..origin_lz, "\n");
 			end
-			table.remove(destinations_remaining, key_to_remove);
 			
-			tagless_maps_done[dest_map] = true;
+			if no_repeat == false then 
+				file:write("trying new origin...", "\n")
+			end;
+		until(no_repeat)
+		
+		--Assign the chosen origin to the destination
+		inverted_map_assortment[dest_ref] = origin_ref;
+		
+		--Remove destination and origin from their respective tables
+		local key_to_remove = nil;
+		for key,val in ipairs(origins_remaining) do
+			if val == origin_lz then
+				key_to_remove = key;
+			end
 		end
+		table.remove(origins_remaining, key_to_remove);
+		file:write("Removed origin "..getFullName(origin_lz), "\n");
+		
+		key_to_remove = nil;
+		for key,val in ipairs(destinations_remaining) do
+			if val == dest_lz then
+				key_to_remove = key;
+			end
+		end
+		table.remove(destinations_remaining, key_to_remove);
+		file:write("Removed destination "..getFullName(dest_lz), "\n");
+		
+		tagless_maps_done[dest_map] = true;
+		file:write("Marked "..getMapName(dest_map).." as done.\n");
+		
 		return true;
 	else
 		file:write("this map was already handled, we cannot re-assign it.\n");

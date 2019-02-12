@@ -586,5 +586,5 @@ end
 function getFullName(lz_id)
 	map_id = math.floor(lz_id / 256)
 	exit_id = lz_id - (map_id * 256)
-	return getMapName(map_id), getExitName(map_id, exit_id)
+	return getMapName(map_id).." (Exit "..getExitName(map_id, exit_id)..")"
 end
