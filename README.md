@@ -20,28 +20,48 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 - Step 6: Click confirm and enjoy the oncoming madness!
 
 ![Features](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20features.png)
-- Randomisation of regular loading zones
-	- For example: Trying to enter the loading zone to DK Isles from Aztec Lobby will take you to the Winch Room in Fungi Forest.
-	- Some maps are excluded from this randomisation (Snide's, Cranky's, Candy's, Funky's, Troff 'n' Scoff)
-- Randomisation of Bonus Barrels
+- Randomization of regular loading zones
+	-For example: Trying to enter the loading zone to DK Isles from Aztec Lobby could take you to the Winch Room in Fungi Forest. Exiting the Winch Room however could take you to the Library in Creepy Castle.
+	- Some maps are excluded from this randomization (Snide's, Cranky's, Candy's, Funky's, Troff 'n' Scoff, Helm Lobby and Helm Entrance)
+	- Bosses are randomized (ex: Mad Jack in Creepy Castle Troff ‘n’ Scoff)
+- Randomization of Bonus Barrels
 	- For Example: Trying to enter the bonus barrel near Arcade in Frantic Factory (Which would take you to Stash Snatch) might take you to Mad Maze Maul
-	- This also includes the unused bonus barrels
-- Cutscenes are reduced
-	- You will be taken to the main menu right after the Nintendo Logo, skipping the DK Rap, Rareware & N64 Logo and DK TV
-	- Snide's contraption cutscenes are reduced to just the initial pulley cutscene
-	- Snide's GB Drops are just limited to one "Oh Banana", even if you are turning in 2+ BPs for a kong
-	- K Rool phases immediately start at the "In the red corner" cutscene
-- Option to acquire all moves in the game from the start
-	- Cuts out some coin collection, completely optional
-- Option to unlock all kongs in the game from the start
-	- Cuts out some of the start of the run
-- Randomised Kasplats
+	- This also includes the unused bonus barrels not accessible via normal gameplay!
+- Randomized Kasplats
 	- Over 110 locations which the 40 kasplats in the game can be
 	- All are collectable glitchless as every kong
 	- Some are just shifted to [new locations](https://twitter.com/2dosSRL/status/1087442940094500865) and some are [in completely new maps!](https://twitter.com/2dosSRL/status/1087800177765818368)
-	- Unfortunately, none are in Helm
+	- Blueprints stay in the levels you find them in (no blueprint-sanity)
+- Randomized bosses
+	- The boss you fight in each level is random (the spawned keys are not)
+	- The kong used to fight each boss is random
+	- The coloured bananas required to open a boss is randomised
+	- Exceptions: Chunky must fight Dogadon 2, Lanky cannot fight Mad Jack
+- Cutscenes are reduced/excessive text removed
+	- You will be taken to the main menu right after the Nintendo Logo, skipping the DK Rap, Rareware & N64 Logo and DK TV
+	- Training barrels are completed and Simian Slam is already learned
+	- Start in DK Isles instead of DK’s house
+	- Snide's contraption cutscenes are reduced to just the initial pulley cutscene
+	- Snide's GB drops are just limited to one "Oh Banana", even if you are turning in 2+ BPs for a kong
+	- K Rool phases immediately start at the "In the red corner" cutscene
+	- First time text descriptions when you use a move are removed
+	- Story skip is permanently on
+- Option to start with all moves
+	- Cuts out some coin collection
+- Option to start with all kongs unlocked
+	- Cuts out having to hunt for King Kutout/searching for kongs
+	- Make loading zone randomization possible glitchless
+- Spoiler log
 	
 ![Future Features](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20future%20features.png)
+- ROM generation instead of running a Lua script
+- Logic to improve the gameplay experience for all skill levels
+- Upgrade/Gun/Instrument randomization
+- Randomization of Kongs
+- Randomization of various enemies in levels
+- Randomization of what keys open what levels
+- Randomization of B Locker Golden Banana requirement count
+- Option to require all 8 keys turned in to unlock K rool (opposed to just 3 & 8)
 - [Randomisation of coloured bananas](https://cdn.discordapp.com/attachments/460646910919966732/461750596152590356/unknown.png)
 - [Randomisation of Battle Crowns](https://twitter.com/2dosSRL/status/1087804011418390528)
 
