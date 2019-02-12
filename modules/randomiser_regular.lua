@@ -730,7 +730,6 @@ lz_origin_map_table = {
 	[0x5702] = {151},
 	[0x5704] = {183},
 	[0x5705] = {151},
-	[0x5707] = {113},
 	[0x5708] = {168},
 	[0x5709] = {166},
 	[0x570B] = {88},
@@ -741,7 +740,6 @@ lz_origin_map_table = {
 	[0x5710] = {167},
 	[0x5714] = {168},
 	[0x5800] = {87},
-	[0x5801] = {113},
 	[0x5900] = {72},
 	[0x5A00] = {72,90},
 	[0x5B00] = {72,91},
@@ -781,9 +779,7 @@ lz_origin_map_table = {
 	[0xB201] = {48},
 	[0xB300] = {30},
 	[0xB700] = {87},
-	[0xB703] = {112},
 	[0xB704] = {108},
-	[0xB900] = {113,185},
 	[0xBA00] = {72},
 	[0xBB00] = {87},
 	[0xBC00] = {48},
@@ -798,14 +794,23 @@ lz_origin_map_table = {
 
 --For special cases where origin is exit-specific
 lz_origin_exceptions_table = {
+	--5 door ship rooms
 	[0x1E01] = {0x2B00},
 	[0x1E02] = {0x2B01},
 	[0x1E03] = {0x2B02},
 	[0x1E06] = {0x2E01},
 	[0x1E07] = {0x2E00},
+	--2 door ship
 	[0x1E08] = {0x2F00},
 	[0x1E09] = {0x2F01},
+	--Museum
+	[0x5707] = {0x7100},
+	[0x5801] = {0x7101, 0x7102},
+	[0xB900] = {0x7101, 0x7102, 0xB900},
+	--Library Back door
 	[0x7201] = {0x570D},
+	--Crypt (DK, Diddy, Chunky)
+	[0xB703] = {0x7000},
 };
 
 boss_map_table = {
@@ -984,17 +989,28 @@ function generateAssortmentWithLogic()
 	assert(#inverted_map_assortment == #regular_map_assortment, "Assortment contains repeated or missing pathways");
 end
 
-function handle_tagless_map(dest_map,kong_array)
+function handle_tagless_map(dest_map,kong_array,special_case_lz)
 	file:write("handling map: "..getMapName(dest_map), "\n");
 	--if this map isn't done yet
 	if(tagless_maps_done[dest_map] == nil) then
 		--Choose one of its exits as destination
-		--TODO: handle special cases
 		local possibleExits = {};
-		for i = 1, #destinations_remaining do
-			local lz = destinations_remaining[i];
-			if dest_map == math.floor(lz / 256) then
-				table.insert(possibleExits, lz);
+		
+		if special_case_lz ~= nil then
+			--In special cases, use the specified lz
+			file:write("special case! can only use "..getFullName(special_case_lz), "\n");
+			for i = 1, #destinations_remaining do
+				if special_case_lz == destinations_remaining[i] then
+					table.insert(possibleExits, special_case_lz);
+				end
+			end
+		else
+			--otherwise, use any lz from the specified map
+			for i = 1, #destinations_remaining do
+				local lz = destinations_remaining[i];
+				if dest_map == math.floor(lz / 256) then
+					table.insert(possibleExits, lz);
+				end
 			end
 		end
 		if #possibleExits == 0 then
@@ -1050,8 +1066,20 @@ function handle_tagless_map(dest_map,kong_array)
 			
 			--step d) If map leading to origin_lz is tag-less, prepare to repeat for new map
 			local maps_to_origin = lz_origin_map_table[origin_lz];
+			local map_to_origin = nil;
+			local lz_to_origin = nil;
+			
 			if maps_to_origin ~= nil  then
-				local map_to_origin = maps_to_origin[chooseRandomIndex(maps_to_origin)];
+				map_to_origin = maps_to_origin[chooseRandomIndex(maps_to_origin)];
+			else
+				maps_to_origin = lz_origin_exceptions_table[origin_lz]
+				if maps_to_origin ~= nil  then
+					lz_to_origin = maps_to_origin[chooseRandomIndex(maps_to_origin)];
+					map_to_origin = math.floor(lz_to_origin / 256);
+				end
+			end
+			
+			if map_to_origin ~= nil then
 				file:write("Checking map to origin: "..getMapName(map_to_origin), "\n");
 				
 				local tag_reached = true;
@@ -1059,7 +1087,7 @@ function handle_tagless_map(dest_map,kong_array)
 					if tagless_map_table[i][1] == map_to_origin then
 						tag_reached = false;
 						local new_kong_array = unionOfSets(kong_array, tagless_map_table[i][2]);
-						no_repeat = handle_tagless_map(tagless_map_table[i][1], new_kong_array);
+						no_repeat = handle_tagless_map(tagless_map_table[i][1], new_kong_array, lz_to_origin);
 						break;
 					end
 				end
@@ -1075,7 +1103,7 @@ function handle_tagless_map(dest_map,kong_array)
 				table.insert(origins_remaining, origin_key, origin_lz);
 				file:write("doesn't work, re-adding origin "..getFullName(origin_lz), "\n");
 				file:write("trying new origin...", "\n")
-			end;
+			end
 		until(no_repeat)
 		
 		--Assign the chosen origin to the destination
@@ -1253,7 +1281,7 @@ function generateTnSNumberAssortment()
 			tns_probability_array[tns_array_counter] = i;
 		end
 	end
-	tns_total_temp = randomBetween(boss_door_range[1],boss_door_range[2]));
+	tns_total_temp = randomBetween(boss_door_range[1],boss_door_range[2]);
 	tns_total = tns_total_temp - (tns_total_temp % 5);
 	tns_running_total = tns_total;
 	for i = 1, (tns_total / 5) do
