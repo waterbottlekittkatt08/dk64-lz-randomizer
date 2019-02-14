@@ -371,7 +371,7 @@ lzrForm = {
 		form_controls = {},
 		form_padding = 8,
 		form_width = 10,
-		form_height = 21,
+		form_height = 20,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -517,13 +517,10 @@ function confirmSettings()
 	if settings.randomiser_barrel == 1 or settings.randomiser == 1 then
 		require "modules.replaceLZCode"
 	end
-	if forms.ischecked(lzrForm.UI.form_controls["No Cutscenes Checkbox"]) then
-		settings.no_cutscenes = 1;
-		require "modules.reducedCutscenes"
-		print("No Cutscenes On");
-	else
-		settings.no_cutscenes = 0;
-	end
+	
+	settings.no_cutscenes = 1;
+	require "modules.reducedCutscenes"
+		
 	if forms.ischecked(lzrForm.UI.form_controls["Jabos Checkbox"]) then
 		settings.using_jabos = 1;
 		print("Using Jabos On");
@@ -754,19 +751,16 @@ lzrForm.UI.form_controls["Barrel Randomiser Checkbox"] = forms.checkbox(lzrForm.
 lzrForm.UI.form_controls["All Moves Label"] = forms.label(lzrForm.UI.options_form, "Give All Moves:", lzrForm.UI.col(0), lzrForm.UI.row(6) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["All Moves Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(6) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["No Cutscenes Label"] = forms.label(lzrForm.UI.options_form, "Reduced Cutscenes:", lzrForm.UI.col(0), lzrForm.UI.row(7) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["No Cutscenes Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(7) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["All Kongs Label"] = forms.label(lzrForm.UI.options_form, "Unlock All Kongs:", lzrForm.UI.col(0), lzrForm.UI.row(7) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["All Kongs Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(7) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["All Kongs Label"] = forms.label(lzrForm.UI.options_form, "Unlock All Kongs:", lzrForm.UI.col(0), lzrForm.UI.row(8) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["All Kongs Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(8) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Jabos Label"] = forms.label(lzrForm.UI.options_form, "I am using Jabo 1.6.1:", lzrForm.UI.col(0), lzrForm.UI.row(8) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Jabos Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(8) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["Jabos Label"] = forms.label(lzrForm.UI.options_form, "I am using Jabo 1.6.1:", lzrForm.UI.col(0), lzrForm.UI.row(9) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Jabos Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(9) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Kasplat Label"] = forms.label(lzrForm.UI.options_form, "Random Kasplat Locations:", lzrForm.UI.col(0), lzrForm.UI.row(9) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Kasplat Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(9) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["Kasplat Label"] = forms.label(lzrForm.UI.options_form, "Random Kasplat Locations:", lzrForm.UI.col(0), lzrForm.UI.row(10) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Kasplat Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(10) + lzrForm.UI.dropdown_offset);
-
-seed_form_height = 12;
+seed_form_height = 11;
 seed_form_offset = 0.5;
 
 lzrForm.UI.form_controls["Increase 10000"] = forms.button(lzrForm.UI.options_form, "+", increase10000, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);

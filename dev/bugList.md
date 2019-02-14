@@ -21,6 +21,7 @@ resolved
 - Turning on Lighthouse CS doesn't work properly
 - Free seal GB not obtainable
 - Kasplat pens use the spawn coordinates as xmin and zmin
+- Boss Door remains shut upon re-entry if key has been collected, making it problematic for glitchless
 
 ## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps
@@ -59,5 +60,4 @@ resolved
 - SDSS given on file select when it should be regular SS
 - Kasplat not spawning in Caves
 - T&Ses are closing, causing entrances to be closed off
-- Boss Door remains shut upon re-entry if key has been collected, making it problematic for glitchless
 - Softlocks are occuring
