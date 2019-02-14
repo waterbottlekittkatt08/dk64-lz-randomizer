@@ -52,14 +52,14 @@ function randomise()
 					end
 				end
 			end
-			if dmapType == "regular_maps" then
-				mainmemory.writebyte(Mem.insubmap[version], 0);
-				mainmemory.writebyte(Mem.insubmap_b[version], 0);
-			end
 			if transition_speed_value > 0 then
 				current_dexit = mainmemory.read_u32_be(Mem.dexit[version]);
 				lag = mainmemory.read_u32_be(Mem.frame_lag[version]);
 				real = mainmemory.read_u32_be(Mem.frame_real[version]);
+				if dmapType == "regular_maps" and cmapType ~= "bonus_maps" then
+					mainmemory.writebyte(Mem.insubmap[version], 0);
+					mainmemory.writebyte(Mem.insubmap_b[version], 0);
+				end
 				if zipProg < 50 and lag == real and rando_happened == 0 then
 					if dmapType == "bonus_maps" and cmapType ~= "bonus_maps" and settings.randomiser_barrel == 1 then
 						new_destmap_to_write = getBonusDestination(current_dmap);

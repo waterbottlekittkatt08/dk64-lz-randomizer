@@ -667,11 +667,13 @@ function Spoiler()
 		file:write("\n");
 		file:write("BONUS MAP ASSORTMENT", "\n");
 		for i = 1, #bonus_map_assortment do
-			lz_map_in = bonus_map_table[i];
-			lz_map_out = bonus_map_table[bonus_map_assortment[i]];
-			file:write("\n");
-			file:write("LZ to: "..getMapName(lz_map_in), "\n");
-			file:write("Goes to: "..getMapName(lz_map_out), "\n");
+			if bonus_map_assortment[i] ~= nil then
+				lz_map_in = bonus_map_table[i][1];
+				lz_map_out = bonus_map_table[bonus_map_assortment[i]][1];
+				file:write("\n");
+				file:write("LZ to: "..getMapName(lz_map_in), "\n");
+				file:write("Goes to: "..getMapName(lz_map_out), "\n");
+			end
 		end
 	end
 	if settings.random_kasplats == 1 then
