@@ -611,7 +611,9 @@ lz_origin_map_table = {
 	[0x0C00] = {7},
 	[0x0D00] = {7},
 	[0x0E00] = {38,14},
+	[0x1000] = {38},
 	[0x1300] = {38},
+	[0x1400] = {38},
 	[0x2203] = {173},
 	[0x1500] = {38},
 	[0x1600] = {38},
@@ -706,7 +708,7 @@ lz_origin_map_table = {
 	[0x4004] = {48},
 	[0x4600] = {48},
 	[0x4700] = {48},
-	[0x4800] = {194,48},
+	[0x4800] = {194,72},
 	[0x4801] = {100},
 	[0x4802] = {86},
 	[0x4803] = {85},
@@ -756,7 +758,6 @@ lz_origin_map_table = {
 	[0x7000] = {183},
 	[0x7001] = {106},
 	[0x7100] = {87},
-	[0x7101] = {185},
 	[0x7102] = {88},
 	[0x7200] = {87},
 	[0x9700] = {87},
@@ -807,6 +808,7 @@ lz_origin_exceptions_table = {
 	[0x5707] = {0x7100},
 	[0x5801] = {0x7101, 0x7102},
 	[0xB900] = {0x7101, 0x7102, 0xB900},
+	[0x7101] = {0xB900},
 	--Library Back door
 	[0x7201] = {0x570D},
 	--Crypt (DK, Diddy, Chunky)
@@ -938,6 +940,7 @@ end
 function generateAssortmentWithLogic()
 	file = io.open("logicDebug.txt", "w+")
 	file:write("~~~~~~~~~~~~~", "\n");
+	file:write("Seed: "..seedAsNumber, "\n");
 	file:write("START generateAssortmentWithLogic", "\n");
 	local regular_seedSetting = seedAsNumber * 1000;
 	math.randomseed(regular_seedSetting);
@@ -964,7 +967,7 @@ function generateAssortmentWithLogic()
 		file:write("\n");
 	end
 	
-	file:write("Finished all tag-less maps!\n");
+	file:write("Finished assigning all tag-less maps!\n\n");
 	
 	--Fill out rest of randomization
 	for i = 1, #regular_map_table do
@@ -981,12 +984,15 @@ function generateAssortmentWithLogic()
 			table.remove(origins_remaining, selected_temp_value);
 		end
 	end
-	file:close();
-	
 	regular_map_assortment = table_invert(inverted_map_assortment);
+	
+	file:write("Finished assigning all remaining maps!\n\n");
 	
 	--validate nothing went wrong
 	assert(#inverted_map_assortment == #regular_map_assortment, "Assortment contains repeated or missing pathways");
+	validateReachability();
+	
+	file:close();
 end
 
 function handle_tagless_map(dest_map,kong_array,special_case_lz)
@@ -1158,7 +1164,7 @@ function chooseRandomIndex(tbl)
 end
 
 function getLzReference(lz)
-	reference = nil;
+	local reference = nil;
 	for i = 1, #regular_map_table do
 		if regular_map_table[i] == lz then
 			reference = i;
@@ -1196,6 +1202,235 @@ function unionOfSets(setA,setB)
 		if not isValInTable(val,setA) then table.insert(ret, val) end
 	end
 	return ret
+end
+
+function validateReachability()
+	file:write("Starting validateReachability\n");
+	--Since all tag-less maps were set to be reachable from tag-full maps
+	--we can simply validate all tag-full maps are reachable from the start
+	--excluding helm lobby/helm because they are vanilla
+	maps_reached = {};
+	maps_reached_by_kongs = {};
+	
+	kongs_free = {1};
+	if settings.all_kongs == 1 then
+		file:write("Starting with all kongs unlocked\n");
+		kongs_free = {1,2,3,4,5};
+	end
+	
+	--start by exploring enter japes lobby
+	exploreAllPaths(0xA900);
+	
+	local passed, unreachedmap = allTagfullMapsReached();
+	if passed then
+		file:write("\nReachability validation passed!\n");
+		print("Reachability validation passed!");
+	else
+		file:write("\nReachability validation failed! Could not reach "..getMapName(unreachedmap),"\n");
+		print("Reachability validation failed! Could not reach "..getMapName(unreachedmap));
+	end
+end
+
+function exploreAllPaths(origin_lz)
+	file:write("Exploring "..getFullName(origin_lz),"\n");
+	local dest_lz = getRandomizedExit(origin_lz);
+	local dest_map = math.floor(dest_lz / 256);
+	file:write("Took me to "..getFullName(dest_lz),"\n");
+	
+	--mark kongs as freed
+	if dest_map == 7 and isValInTable(1, kongs_free) then
+		if not isValInTable(2, kongs_free) then
+			table.insert(kongs_free, 2);
+			file:write("Diddy freed!\n");
+		end
+	end
+	if dest_map == 16 and isValInTable(2, kongs_free) then
+		if not isValInTable(4, kongs_free) then
+			table.insert(kongs_free, 4);
+			file:write("Tiny freed!\n");
+		end
+	end
+	if dest_map == 20 and isValInTable(1, kongs_free) then
+		if not isValInTable(3, kongs_free) then
+			table.insert(kongs_free, 3);
+			file:write("Lanky freed!\n");
+		end
+	end
+	if dest_map == 26 and isValInTable(3, kongs_free) then
+		--exit car race doesn't free chunky
+		if dest_lz ~= '0x1A10' and not isValInTable(5, kongs_free) then
+			table.insert(kongs_free, 5);
+			file:write("Chunky freed!\n");
+		end
+	end
+	
+	--if map was reached already, return
+	--else, mark as reached
+	if maps_reached[dest_map] == true then
+		if #maps_reached_by_kongs[dest_map] == #kongs_free then
+			file:write("Already reached with same kongs, trying next place...\n");
+			return;
+		else
+			file:write("Already reached, but we have more kongs now!\n");
+			maps_reached_by_kongs[dest_map] = {};
+			for k,v in ipairs(kongs_free) do
+				maps_reached_by_kongs[dest_map][k] = v;
+			end
+		end
+	else
+		file:write("Marking "..getMapName(dest_map).." as reached!\n");
+		maps_reached[dest_map] = true;
+		maps_reached_by_kongs[dest_map] = {};
+		for k,v in ipairs(kongs_free) do
+			maps_reached_by_kongs[dest_map][k] = v;
+		end
+	end
+	
+	--using lz_origin_map_table, make list of all lzs this map/lz can lead to
+	--handle exceptions first, then check main lz_origin_map_table
+	local reachable_lzs = {};
+	
+	--special case for isles, assume no lobbies are reachable
+	if dest_map ~= 34 then
+		for key,val in pairs(lz_origin_exceptions_table) do
+			if isValInTable(dest_lz, val) then
+				file:write("Adding reachable lz from exceptions: "..getFullName(key), "\n");
+				table.insert(reachable_lzs, key);
+			end
+		end
+		if #reachable_lzs == 0 then
+			for key,val in pairs(lz_origin_map_table) do
+				if isValInTable(dest_map, val) then
+					file:write("Adding reachable lz: "..getFullName(key), "\n");
+					table.insert(reachable_lzs, key)
+				end
+			end
+		end
+	end
+	
+	file:write("There are "..#reachable_lzs.." reachable lzs to explore\n");
+	
+	--iterate over reachable_lzs
+	local stop_repeat = false;
+	repeat
+		local prev_num_kongs_free = #kongs_free;
+		
+		for i = 1, #reachable_lzs do
+			--if any free kongs can use this lz, explore it
+			local lz = reachable_lzs[i];
+			
+			local dk_can = isValInTable(1,kongs_free);
+			local diddy_can = isValInTable(2,kongs_free);
+			local lanky_can = isValInTable(3,kongs_free);
+			local tiny_can = isValInTable(4,kongs_free);
+			local chunky_can = isValInTable(5,kongs_free);
+			
+			if isValInTable(lz,inaccessible_map_table_DK) then
+				dk_can = false;
+			end
+			if isValInTable(lz,inaccessible_map_table_Diddy) then
+				diddy_can = false;
+			end
+			if isValInTable(lz,inaccessible_map_table_Lanky) then
+				lanky_can = false;
+			end
+			if isValInTable(lz,inaccessible_map_table_Tiny) then
+				tiny_can = false;
+			end
+			if isValInTable(lz,inaccessible_map_table_Chunky) then
+				chunky_can = false;
+			end
+			
+			if dk_can or diddy_can or lanky_can or tiny_can or chunky_can then
+				exploreAllPaths(lz);
+			else
+				file:write("I don't have the kong needed to explore "..getFullName(lz),"\n");
+			end
+		end
+		--if # of freed kongs hasn't changed, there's no use repeating
+		if prev_num_kongs_free == #kongs_free then
+			file:write("No progress left to be made here, stop repeating\n");
+			stop_repeat = true;
+		end
+	until(stop_repeat)
+end
+
+function allTagfullMapsReached()
+	if not maps_reached[7] then
+		return false,7;
+	end
+	if not maps_reached[20] then
+		return false,20;
+	end
+	if not maps_reached[26] then
+		return false,26;
+	end
+	if not maps_reached[30] then
+		return false,30;
+	end
+	if not maps_reached[38] then
+		return false,38;
+	end
+	if not maps_reached[48] then
+		return false,48
+	end
+	if not maps_reached[61] then
+		return false,61;
+	end
+	if not maps_reached[64] then
+		return false,64;
+	end
+	if not maps_reached[72] then
+		return false,72;
+	end
+	if not maps_reached[87] then
+		return false,87;
+	end
+	if not maps_reached[151] then
+		return false,151;
+	end
+	if not maps_reached[163] then
+		return false,163;
+	end
+	if not maps_reached[169] then
+		return false,169;
+	end
+	if not maps_reached[173] then
+		return false,173;
+	end
+	if not maps_reached[174] then
+		return false,174;
+	end
+	if not maps_reached[175] then
+		return false,175;
+	end
+	if not maps_reached[178] then
+		return false,178;
+	end
+	if not maps_reached[183] then
+		return false,183;
+	end
+	if not maps_reached[193] then
+		return false,193;
+	end
+	if not maps_reached[194] then
+		return false,194;
+	end
+	if not maps_reached[195] then
+		return false,195;
+	end
+	return true;
+end
+
+function getRandomizedExit(exit_in)
+	local reference = getLzReference(exit_in);
+	if reference == nil then
+		return exit_in;
+	else
+		value_to_lookup = regular_map_assortment[reference];
+		exit_out = regular_map_table[value_to_lookup];
+		return exit_out;
+	end
 end
 
 function generateBossAssortment()
@@ -1347,25 +1582,6 @@ function setAssortments()
 	generateKRoolOrder();
 	generateBossDoorAssortment();
 	generateTnSNumberAssortment();
-end
-
-function getLoadingZone(destmap, destexit)
-	reference = nil;
-	lookup_value = (destmap * 256) + destexit;
-	for i = 1, #regular_map_table do
-		if regular_map_table[i] == lookup_value then
-			reference = i;
-		end
-	end
-	if reference == nil then
-		print("Value maintained as "..lookup_value);
-		return lookup_value;
-	else
-		value_to_lookup = regular_map_assortment[reference];
-		new_dmap_code = regular_map_table[value_to_lookup];
-		print("Value set to as "..new_dmap_code);
-		return new_dmap_code;
-	end
 end
 
 function getBossDestination(parent_map)
