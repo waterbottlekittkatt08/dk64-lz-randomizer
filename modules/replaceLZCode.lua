@@ -114,4 +114,23 @@ function randomise()
 	end
 end
 
+function getLoadingZone(destmap, destexit)
+	reference = nil;
+	lookup_value = (destmap * 256) + destexit;
+	for i = 1, #regular_map_table do
+		if regular_map_table[i] == lookup_value then
+			reference = i;
+		end
+	end
+	if reference == nil then
+		print("Value maintained as "..lookup_value);
+		return lookup_value;
+	else
+		value_to_lookup = regular_map_assortment[reference];
+		new_dmap_code = regular_map_table[value_to_lookup];
+		print("Value set to as "..new_dmap_code);
+		return new_dmap_code;
+	end
+end
+
 event.onframeend(randomise, "Randomises Destination Map");

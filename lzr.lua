@@ -483,46 +483,60 @@ settings = {
 function confirmSettings()
 	print("Settings Confirmed");
 	print("Seed: "..seedAsNumber);
+	if forms.ischecked(lzrForm.UI.form_controls["All Moves Checkbox"]) then
+		settings.all_moves = 1;
+		require "modules.allMoves"
+		print("All Moves On");
+	else
+		settings.all_moves = 0;
+	end
+	if forms.ischecked(lzrForm.UI.form_controls["All Kongs Checkbox"]) then
+		settings.all_kongs = 1;
+		require "modules.allKongs"
+		print("All Kongs On");
+	else
+		settings.all_kongs = 0;
+	end
 	if forms.ischecked(lzrForm.UI.form_controls["Randomiser Checkbox"]) then
 		settings.randomiser = 1;
 		require "modules.randomiser_regular"
 		print("Randomiser On");
 		setAssortments();
 		setTnSDoorStuff();
+	else
+		settings.randomizer = 0;
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["Barrel Randomiser Checkbox"]) then
 		settings.randomiser_barrel = 1;
 		require "modules.randomiser_barrel"
 		print("Barrel Randomiser On");
 		generateBonusAssortment();
+	else
+		settings.randomizer_barrel = 0;
 	end
 	if settings.randomiser_barrel == 1 or settings.randomiser == 1 then
 		require "modules.replaceLZCode"
-	end
-	if forms.ischecked(lzrForm.UI.form_controls["All Moves Checkbox"]) then
-		settings.all_moves = 1;
-		require "modules.allMoves"
-		print("All Moves On");
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["No Cutscenes Checkbox"]) then
 		settings.no_cutscenes = 1;
 		require "modules.reducedCutscenes"
 		print("No Cutscenes On");
-	end
-	if forms.ischecked(lzrForm.UI.form_controls["All Kongs Checkbox"]) then
-		settings.all_kongs = 1;
-		require "modules.allKongs"
-		print("All Kongs On");
+	else
+		settings.no_cutscenes = 0;
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["Jabos Checkbox"]) then
 		settings.using_jabos = 1;
 		print("Using Jabos On");
+	else
+		settings.using_jabos = 0;
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["Kasplat Checkbox"]) then
 		settings.random_kasplats = 1;
 		require "modules.randomKasplats"
 		print("Random Kasplats On");
 		generateKasplatAssortment();
+	else
+		settings.random_kasplats = 0;
 	end
 	if settings.using_jabos == 0 then
 		client.reboot_core();
