@@ -792,9 +792,6 @@ end
 if previousSettings.all_moves == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["All Moves Checkbox"], "Checked", true);
 end
-if previousSettings.no_cutscenes == 1 then
-	forms.setproperty(lzrForm.UI.form_controls["No Cutscenes Checkbox"], "Checked", true);
-end
 if previousSettings.all_kongs == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["All Kongs Checkbox"], "Checked", true);
 end
