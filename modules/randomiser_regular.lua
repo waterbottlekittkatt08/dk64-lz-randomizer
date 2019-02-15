@@ -1037,9 +1037,17 @@ function generateAssortmentWithLogic()
 end
 
 function handle_tagless_map(dest_map,kong_array,special_case_lz)
-	file:write("handling map: "..getMapName(dest_map), "\n");
+	local is_done = nil;
+	if special_case_lz ~= nil then
+		is_done = tagless_maps_done[special_case_lz];
+		file:write("handling lz: "..getFullName(special_case_lz), "\n");
+	else
+		is_done = tagless_maps_done[dest_map];
+		file:write("handling map: "..getMapName(dest_map), "\n");
+	end
+	
 	--if this map isn't done yet
-	if(tagless_maps_done[dest_map] == nil) then
+	if is_done == nil then
 		--Choose one of its exits as destination
 		local possibleExits = {};
 		
@@ -1163,8 +1171,13 @@ function handle_tagless_map(dest_map,kong_array,special_case_lz)
 		
 		inverted_map_assortment[dest_ref] = origin_ref;
 		
-		tagless_maps_done[dest_map] = true;
-		file:write("Marked "..getMapName(dest_map).." as done.\n");
+		if special_case_lz ~= nil then
+			tagless_maps_done[special_case_lz] = true;
+			file:write("Marked LZ "..getFullName(special_case_lz).." as done.\n");
+		else
+			tagless_maps_done[dest_map] = true;
+			file:write("Marked "..getMapName(dest_map).." as done.\n");
+		end
 		
 		return true;
 	else
@@ -1327,8 +1340,7 @@ function exploreAllPaths(origin_lz)
 		end
 	end
 	
-	--using lz_origin_map_table, make list of all lzs this map/lz can lead to
-	--handle exceptions first, then check main lz_origin_map_table
+	--make list of all lzs this map/lz can lead to
 	local reachable_lzs = {};
 	
 	--special case for isles, assume no lobbies are reachable
@@ -1339,12 +1351,10 @@ function exploreAllPaths(origin_lz)
 				table.insert(reachable_lzs, key);
 			end
 		end
-		if #reachable_lzs == 0 then
-			for key,val in pairs(lz_origin_map_table) do
-				if isValInTable(dest_map, val) then
-					file:write("Adding reachable lz: "..getFullName(key), "\n");
-					table.insert(reachable_lzs, key)
-				end
+		for key,val in pairs(lz_origin_map_table) do
+			if isValInTable(dest_map, val) then
+				file:write("Adding reachable lz: "..getFullName(key), "\n");
+				table.insert(reachable_lzs, key)
 			end
 		end
 	end
