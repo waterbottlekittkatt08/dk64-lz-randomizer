@@ -534,7 +534,7 @@ also_requires_kong_map_table = {
 	[0x1800] = 2,	--Chunky 5DT
 	[0x0E00] = 2,	--Aztec Beetle Race
 	[0x1400] = 1,	--Llama Temple, in case we revert "llama always free" decision
-	[0x2400] = 1, 	--Crusher Room, special case! power shed must also have been reached
+	[0x2400] = 1, 	--Crusher Room
 	[0x3100] = 1,	--Lighthouse
 	[0x3900] = 2,	--Winch Room
 	[0x4600] = 3, 	--Lanky Dark Room, in case we count other kongs entering as "in logic"
@@ -544,10 +544,17 @@ also_requires_kong_map_table = {
 	[0x5500] = 2,	--Lanky 5DI
 	[0x5400] = 2,	--Tiny 5DI
 	[0x5F00] = 2,	--Chunky 5DI
-	[0xA400] = 1,	--Castle Tree, special case! castle bblast must also have been reached
+	[0xA400] = 1,	--Castle Tree
 	[0x5800] = 2,	--Ballroom
 	[0x6900] = 3,	--Top Tower
-}
+};
+
+also_requires_reached_map_table = {
+	[0x2400] = 29, 	--Crusher Room, power shed must also have been reached
+	[0x2700] = 54, 	--Seal Race, galleon bblast must also have been reached
+	[0x1F00] = 49,	--Seasick Ship, lighthouse must also have been reached
+	[0xA400] = 187,	--Castle Tree, castle bblast must also have been reached
+};
 
 --Key is map ID, value is list of kong IDs that need access
 tagless_map_table = {
@@ -1350,32 +1357,41 @@ function exploreAllPaths(origin_lz)
 			--if any free kongs can use this lz, explore it
 			local lz = reachable_lzs[i];
 			
-			local dk_can = isValInTable(1,kongs_free);
-			local diddy_can = isValInTable(2,kongs_free);
-			local lanky_can = isValInTable(3,kongs_free);
-			local tiny_can = isValInTable(4,kongs_free);
-			local chunky_can = isValInTable(5,kongs_free);
+			local needs_kong = also_requires_kong_map_table[lz];
+			local needs_map = also_requires_reached_map_table[lz];
 			
-			if isValInTable(lz,inaccessible_map_table_DK) then
-				dk_can = false;
-			end
-			if isValInTable(lz,inaccessible_map_table_Diddy) then
-				diddy_can = false;
-			end
-			if isValInTable(lz,inaccessible_map_table_Lanky) then
-				lanky_can = false;
-			end
-			if isValInTable(lz,inaccessible_map_table_Tiny) then
-				tiny_can = false;
-			end
-			if isValInTable(lz,inaccessible_map_table_Chunky) then
-				chunky_can = false;
-			end
-			
-			if dk_can or diddy_can or lanky_can or tiny_can or chunky_can then
-				exploreAllPaths(lz);
+			if needs_kong ~= nil and not isValInTable(needs_kong, kongs_free) then
+				file:write("I don't have the kong needed to open "..getFullName(lz),"\n");
+			elseif needs_map ~= nil and maps_reached[needs_map] ~= true then
+				file:write("I haven't reached needed map to open "..getFullName(lz),"\n");
 			else
-				file:write("I don't have the kong needed to explore "..getFullName(lz),"\n");
+				local dk_can = isValInTable(1,kongs_free);
+				local diddy_can = isValInTable(2,kongs_free);
+				local lanky_can = isValInTable(3,kongs_free);
+				local tiny_can = isValInTable(4,kongs_free);
+				local chunky_can = isValInTable(5,kongs_free);
+				
+				if isValInTable(lz,inaccessible_map_table_DK) then
+					dk_can = false;
+				end
+				if isValInTable(lz,inaccessible_map_table_Diddy) then
+					diddy_can = false;
+				end
+				if isValInTable(lz,inaccessible_map_table_Lanky) then
+					lanky_can = false;
+				end
+				if isValInTable(lz,inaccessible_map_table_Tiny) then
+					tiny_can = false;
+				end
+				if isValInTable(lz,inaccessible_map_table_Chunky) then
+					chunky_can = false;
+				end
+				
+				if dk_can or diddy_can or lanky_can or tiny_can or chunky_can then
+					exploreAllPaths(lz);
+				else
+					file:write("I don't have the kong needed to access "..getFullName(lz),"\n");
+				end
 			end
 		end
 		--if # of freed kongs hasn't changed, there's no use repeating
