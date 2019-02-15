@@ -549,7 +549,10 @@ also_requires_kong_map_table = {
 	[0x6900] = 3,	--Top Tower
 };
 
+--covers edge cases where a lz is only open after a different map is completed
 also_requires_reached_map_table = {
+	--Commented out since "llama always free" setting exists
+	--[0x1400] = 41,	--Llama Temple, aztec bblast must also have been reached
 	[0x2400] = 29, 	--Crusher Room, power shed must also have been reached
 	[0x2700] = 54, 	--Seal Race, galleon bblast must also have been reached
 	[0x1F00] = 49,	--Seasick Ship, lighthouse must also have been reached
