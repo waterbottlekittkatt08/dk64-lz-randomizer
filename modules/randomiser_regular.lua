@@ -525,6 +525,30 @@ inaccessible_map_table_Chunky = {
 	0xC800,
 };
 
+--covers edge cases where a kong can enter a lz, but relies on another kong to open it
+also_requires_kong_map_table = {
+	[0x0D00] = 2, 	--Painting room
+	[0x1300] = 2,	--DK 5DT
+	[0x1700] = 2,	--Lanky 5DT
+	[0x1600] = 2,	--Tiny 5DT
+	[0x1800] = 2,	--Chunky 5DT
+	[0x0E00] = 2,	--Aztec Beetle Race
+	[0x1400] = 1,	--Llama Temple, in case we revert "llama always free" decision
+	[0x2400] = 1, 	--Crusher Room, special case! power shed must also have been reached
+	[0x3100] = 1,	--Lighthouse
+	[0x3900] = 2,	--Winch Room
+	[0x4600] = 3, 	--Lanky Dark Room, in case we count other kongs entering as "in logic"
+	[0x3E03] = 5, 	--Tiny hole to rear mill room
+	[0x3007] = 5, 	--Tiny hole to leave rear mill room
+	[0x5600] = 2, 	--DK 5DI
+	[0x5500] = 2,	--Lanky 5DI
+	[0x5400] = 2,	--Tiny 5DI
+	[0x5F00] = 2,	--Chunky 5DI
+	[0xA400] = 1,	--Castle Tree, special case! castle bblast must also have been reached
+	[0x5800] = 2,	--Ballroom
+	[0x6900] = 3,	--Top Tower
+}
+
 --Key is map ID, value is list of kong IDs that need access
 tagless_map_table = {
 	{4, {2}},
