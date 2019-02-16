@@ -907,8 +907,8 @@ boss_door_kong_permits = {
 };
 
 boss_door_range = { -- Normal amount is 1680
-	[1] = 1000, -- Min
-	[2] = 2000, -- Max
+	[1] = 500 * settings.gameLengths, -- Min
+	[2] = 500 + (500 * settings.gameLengths), -- Max
 };
 
 key_take_occurred = 0;
@@ -1586,7 +1586,7 @@ function generateTnSNumberAssortment()
 		tns_running_total = tns_running_total - 5;
 		list_to_remove = {};
 		removal_count_tns = 0;
-		if tns_number_assortment[1] == 200 then -- Japes at 200
+		if tns_number_assortment[1] == 200 then -- Japes at 200 (Max obtainable for DK/Diddy)
 			for j = 1, #tns_probability_array do
 				if tns_probability_array[j] == 1 then
 					removal_count_tns = removal_count_tns + 1;
@@ -1594,7 +1594,7 @@ function generateTnSNumberAssortment()
 				end
 			end
 		end
-		if tns_number_assortment[2] == 400 then -- Aztec at 400
+		if tns_number_assortment[2] == 400 then -- Aztec at 400 (Max obtainable for DK/Diddy/Lanky/Tiny)
 			for j = 1, #tns_probability_array do
 				if tns_probability_array[j] == 2 then
 					removal_count_tns = removal_count_tns + 1;
@@ -1603,7 +1603,7 @@ function generateTnSNumberAssortment()
 			end
 		end
 		for k = 3, 7 do
-			if tns_number_assortment[k] == 500 then -- Other Levels at 500
+			if tns_number_assortment[k] == 400 then -- Capping other levels at 400 for balance purposes
 				for j = 1, #tns_probability_array do
 					if tns_probability_array[j] == k then
 						removal_count_tns = removal_count_tns + 1;
@@ -1636,12 +1636,23 @@ function generateKRoolOrder()
 	k_rool_assortment[5] = 5; -- Always ends on Chunky Phase
 end
 
+function generateBLockerAssortment()
+	b_locker_assortment = {};
+	b_locker_assortment[8] = 100 / (2 ^ (3 - settings.gameLengths));
+	b_locker_seedSetting = seedAsNumber + 801;
+	math.randomseed(b_locker_seedSetting);
+	for i = 1, 7 do
+		b_locker_assortment[i] = randomBetween(1,b_locker_assortment[8] - 1);
+	end
+end
+
 function setAssortments()
 	generateAssortmentWithLogic();
 	generateBossAssortment();
 	generateKRoolOrder();
 	generateBossDoorAssortment();
 	generateTnSNumberAssortment();
+	generateBLockerAssortment();
 end
 
 function getBossDestination(parent_map)
@@ -1680,6 +1691,9 @@ end
 function setTnSDoorStuff()
 	for i = 0, 6 do
 		mainmemory.write_u16_be(Mem.tnsdoor_header[version] + (2 * i), tns_number_assortment[i + 1]);
+	end
+	for i = 0, 7 do
+		mainmemory.write_u16_be(Mem.tnsdoor_header[version] + 0x10 + (2 * i), b_locker_assortment[i + 1]);
 	end
 	for i = 1, 7 do
 		boss_assigned = boss_map_assortment[i]; -- check the value of the boss assigned to it

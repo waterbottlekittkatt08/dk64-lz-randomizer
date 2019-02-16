@@ -372,7 +372,7 @@ lzrForm = {
 		form_controls = {},
 		form_padding = 8,
 		form_width = 10,
-		form_height = 20,
+		form_height = 22,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -479,11 +479,20 @@ settings = {
 	using_jabos = 0,
 	random_kasplats = 0,
 	randomiser_barrel = 0,
+	gameLengths = 1,
 };
 
 function confirmSettings()
 	print("Settings Confirmed");
 	print("Seed: "..seedAsNumber);
+	lengthString = forms.getproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem");
+	settings.gameLengths = 1;
+	for i = 1, #gameLengths do
+		if gameLengths[i] == lengthString then
+			settings.gameLengths = i;
+		end
+	end
+	print("Game Length: "..gameLengths[settings.gameLengths]);
 	if forms.ischecked(lzrForm.UI.form_controls["All Moves Checkbox"]) then
 		settings.all_moves = 1;
 		require "modules.allMoves"
@@ -597,6 +606,7 @@ levels = {
 	[5] = "CAVES",
 	[6] = "CASTLE",
 	[7] = "DK ISLES",
+	[8] = "HELM",
 };
 
 levelsLower = {
@@ -608,6 +618,7 @@ levelsLower = {
 	[5] = "Caves",
 	[6] = "Castle",
 	[7] = "DK Isles",
+	[8] = "Helm",
 };
 
 lobbies = {
@@ -660,6 +671,16 @@ function Spoiler()
 			file:write("\n");
 			file:write(boss_fight_names[i]..": "..kongNames[boss_door_assortment[i]], "\n");
 		end
+		file:write("\n");
+		file:write("B. LOCKER ASSORTMENT", "\n");
+		for i = 1, #b_locker_assortment do
+			file:write("\n");
+			if i < 8 then
+				file:write(levelsLower[i - 1]..": "..b_locker_assortment[i], "\n");
+			else
+				file:write(levelsLower[i]..": "..b_locker_assortment[i], "\n");
+			end
+		end
 	end
 	if settings.randomiser_barrel == 1 then
 		file:write("\n");
@@ -702,6 +723,7 @@ function WriteSettings()
 	file:write("using_jabos = ", settings.using_jabos, ",", "\n");
 	file:write("random_kasplats = ", settings.random_kasplats, ",", "\n");
 	file:write("seed = ", seedAsNumber, ",", "\n");
+	file:write("gameLengths = ", settings.gameLengths, ",", "\n");
 	file:write("};", "\n");
 	file:close();
 	print("Saved settings to settings.lua!");
@@ -739,6 +761,12 @@ function lzrForm.UI.checkbox(col, row, tag, caption, default)
 	end
 end
 
+gameLengths = {
+	[1] = "Short",
+	[2] = "Medium",
+	[3] = "Long",
+};
+
 lzrForm.UI.form_controls["Title Label 1"] = forms.label(lzrForm.UI.options_form, "DONKEY KONG 64", lzrForm.UI.col(1) + 10, lzrForm.UI.row(0) + lzrForm.UI.label_offset, 410, 24);
 lzrForm.UI.form_controls["Title Label 2"] = forms.label(lzrForm.UI.options_form, "LOADING ZONE RANDOMISER", lzrForm.UI.col(0), lzrForm.UI.row(1) + lzrForm.UI.label_offset, 410, 24);
 lzrForm.UI.form_controls["Title Label 3"] = forms.label(lzrForm.UI.options_form, "SETTINGS", lzrForm.UI.col(2) + 10, lzrForm.UI.row(2) + lzrForm.UI.label_offset, 410, 24);
@@ -761,7 +789,10 @@ lzrForm.UI.form_controls["Jabos Checkbox"] = forms.checkbox(lzrForm.UI.options_f
 lzrForm.UI.form_controls["Kasplat Label"] = forms.label(lzrForm.UI.options_form, "Random Kasplat Locations:", lzrForm.UI.col(0), lzrForm.UI.row(9) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["Kasplat Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(9) + lzrForm.UI.dropdown_offset);
 
-seed_form_height = 11;
+lzrForm.UI.form_controls["Length Label"] = forms.label(lzrForm.UI.options_form, "Length:", lzrForm.UI.col(0), lzrForm.UI.row(10) + lzrForm.UI.label_offset, 60, 24);
+lzrForm.UI.form_controls["Length Dropdown"] = forms.dropdown(lzrForm.UI.options_form, gameLengths, lzrForm.UI.col(3) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(10) + lzrForm.UI.dropdown_offset + 5, lzrForm.UI.col(5) + 8, lzrForm.UI.button_height);
+
+seed_form_height = 13;
 seed_form_offset = 0.5;
 
 lzrForm.UI.form_controls["Increase 10000"] = forms.button(lzrForm.UI.options_form, "+", increase10000, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
@@ -802,6 +833,7 @@ end
 if previousSettings.random_kasplats == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Kasplat Checkbox"], "Checked", true);
 end
+forms.setproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem", gameLengths[previousSettings.gameLengths]);
 
 function lzrForm.UI.updateReadouts()
 	getSeedString();

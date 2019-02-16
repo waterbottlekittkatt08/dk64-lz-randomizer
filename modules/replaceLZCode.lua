@@ -20,11 +20,12 @@ function randomise()
 			cmapType = mapType(current_cmap);
 			previous_msb_value = mainmemory.readbyte(Mem.map_state[version]);
 			player = getPlayerObject();
-			if isRDRAM(player) then
+			if isRDRAM(player) and cmapType == "regular_maps" then
 				has_control = mainmemory.readbyte(player + 0x373); -- Might be 0x37B. Changes on same frame
+				movement = mainmemory.readbyte(player + 0x154); -- Might be 0x37B. Changes on same frame
 				if transition_speed_value < 0 then
 					rando_happened = 0;
-					if has_control == 0 then
+					if has_control == 0 and zipProg > 6 and movement ~= 0x42 then
 						if isRDRAM(player) then
 							local value = mainmemory.readbyte(player + 0x144);
 							if bit.check(value, 2) then
