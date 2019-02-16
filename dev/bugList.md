@@ -7,16 +7,7 @@ resolved
 - K Rool CS Skip doesn't work sometimes
 - Galleon Water Level / Fungi day setting causes inconsistencies until you load area where the change occurs (lighthouse/clock)
 - Fake K Rool Phase fix not always working
-- Fix object deload bug (this seems like a DK64 bug that LZR causes)
-- Savestates can cause crashes
-- Exits seem to be reappearing
-	- Seed 420: Exiting T&S/Cranky/Candy in Factory > Exiting Funky in Aztec
-	- Parent Exit stuff?
-- Crashes from invalid exit values exiting global maps
 - Spawning Japes Mountain GB not working
-- Tiny Caves Bonus not working
-- Turning on Lighthouse CS doesn't work properly
-- Free seal GB not obtainable
 - Kasplat pens use the spawn coordinates as xmin and zmin
 
 ## BUGS THAT HAVE BEEN FIXED
@@ -63,3 +54,12 @@ resolved
 - Spoiler log for bosses shown out of order
 - Boss Door remains shut upon re-entry if key has been collected, making it problematic for glitchless
 - T&S Portals close upon exiting a level where the key has already been obtained
+- Tiny Caves Bonus not working
+- Turning on Lighthouse CS doesn't work properly
+- Free seal GB not obtainable
+- Crashes from invalid exit values exiting global maps
+- Savestates can cause crashes
+- Fix object deload bug (this seems like a DK64 bug that LZR causes)
+- Exits seem to be reappearing
+	- Seed 420: Exiting T&S/Cranky/Candy in Factory > Exiting Funky in Aztec
+	- Parent Exit stuff?

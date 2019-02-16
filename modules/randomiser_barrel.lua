@@ -142,7 +142,6 @@ function getListOfCompliantMinigames(access_array,mode,available_maps_array,bmta
 	return compliantMinigames;
 end
 
-
 function generateBonusAssortmentWithLogic()
 	temp_available_maps_total = {};
 	bonus_map_assortment = {};

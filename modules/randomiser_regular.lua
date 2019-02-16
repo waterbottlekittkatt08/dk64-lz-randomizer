@@ -877,11 +877,11 @@ tns_parent_maps_table = {
 };
 
 k_rool_maps_table = {
-	[1] = {0xCB,5};
-	[2] = {0xCC,4};
-	[3] = {0xCD,7};
-	[4] = {0xCE,4};
-	[5] = {0xCF,5};
+	[1] = {0xCB,5,{25,4}};
+	[2] = {0xCC,4,{3,3}};
+	[3] = {0xCD,7,{6,6}};
+	[4] = {0xCE,4,{20,4}};
+	[5] = {0xCF,5,{4,4}};
 };
 
 keys = {
@@ -1653,6 +1653,7 @@ function setAssortments()
 	generateBossDoorAssortment();
 	generateTnSNumberAssortment();
 	generateBLockerAssortment();
+	getKRoolInput();
 end
 
 function getBossDestination(parent_map)
@@ -1673,10 +1674,18 @@ function getBossDestination(parent_map)
 	end
 end
 
+function getKRoolInput()
+	k_rool_input = {};
+	k_rool_input[1] = k_rool_maps_table[1][1];
+	for i = 2, 5 do
+		k_rool_input[i] = k_rool_maps_table[k_rool_assortment[i-1] + 1][1];
+	end
+end
+
 function getKRoolDestination(destmap)
 	reference = nil;
-	for i = 1, #k_rool_maps_table do
-		if k_rool_maps_table[i][1] == destmap then
+	for i = 1, #k_rool_input do
+		if k_rool_input[i] == destmap then
 			reference = i;
 		end
 	end

@@ -20,6 +20,9 @@ function randomise()
 			cmapType = mapType(current_cmap);
 			previous_msb_value = mainmemory.readbyte(Mem.map_state[version]);
 			player = getPlayerObject();
+			if transition_speed_value < 0 then
+				rando_happened = 0;
+			end
 			if isRDRAM(player) and cmapType == "regular_maps" then
 				has_control = mainmemory.readbyte(player + 0x373); -- Might be 0x37B. Changes on same frame
 				movement = mainmemory.readbyte(player + 0x154); -- Might be 0x37B. Changes on same frame
@@ -71,7 +74,7 @@ function randomise()
 						new_destmap_to_write = getBossDestination(current_pmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 						rando_happened = 1;
-					elseif dmapType == "k_rool" and current_cmap ~= 0xD6 and settings.randomiser == 1 then
+					elseif dmapType == "k_rool" and current_cmap ~= 0xD6 and settings.randomiser == 1 then -- 0xD6 = Tiny Shoe
 						new_destmap_to_write = getKRoolDestination(current_dmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 						rando_happened = 1;
@@ -91,14 +94,17 @@ function randomise()
 						end
 					end
 				end
-			elseif transition_speed_value < 0 and zipProg > 3 and zipProg < 9 and cutsceneActive == 0 and dmapType == "k_rool" and previous_msb_value % 2 == 0 then
+			elseif transition_speed_value < 0 and zipProg > 6 and zipProg < 12 and cutsceneActive == 0 and dmapType == "k_rool" and previous_msb_value % 2 == 0 then
 				mainmemory.writebyte(Mem.map_state[version], previous_msb_value + 1);
 				forcing_a_cutscene = 1;
 				-- On first frame of 6 zip progress (-1 transition speed), reload byte
 				-- ensure same dest map
 				-- Force CS number to array value
-				-- Reduce Round Number by 1
-			elseif transition_speed_value < 0 and zipProg > 3 and zipProg < 9 and cutsceneActive == 1 and cutscene == 25 and current_dmap == 0xCB and previous_msb_value % 2 == 0 then
+				-- Reduce Round Number by 14
+			elseif transition_speed_value < 0 and zipProg > 0 and zipProg < 9 and cutsceneActive == 1 and cmapType == "k_rool" and (cutscene == k_rool_maps_table[current_cmap - 0xCA][3][1] or cutscene == k_rool_maps_table[current_cmap - 0xCA][3][2])then
+				mainmemory.write_u16_be(Mem.cs[version], k_rool_maps_table[current_cmap - 0xCA][2]);
+				forcing_a_cutscene = 0;
+			elseif transition_speed_value < 0 and zipProg > 6 and zipProg < 12 and cutsceneActive == 1 and cutscene == 25 and current_dmap == 0xCB and previous_msb_value % 2 == 0 then
 				mainmemory.writebyte(Mem.map_state[version], previous_msb_value + 1);
 				forcing_a_cutscene = 1;
 			end

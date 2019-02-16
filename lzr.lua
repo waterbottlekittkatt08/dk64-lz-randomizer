@@ -520,7 +520,7 @@ function confirmSettings()
 		settings.randomiser_barrel = 1;
 		require "modules.randomiser_barrel"
 		print("Barrel Randomiser On");
-		generateBonusAssortment();
+		generateBonusAssortmentWithLogic();
 	else
 		settings.randomizer_barrel = 0;
 	end
@@ -680,6 +680,12 @@ function Spoiler()
 			else
 				file:write(levelsLower[i]..": "..b_locker_assortment[i], "\n");
 			end
+		end
+		file:write("\n");
+		file:write("K ROOL PHASE ORDER", "\n");
+		for i = 1, #k_rool_assortment do
+			file:write("\n");
+			file:write("Phase "..i..": "..kongNames[k_rool_assortment[i]].." Phase", "\n");
 		end
 	end
 	if settings.randomiser_barrel == 1 then

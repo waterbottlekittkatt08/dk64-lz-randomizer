@@ -258,7 +258,7 @@ function writeKasplats(level)
 								mainmemory.writebyte(beavers_in_map[k] + 0xF, 50); -- Scale
 								mainmemory.write_s16_be(beavers_in_map[k] + 0x40, KasplatLocations[level][value_to_check][3]); -- Chunk
 								kdr_count = kdr_count + 1;
-								kasplat_direct_replacement[kdr_count] = i;
+								kasplat_direct_replacement[kdr_count] = kasplats_in_map[i];
 								beaver_table_swap[kdr_count] = k;
 							end
 						end
@@ -318,21 +318,21 @@ function writeKasplats(level)
 					x_max = mainmemory.read_s16_be(box_address + x_max_offset);
 					z_max = mainmemory.read_s16_be(box_address + z_max_offset);
 					if box_address > 0 and agg_address > 0 then
-						if not isBetween(x_min, x_max, kasplat_x) then
-							mainmemory.write_s16_be(box_address + x_min_offset, KasplatLocations[level][value_to_check][5]);
-							mainmemory.write_s16_be(box_address + x_max_offset, KasplatLocations[level][value_to_check][6]);
-							mainmemory.write_s16_be(agg_address + 0x0, KasplatLocations[level][value_to_check][5]);
-							mainmemory.write_s16_be(agg_address + 0xC, KasplatLocations[level][value_to_check][5]);
-							mainmemory.write_s16_be(agg_address + 0x6, KasplatLocations[level][value_to_check][6]);
-							mainmemory.write_s16_be(agg_address + 0x12, KasplatLocations[level][value_to_check][6]);
-						end
-						if not isBetween(z_min, z_max, kasplat_z) then
-							mainmemory.write_s16_be(box_address + z_min_offset, KasplatLocations[level][value_to_check][7]);
-							mainmemory.write_s16_be(box_address + z_max_offset, KasplatLocations[level][value_to_check][8]);
-							mainmemory.write_s16_be(agg_address + 0x4, KasplatLocations[level][value_to_check][7]);
-							mainmemory.write_s16_be(agg_address + 0x10, KasplatLocations[level][value_to_check][7]);
-							mainmemory.write_s16_be(agg_address + 0xA, KasplatLocations[level][value_to_check][8]);
-							mainmemory.write_s16_be(agg_address + 0x16, KasplatLocations[level][value_to_check][8]);
+						if not isBetween(x_min, x_max, kasplat_x) or not isBetween(z_min, z_max, kasplat_z) then
+							if KasplatLocations[level][value_to_check][5] ~= nil then
+								mainmemory.write_s16_be(box_address + x_min_offset, KasplatLocations[level][value_to_check][5]);
+								mainmemory.write_s16_be(box_address + x_max_offset, KasplatLocations[level][value_to_check][6]);
+								mainmemory.write_s16_be(agg_address + 0x0, KasplatLocations[level][value_to_check][5]);
+								mainmemory.write_s16_be(agg_address + 0xC, KasplatLocations[level][value_to_check][5]);
+								mainmemory.write_s16_be(agg_address + 0x6, KasplatLocations[level][value_to_check][6]);
+								mainmemory.write_s16_be(agg_address + 0x12, KasplatLocations[level][value_to_check][6]);
+								mainmemory.write_s16_be(box_address + z_min_offset, KasplatLocations[level][value_to_check][7]);
+								mainmemory.write_s16_be(box_address + z_max_offset, KasplatLocations[level][value_to_check][8]);
+								mainmemory.write_s16_be(agg_address + 0x4, KasplatLocations[level][value_to_check][7]);
+								mainmemory.write_s16_be(agg_address + 0x10, KasplatLocations[level][value_to_check][7]);
+								mainmemory.write_s16_be(agg_address + 0xA, KasplatLocations[level][value_to_check][8]);
+								mainmemory.write_s16_be(agg_address + 0x16, KasplatLocations[level][value_to_check][8]);
+							end
 						end
 						for i = 1, 4 do
 							mainmemory.write_s16_be(agg_address + (6 * i) - 4, kasplat_y); -- + (20 * (1 - (2 * (i % 2))))
