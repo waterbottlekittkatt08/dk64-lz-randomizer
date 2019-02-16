@@ -4,9 +4,7 @@ resolved
 
 
 ## BUG LIST TO FIX
-- K Rool CS Skip doesn't work sometimes
 - Galleon Water Level / Fungi day setting causes inconsistencies until you load area where the change occurs (lighthouse/clock)
-- Fake K Rool Phase fix not always working
 - Spawning Japes Mountain GB not working
 - Kasplat pens use the spawn coordinates as xmin and zmin
 
@@ -63,3 +61,5 @@ resolved
 - Exits seem to be reappearing
 	- Seed 420: Exiting T&S/Cranky/Candy in Factory > Exiting Funky in Aztec
 	- Parent Exit stuff?
+- K Rool CS Skip doesn't work sometimes
+- Fake K Rool Phase fix not always working
