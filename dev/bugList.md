@@ -15,13 +15,9 @@ resolved
 - Crashes from invalid exit values exiting global maps
 - Spawning Japes Mountain GB not working
 - Tiny Caves Bonus not working
-- [Glitchless] T&S for Fungi Boss showing non-Chunky Kong
-- [Glitchless] T&S for Factory Boss showing Lanky Kong
-- Arcade is broken upon exit
 - Turning on Lighthouse CS doesn't work properly
 - Free seal GB not obtainable
 - Kasplat pens use the spawn coordinates as xmin and zmin
-- Boss Door remains shut upon re-entry if key has been collected, making it problematic for glitchless
 
 ## BUGS THAT HAVE BEEN FIXED
 - Crashing out of global maps
@@ -61,3 +57,9 @@ resolved
 - Kasplat not spawning in Caves
 - T&Ses are closing, causing entrances to be closed off
 - Softlocks are occuring
+- Arcade is broken upon exit
+- [Glitchless] T&S for Fungi Boss showing non-Chunky Kong
+- [Glitchless] T&S for Factory Boss showing Lanky Kong
+- Spoiler log for bosses shown out of order
+- Boss Door remains shut upon re-entry if key has been collected, making it problematic for glitchless
+- T&S Portals close upon exiting a level where the key has already been obtained

@@ -583,6 +583,25 @@ function getExitName(map_index, exit_index)
     return exit_index;
 end
 
+function getMapValue(search_key)
+	map_count = 0;
+	map_in_search = {};
+	for i = 1, #maps do
+		string_start = string.find(maps[i],search_key,1);
+		if string_start ~= nil then
+			map_count = map_count + 1;
+			map_in_search[map_count] = i;
+		end
+	end
+	print("Maps matching search key: "..map_count);
+	if map_count > 0 then
+		for i = 1, map_count do
+			map_value = map_in_search[i];
+			print("Map found: "..maps[map_value].." ("..toHexString(map_value-1)..")");
+		end
+	end
+end
+
 function getFullName(lz_id)
 	map_id = math.floor(lz_id / 256)
 	exit_id = lz_id - (map_id * 256)

@@ -857,13 +857,13 @@ lz_origin_exceptions_table = {
 };
 
 boss_map_table = {
-	[1] = 8,
-	[2] = 83,
-	[3] = 111,
-	[4] = 154,
-	[5] = 196,
-	[6] = 197,
-	[7] = 199
+	[1] = 8, -- Army 1
+	[2] = 197, -- Dog 1
+	[3] = 154, -- MJ
+	[4] = 111, -- Puff
+	[5] = 83, -- Dog 2
+	[6] = 196, -- Army 2
+	[7] = 199, -- KKO
 };
 
 tns_parent_maps_table = {
@@ -1603,7 +1603,7 @@ function generateTnSNumberAssortment()
 			end
 		end
 		for k = 3, 7 do
-			if tns_number_assortment[k] == 500 then -- Aztec at 400
+			if tns_number_assortment[k] == 500 then -- Other Levels at 500
 				for j = 1, #tns_probability_array do
 					if tns_probability_array[j] == k then
 						removal_count_tns = removal_count_tns + 1;
@@ -1682,7 +1682,9 @@ function setTnSDoorStuff()
 		mainmemory.write_u16_be(Mem.tnsdoor_header[version] + (2 * i), tns_number_assortment[i + 1]);
 	end
 	for i = 1, 7 do
-		mainmemory.writebyte(Mem.tnsdoor_header[version] + 0x30 + (boss_map_assortment[i] - 1), boss_door_assortment[boss_map_assortment[i]] - 1);
+		boss_assigned = boss_map_assortment[i]; -- check the value of the boss assigned to it
+		kong_assigned = boss_door_assortment[boss_assigned];-- Use that value as a lookup for the kong used
+		mainmemory.writebyte(Mem.tnsdoor_header[version] + 0x30 + (i - 1), kong_assigned - 1); -- Set that value of kong
 	end
 end
 
