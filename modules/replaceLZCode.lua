@@ -164,6 +164,8 @@ cutscene_transition_table = {
 	{38,17},
 	{57,0},
 	{48,7},
+	{61,1},
+	{48,9},
 };
 
 event.onframeend(randomise, "Randomises Destination Map");
