@@ -36,6 +36,7 @@ Mem = {
 	cutscene_type = {0x7476FC, 0x741E5C, 0x746FBC},
 	cutscene_type_map = {0x7F5B10, 0x7F5A30, 0x7F5F80},
 	cutscene_type_kong = {0x7F5BF0, 0x7F5B10, 0x7F6060},
+	loading_zone_transition_type = {0x76AEE0, 0x765A00, 0x76B0D0},
 };
 
 -------------------------------

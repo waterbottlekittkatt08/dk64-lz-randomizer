@@ -11,6 +11,7 @@ function randomise()
 			zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
 			cutscene = mainmemory.read_u16_be(Mem.cs[version]);
 			cutsceneActive = mainmemory.readbyte(Mem.cs_active[version]);
+			transition_type = mainmemory.readbyte(Mem.loading_zone_transition_type[version]);
 			current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
 			current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
 			current_pmap = mainmemory.read_u16_be(Mem.pmap[version]);
@@ -79,7 +80,7 @@ function randomise()
 						rando_happened = 1;
 					elseif cmapType ~= "bonus_maps" and cmapType ~= "crown_maps" and cmapType ~= "special_minigame_maps" and dmapType == "regular_maps" then
 						if current_cmap ~= 0x61 and current_dmap ~= 0x61 and settings.randomiser == 1 then
-							loadingZoneCode = getLoadingZone(current_dmap, current_dexit);
+							loadingZoneCode = getLoadingZone(current_dmap, current_dexit, current_cmap, cutscene, transition_type);
 							new_destexit_to_write = loadingZoneCode % 256;
 							new_destmap_to_write = (loadingZoneCode - (loadingZoneCode % 256)) / 256;
 							mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
@@ -114,9 +115,25 @@ function randomise()
 	end
 end
 
-function getLoadingZone(destmap, destexit)
+function getLoadingZone(destmap, destexit, origmap, cs_val, transition_type)
 	reference = nil;
 	lookup_value = (destmap * 256) + destexit;
+	
+	--special case: Llama temple switch
+	if destmap == 38 and destexit == 2 and transition_type == 0 then
+		print("Value maintained for llama temple switch "..lookup_value);
+		return lookup_value;
+	end
+	--disable randomization for cross-map cutscenes
+	if cutsceneActive == 1 then
+		for i=1, #cutscene_transition_table do
+			if cutscene_transition_table[i][1] == origmap and cutscene_transition_table[i][2] == cs_val then
+				print("Value maintained for cutscene transition "..lookup_value);
+				return lookup_value;
+			end
+		end
+	end
+	--normal case
 	for i = 1, #regular_map_table do
 		if regular_map_table[i] == lookup_value then
 			reference = i;
@@ -132,5 +149,21 @@ function getLoadingZone(destmap, destexit)
 		return new_dmap_code;
 	end
 end
+
+cutscene_transition_table = {
+	--map id, cutscene id
+	{62,1},
+	{48,11},
+	{29,0},
+	{26,7},
+	{49,0},
+	{30,14},
+	{62,0},
+	{48,10},
+	{61,2},
+	{38,17},
+	{57,0},
+	{48,7},
+};
 
 event.onframeend(randomise, "Randomises Destination Map");
