@@ -353,6 +353,7 @@ newFileFlags = {
 	[73] = {0x2B,5}, -- Castle FT CS
 	[74] = {0x30,0}, -- Simian Slam Given from Cranky
 	[75] = {0xD,5}, -- Factory Hatch
+	[76] = {0x2C,4}, -- BBlast CS in Japes
 };
 
 function checkNewFile()
