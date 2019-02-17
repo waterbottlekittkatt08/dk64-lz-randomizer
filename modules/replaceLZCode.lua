@@ -159,6 +159,8 @@ end
 
 cutscene_transition_table = {
 	--map id, cutscene id
+	{4,3},
+	{7,13},
 	{62,1},
 	{48,11},
 	{29,0},
