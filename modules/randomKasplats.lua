@@ -252,6 +252,7 @@ function writeKasplats(level)
 						if mainmemory.read_s16_be(beavers_in_map[k] + 6) == KasplatLocations[level][value_to_check][2][2] then
 							if mainmemory.read_s16_be(beavers_in_map[k] + 8) == KasplatLocations[level][value_to_check][2][3] then
 								mainmemory.writebyte(beavers_in_map[k],0x3C + kong); -- Set Enemy Value
+								mainmemory.writebyte(beavers_in_map[k] + 0x44,0x3C + kong); -- Set Alternative Spawn Enemy Value
 								for j = 1, 3 do
 									mainmemory.write_s16_be(beavers_in_map[k] + 2 + (2 * j), KasplatLocations[level][value_to_check][2][j]); -- X/Y/Z
 								end
@@ -298,6 +299,7 @@ function writeKasplats(level)
 					value_to_check = kasplat_assortment[level][kong];
 					number_in_array = i;
 					mainmemory.writebyte(beavers_in_map[number_in_array],0x3C + kong); -- Set Enemy Value
+					mainmemory.writebyte(beavers_in_map[number_in_array] + 0x44,0x3C + kong); -- Set Alternative Spawn Enemy Value
 					for j = 1, 3 do
 						mainmemory.write_s16_be(beavers_in_map[number_in_array] + 2 + (2 * j), KasplatLocations[level][value_to_check][2][j]); -- X/Y/Z
 					end
@@ -380,7 +382,7 @@ function writeData()
 			replaceKasplats();
 			getKasplatCount(levelIndexKasplats);
 			writeKasplats(levelIndexKasplats);
-			print("Kasplats Inserted");
+			devPrint("Kasplats Inserted: "..#kasplats_in_map);
 			kasplat_rando_happened = 1;
 		end
 	elseif transition_speed_value > 0 then

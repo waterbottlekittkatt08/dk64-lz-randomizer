@@ -1733,4 +1733,4 @@ function checkMap(map_value)
 	end
 end
 
---event.onframestart(keySwap, "Swaps keys out to prevent T&S portal disappearing");
+event.onframestart(keySwap, "Swaps keys out to prevent T&S portal disappearing");

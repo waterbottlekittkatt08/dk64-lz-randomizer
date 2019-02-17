@@ -128,14 +128,14 @@ function getLoadingZone(destmap, destexit, origmap, cs_val, transition_type)
 	
 	--special case: Llama temple switch
 	if destmap == 38 and destexit == 2 and transition_type == 0 then
-		print("Value maintained for llama temple switch "..lookup_value);
+		devPrint("Value maintained for llama temple switch "..toHexString(lookup_value));
 		return lookup_value;
 	end
 	--disable randomization for cross-map cutscenes
 	if cutsceneActive == 1 then
 		for i=1, #cutscene_transition_table do
 			if cutscene_transition_table[i][1] == origmap and cutscene_transition_table[i][2] == cs_val then
-				print("Value maintained for cutscene transition "..lookup_value);
+				devPrint("Value maintained for cutscene transition "..toHexString(lookup_value));
 				return lookup_value;
 			end
 		end
@@ -147,12 +147,12 @@ function getLoadingZone(destmap, destexit, origmap, cs_val, transition_type)
 		end
 	end
 	if reference == nil then
-		print("Value maintained as "..lookup_value);
+		devPrint("Value maintained as "..toHexString(lookup_value));
 		return lookup_value;
 	else
 		value_to_lookup = regular_map_assortment[reference];
 		new_dmap_code = regular_map_table[value_to_lookup];
-		print("Value set to as "..new_dmap_code);
+		devPrint("Value set to as "..toHexString(new_dmap_code));
 		return new_dmap_code;
 	end
 end

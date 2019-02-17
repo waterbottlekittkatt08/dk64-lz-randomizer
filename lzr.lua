@@ -11,7 +11,6 @@ Mem = {
 	zipper_progress = {0x7ECC60, 0x7ECBA0, 0x7ECE50},
 	frame_lag = {0x76AF10, 0x765A30, 0x76B100},
 	frame_real = {0x7F0560, 0x7F0480, 0x7F09D0},
-	cutscene_value = {0x7476F4, 0x741E54, 0x746FB4},
 	cutscene_timer = {0x7476F0, 0x741E50, 0x746FB0},
 	pmap = {0x76A172, 0x764C92, 0x76A362},
 	actor_count = {0x7FC3F0, 0x7FC310, 0x7FC860},
@@ -37,6 +36,7 @@ Mem = {
 	cutscene_type_map = {0x7F5B10, 0x7F5A30, 0x7F5F80},
 	cutscene_type_kong = {0x7F5BF0, 0x7F5B10, 0x7F6060},
 	loading_zone_transition_type = {0x76AEE0, 0x765A00, 0x76B0D0},
+	oranges = {0x7FCC44, nil, nil},
 };
 
 -------------------------------
@@ -186,6 +186,23 @@ function toHexString(value, desiredLength, prefix)
 	return (prefix or "0x")..value;
 end
 
+dev_mode = 0;
+
+function toggleDevMode()
+	dev_mode = 1 - dev_mode;
+	if dev_mode == 1 then
+		print("Developer Mode: On");
+	else
+		print("Developer Mode: Off");
+	end
+end
+
+function devPrint(text)
+	if dev_mode == 1 then
+		print(text);
+	end
+end
+
 regular_maps = {4,6,7,12,13,14,16,17,19,20,21,22,23,24,26,27,29,30,31,33,34,36,37,38,39,41,43,44,45,46,47,48,49,51,52,54,55,56,57,58,59,60,61,62,63,64,70,71,72,82,84,85,86,87,88,89,90,91,92,93,94,95,97,98,100,105,106,108,110,112,113,114,151,163,164,166,167,168,169,170,171,173,174,175,176,178,179,183,185,186,187,188,189,193,194,195,200};
 global_maps = {1,5,15,25,42};
 boss_maps = {8,83,111,154,196,197,199};
@@ -325,6 +342,17 @@ newFileFlags = {
 	[62] = {0x6,2}, -- Llama FT CS
 	[63] = {0x25,4}, -- Kill Kosha
 	[64] = {0x25,3}, -- Kosha Cutscene
+	[65] = {0x13,3}, -- Galleon Coconut Gate
+	[66] = {0x14,1}, -- Galleon Peanut Gate
+	[67] = {0xB,4}, -- Llama Cutscene
+	[68] = {0xB,5}, -- Lanky Help Me
+	[69] = {0xB,6}, -- Tiny Help Me
+	[70] = {0x11,4}, -- Chunky Help Me/Factory FT CS
+	[71] = {0x18,2}, -- Galleon FT CS
+	[72] = {0x20,1}, -- Fungi FT CS
+	[73] = {0x2B,5}, -- Castle FT CS
+	[74] = {0x30,0}, -- Simian Slam Given from Cranky
+	[75] = {0xD,5}, -- Factory Hatch
 };
 
 function checkNewFile()
@@ -353,6 +381,7 @@ function checkNewFile()
 			if settings.all_kongs == 1 then
 				getAllKongs();
 			end
+			mainmemory.write_u16_be(Mem.oranges[version],20); -- Gives 20 oranges
 		elseif current_dmap == 0x22 then -- Old File
 			-- If something needs to be set here
 		end
@@ -491,6 +520,9 @@ function confirmSettings()
 		if gameLengths[i] == lengthString then
 			settings.gameLengths = i;
 		end
+	end
+	if settings.gameLengths < 3 then
+		require "modules.finalHelmDoors"
 	end
 	print("Game Length: "..gameLengths[settings.gameLengths]);
 	if forms.ischecked(lzrForm.UI.form_controls["All Moves Checkbox"]) then
