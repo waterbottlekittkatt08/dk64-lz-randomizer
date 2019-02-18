@@ -23,15 +23,15 @@ function removeCutscenes()
 				mainmemory.writebyte(snide_pointers[1] + 0x232, 1);
 			end
 		end
-	elseif current_cmap == 0xCC then -- Diddy Phase
-		if cutscene == 1 then
-			krool_diddy_array = getActorPointers(292);
-			krool_diddy = krool_diddy_array[1];
-			krool_diddy_state = mainmemory.readbyte(krool_diddy + 0x155);
-			if krool_diddy_state == 3 then
-				mainmemory.writebyte(krool_diddy + 0x155, 4); -- Auto Fast Light
-			end
-		end
+	--elseif current_cmap == 0xCC then -- Diddy Phase
+	--	if cutscene == 1 then
+	--		krool_diddy_array = getActorPointers(292);
+	--		krool_diddy = krool_diddy_array[1];
+	--		krool_diddy_state = mainmemory.readbyte(krool_diddy + 0x155);
+	--		if krool_diddy_state == 3 then
+	--			mainmemory.writebyte(krool_diddy + 0x155, 4); -- Auto Fast Light
+	--		end
+	--	end
 	end
 	if settings.using_jabos == 0 then
 		quickFile() -- Getting back to the main menu faster
