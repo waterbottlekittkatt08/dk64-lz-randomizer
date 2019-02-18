@@ -1,5 +1,9 @@
-fileFlagsCount = #newFileFlags;
 if settings.gameLengths < 3 then	
-	newFileFlags[fileFlagsCount + 2] = {0x60,3};
-	newFileFlags[fileFlagsCount + 2] = {0x60,4};
+	fileFlagsCount = #newFileFlags;
+	newFileFlags[fileFlagsCount + 1] = {0x60,3}; -- Coin Door
+end
+
+if settings.gameLengths < 2 then
+	fileFlagsCount = #newFileFlags;
+	newFileFlags[fileFlagsCount + 1] = {0x60,4}; -- Crown Door
 end
