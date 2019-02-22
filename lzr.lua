@@ -37,6 +37,8 @@ Mem = {
 	cutscene_type_kong = {0x7F5BF0, 0x7F5B10, 0x7F6060},
 	loading_zone_transition_type = {0x76AEE0, 0x765A00, 0x76B0D0},
 	oranges = {0x7FCC44, nil, nil},
+	cutscene_fade_active = {0x75533B, 0x74FBBB, 0x7553FB},
+	cutscene_fade_value = {0x75533E, 0x74FBBE, 0x7553FE},
 };
 
 -------------------------------
@@ -664,6 +666,18 @@ lobbies = {
 	[6] = 193, -- Castle
 	[7] = 217, -- Isles (Value doesn't exist, so gets unused. Value is set to prevent exception error)
 	[8] = 170, -- Helm
+};
+
+keys = {
+	-- [key] = {obtained, {keyFlagByte, keyFlagBit}, {tnsFlagByte, tnsFlagBit}, {turnedFlagByte, turnedFlagBit}}
+	[1] = {0, {0x3,2}, {0x5,6}, {0x37,4}},
+	[2] = {0, {0x9,2}, {0xD,4}, {0x37,5}},
+	[3] = {0, {0x11,2}, {0x13,0}, {0x37,6}},
+	[4] = {0, {0x15,0}, {0x19,3}, {0x37,7}},
+	[5] = {0, {0x1D,4}, {0x20,2}, {0x38,0}},
+	[6] = {0, {0x24,5}, {0x25,6}, {0x38,1}},
+	[7] = {0, {0x27,5}, {0x2C,0}, {0x38,2}},
+	[8] = {0, {0x2F,4}, {0xFFFF,0}, {0x38,3}}, -- Dummy Flag used for T&S clear
 };
 
 function Spoiler()

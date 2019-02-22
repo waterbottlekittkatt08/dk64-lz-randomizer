@@ -884,18 +884,6 @@ k_rool_maps_table = {
 	[5] = {0xCF,5,{4,4}};
 };
 
-keys = {
-	-- [key] = {obtained, {keyFlagByte, keyFlagBit}, {tnsFlagByte, tnsFlagBit}}
-	[1] = {0, {0x3,2}, {0x5,6}},
-	[2] = {0, {0x9,2}, {0xD,4}},
-	[3] = {0, {0x11,2}, {0x13,0}},
-	[4] = {0, {0x15,0}, {0x19,3}},
-	[5] = {0, {0x1D,4}, {0x20,2}},
-	[6] = {0, {0x24,5}, {0x25,6}},
-	[7] = {0, {0x27,5}, {0x2C,0}},
-	[8] = {0, {0x2F,4}, {0xFFFF,0}}, -- Dummy Flag used for T&S clear
-};
-
 boss_door_kong_permits = {
 	[1] = {1, 2, 3, 4, 5}, -- Army Dillo 1
 	[2] = {1, 2, 3, 4, 5}, -- Dogadon 1
@@ -918,28 +906,30 @@ function keySwap()
 	transition_speed_value = mainmemory.readfloat(Mem.transition_speed[version], true);
 	zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
 	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
-	if transition_speed_value < 0 then
-		if zipProg < 3 and key_take_occurred == 0 then
-			for i = 1, 8 do
-				if checkFlag(keys[i][2][1],keys[i][2][2]) then
-					keys[i][1] = 1;
-					clearFlag(keys[i][2][1], keys[i][2][2]);
-					--print("Set array for key "..i.." to 1");
-				else
-					--keys[i][1] = 0;
-					--print("Set array for key "..i.." to 0");
+	if current_dmap ~= 97 then -- Not K-Lumsy
+		if transition_speed_value < 0 then
+			if zipProg < 3 and key_take_occurred == 0 then
+				for i = 1, 8 do
+					if checkFlag(keys[i][2][1],keys[i][2][2]) then
+						keys[i][1] = 1;
+						clearFlag(keys[i][2][1], keys[i][2][2]);
+						--print("Set array for key "..i.." to 1");
+					else
+						--keys[i][1] = 0;
+						--print("Set array for key "..i.." to 0");
+					end
 				end
-			end
-			key_take_occurred = 1;
-			--print("Taken Keys");
-		elseif zipProg > 30 and zipProg < 40 and key_give_occurred == 0 and current_dmap ~= 42 then
-			for i = 1, 8 do
-				if keys[i][1] == 1 then
-					setFlag(keys[i][2][1], keys[i][2][2]);
+				key_take_occurred = 1;
+				--print("Taken Keys");
+			elseif zipProg > 30 and zipProg < 40 and key_give_occurred == 0 and current_dmap ~= 42 then
+				for i = 1, 8 do
+					if keys[i][1] == 1 then
+						setFlag(keys[i][2][1], keys[i][2][2]);
+					end
 				end
+				key_give_occurred = 1;
+				--print("Returned Keys");
 			end
-			key_give_occurred = 1;
-			--print("Returned Keys");
 		end
 	end
 	if transition_speed_value > 0 and zipProg < 3 then
