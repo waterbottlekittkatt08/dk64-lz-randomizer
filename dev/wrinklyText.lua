@@ -81,7 +81,7 @@ function getTextboxPointer()
 			inLobby = 1;
 		end
 	end
-	local cutsceneType = dereferencePointer(Game.Memory.cutscene_type);
+	local cutsceneType = dereferencePointer(Mem.cutscene_type[version]);
 	cutscene = mainmemory.read_u16_be(Mem.cs[version]);
 	if inLobby == 1 then
 		if cutsceneType == Mem.cutscene_type_kong[version] and cutscene == 34 then -- Wrinkly Cutscene
@@ -100,7 +100,7 @@ function getTextboxPointer()
 end
 
 function insertText(TextboxPointer,textString)
-	TextPointer = dereferencePointer(TextboxPointer +  0x184);
+	TextPointer = dereferencePointer(TextboxPointer +  0x17C);
 	CharPointer = {};
 	CharValueAddress = {};
 	textStringLength = string.len(textString);

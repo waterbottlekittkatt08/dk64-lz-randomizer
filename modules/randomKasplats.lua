@@ -145,6 +145,7 @@ potential_enemies_table = {
 	[7] = 0x66, -- Pufftup
 	[8] = 0x53, -- Robo-Zinger
 	[9] = 0x50, -- Cutscene Object
+	[10] = 0x21, -- Gold Beaver (Beaver Rando)
 };
  
 function generateKasplatAssortment()

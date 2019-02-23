@@ -39,6 +39,8 @@ Mem = {
 	oranges = {0x7FCC44, nil, nil},
 	cutscene_fade_active = {0x75533B, 0x74FBBB, 0x7553FB},
 	cutscene_fade_value = {0x75533E, 0x74FBBE, 0x7553FE},
+	loading_zone_array_size = {0x7FDCB0, 0x7FDBF0, 0x7FE140},
+	loading_zone_array = {0x7FDCB4, 0x7FDBF4, 0x7FE144},
 };
 
 -------------------------------
@@ -186,6 +188,23 @@ function toHexString(value, desiredLength, prefix)
 	value = string.format("%X", value or 0);
 	value = string.lpad(value, desiredLength or string.len(value), '0');
 	return (prefix or "0x")..value;
+end
+
+function getLoadingZoneArray()
+	return dereferencePointer(Mem.loading_zone_array[version]);
+end
+
+loading_zone_size = 0x3A;
+
+function getLZPointers()
+	lz_pointers = {};
+	loadingZoneArray = getLoadingZoneArray();
+	if isRDRAM(loadingZoneArray) then
+		arraySize = mainmemory.read_u16_be(Mem.loading_zone_array_size[version]);
+		for i = 0, arraySize - 1 do
+			table.insert(lz_pointers, loadingZoneArray + (i * loading_zone_size));
+		end
+	end
 end
 
 dev_mode = 0;
@@ -514,6 +533,10 @@ settings = {
 	gameLengths = 1,
 };
 
+keys_short = {3, 8}; -- Only works for Glitched runs
+keys_med = {3, 6, 7, 8};
+keys_long = {1,2,3,4,5,6,7,8};
+
 function confirmSettings()
 	print("Settings Confirmed");
 	print("Seed: "..seedAsNumber);
@@ -532,6 +555,13 @@ function confirmSettings()
 		settings.all_moves = 1;
 		require "modules.allMoves"
 		print("All Moves On");
+		if settings.gameLengths == 1 then
+			keys_required_to_open_krool = keys_short;
+		elseif settings.gameLengths == 2 then
+			keys_required_to_open_krool = keys_med;
+		elseif settings.gameLengths == 3 then
+			keys_required_to_open_krool = keys_long;
+		end
 	else
 		settings.all_moves = 0;
 	end
@@ -565,6 +595,7 @@ function confirmSettings()
 	
 	settings.no_cutscenes = 1;
 	require "modules.reducedCutscenes"
+	require "modules.klapsAndBeavers"
 		
 	if forms.ischecked(lzrForm.UI.form_controls["Jabos Checkbox"]) then
 		settings.using_jabos = 1;
@@ -679,6 +710,51 @@ keys = {
 	[7] = {0, {0x27,5}, {0x2C,0}, {0x38,2}},
 	[8] = {0, {0x2F,4}, {0xFFFF,0}, {0x38,3}}, -- Dummy Flag used for T&S clear
 };
+
+if settings.gameLengths == 1 then
+	keys_required_to_open_krool = keys_short;
+elseif settings.gameLengths == 2 then
+	keys_required_to_open_krool = keys_med;
+elseif settings.gameLengths == 3 then
+	keys_required_to_open_krool = keys_long;
+end
+
+function checkKeys()
+	keys_counter = 0;
+	for i = 1, #keys_required_to_open_krool do
+		key_req = keys_required_to_open_krool[i];
+		if checkFlag(keys[key_req][4][1], keys[key_req][4][2]) then
+			keys_counter = keys_counter + 1;
+		end
+	end
+	if keys_counter == #keys_required_to_open_krool then
+		return true;
+	else
+		return false;
+	end
+end
+
+function changeKRoolLoadingZone()
+	obj_model2_timer_value = mainmemory.read_u32_be(Mem.obj_model2_timer[version]);
+	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
+	player = getPlayerObject();
+	if isRDRAM(player) then
+		player_chunk = mainmemory.read_u16_be(player + 0x12C);
+		if (obj_model2_timer_value == 30 and current_cmap == 0x22) or player_chunk == 0 then
+			getLZPointers();
+			if #lz_pointers > 0 then
+				for i = 1, #lz_pointers do
+					lz_dmap = mainmemory.read_u16_be(lz_pointers[i] + 0x12);
+					if lz_dmap == 0xCB and not checkKeys() then -- DK phase LZ
+						mainmemory.writebyte(lz_pointers[i] + 0x39, 0);
+					end
+				end
+			end
+		end
+	end
+end
+
+event.onframestart(changeKRoolLoadingZone, "Changes K Rool LZ if necessary");
 
 function Spoiler()
 	print("Writing spoiler to file...");
