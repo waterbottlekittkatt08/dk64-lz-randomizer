@@ -75,9 +75,11 @@ function randomise()
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 						rando_happened = 1;
 					elseif dmapType == "k_rool" and current_cmap ~= 0xD6 and settings.randomiser == 1 then -- 0xD6 = Tiny Shoe
-						new_destmap_to_write = getKRoolDestination(current_dmap);
-						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
-						rando_happened = 1;
+						if current_cmap ~= current_dmap and current_cmap ~= 0xD7 then -- Prevents randomisation when re-attempting rounds
+							new_destmap_to_write = getKRoolDestination(current_dmap);
+							mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
+							rando_happened = 1;
+						end
 					elseif dmapType == "global_maps" and cmapType == "regular_maps" and settings.randomiser == 1 then
 						mainmemory.write_u16_be(Mem.pmap[version], current_cmap);
 						--mainmemory.writebyte(Mem.pexit[version], current_cexit);
@@ -108,6 +110,13 @@ function randomise()
 				mainmemory.writebyte(Mem.map_state[version], previous_msb_value + 1);
 				forcing_a_cutscene = 1;
 			end
+			if transition_speed_value > 0 and dmapType == "k_rool"then
+				for i = 1, #k_rool_maps_table do
+					if k_rool_maps_table[i][1] == current_dmap then
+						mainmemory.writebyte(Mem.character[version], i - 1);
+					end
+				end
+			end
 			if transition_speed_value < 0 and cmapType == "k_rool" and cutsceneActive == 1 and forcing_a_cutscene == 1 then
 				for i = 1, #k_rool_maps_table do
 					if k_rool_maps_table[i][1] == current_cmap then
@@ -115,6 +124,16 @@ function randomise()
 						previous_kr_round = mainmemory.readbyte(Mem.krool_round[version]);
 						mainmemory.writebyte(Mem.krool_round[version], previous_kr_round - 1);
 						forcing_a_cutscene = 0;
+						
+					end
+				end
+			end
+			if transition_speed_value < 0 and cmapType == "k_rool" then
+				for i = 1, #k_rool_maps_table do
+					if k_rool_maps_table[i][1] == current_cmap then
+						if k_rool_assortment[1] == i then
+							mainmemory.writebyte(Mem.krool_round[version], 1);
+						end
 					end
 				end
 			end

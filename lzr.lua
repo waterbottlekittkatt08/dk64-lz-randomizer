@@ -41,6 +41,7 @@ Mem = {
 	cutscene_fade_value = {0x75533E, 0x74FBBE, 0x7553FE},
 	loading_zone_array_size = {0x7FDCB0, 0x7FDBF0, 0x7FE140},
 	loading_zone_array = {0x7FDCB4, 0x7FDBF4, 0x7FE144},
+	character = {0x74E77C, 0x748EDC, 0x74E05C},
 };
 
 -------------------------------

@@ -899,6 +899,16 @@ boss_door_range = { -- Normal amount is 1680
 	[2] = 500 + (500 * settings.gameLengths), -- Max
 };
 
+bblast_maps = {
+	[1] = 0x25, -- Japes
+	[2] = 0x29, -- Aztec
+	[3] = 0x6E, -- Factory
+	[4] = 0x36, -- Galleon
+	[5] = 0xBC, -- Fungi
+	[6] = 0xBA, -- Caves
+	[7] = 0xBB, -- Castle
+};
+
 key_take_occurred = 0;
 key_give_occurred = 0;
 
@@ -1636,6 +1646,34 @@ function generateBLockerAssortment()
 	end
 end
 
+function generateBBlastAssortment()
+	bblast_map_assortment = {};
+	bblast_seedSetting = seedAsNumber + 12;
+	math.randomseed(bblast_seedSetting);
+	for i = 1, #bblast_maps do
+		possible_bblasts = {};
+		bblast_poss_counter = 0;
+		for j = 1, #bblast_maps do
+			has_given = 0;
+			if #bblast_map_assortment > 0 then
+				for k = 1, #bblast_map_assortment do
+					if j == bblast_map_assortment[k] then
+						has_given = 1;
+					end
+				end
+			end
+			if i ~= j then
+				if has_given == 0 then
+					bblast_poss_counter = bblast_poss_counter + 1;
+					possible_bblasts[bblast_poss_counter] = j;
+				end
+			end
+		end
+		selected_temp_value = randomBetween(1, #possible_bblasts);
+		bblast_map_assortment[i] = possible_bblasts[selected_temp_value];
+	end
+end
+
 function setAssortments()
 	generateAssortmentWithLogic();
 	generateBossAssortment();
@@ -1644,6 +1682,7 @@ function setAssortments()
 	generateTnSNumberAssortment();
 	generateBLockerAssortment();
 	getKRoolInput();
+	generateBBlastAssortment();
 end
 
 function getBossDestination(parent_map)
@@ -1683,6 +1722,21 @@ function getKRoolDestination(destmap)
 		return destmap;
 	else
 		new_dmap_code = k_rool_maps_table[k_rool_assortment[reference]][1];
+		return new_dmap_code;
+	end
+end
+
+function getBBlastDestination(inputmap)
+	reference = nil;
+	for i = 1, #bblast_map_assortment do
+		if bblast_maps[i] == inputmap then
+			reference = i;
+		end
+	end
+	if reference == nil then
+		return inputmap;
+	else
+		new_dmap_code = bblast_maps[bblast_map_assortment[reference]];
 		return new_dmap_code;
 	end
 end

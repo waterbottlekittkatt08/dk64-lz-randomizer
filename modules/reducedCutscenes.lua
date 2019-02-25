@@ -92,6 +92,14 @@ function removeCutscenes()
 				end
 			end
 		end
+		if cutscene == 1 and cutscene_active == 1 then
+			if not checkFlag(keys[8][2][1], keys[8][2][2]) then
+				clearFlag(keys[8][4][1], keys[8][4][2]);
+			end
+			if not checkFlag(keys[3][2][1], keys[3][2][2]) then
+				clearFlag(keys[3][4][1], keys[3][4][2]);
+			end
+		end
 		if cs_fade_active == 1 and cs_fade_val == 9 and current_dmap == 153 then -- loading K Rool Takeoff
 			mainmemory.writebyte(Mem.cutscene_fade_active[version], 0);
 			mainmemory.write_u32_be(Mem.dmap[version], 0x22)
