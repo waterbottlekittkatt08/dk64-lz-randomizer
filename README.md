@@ -28,7 +28,7 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 	- This also includes the unused bonus barrels not accessible via normal gameplay!
 	- Beaver Bother cannot appear in Hideout Helm (We are nice sometimes)
 - Randomized Kasplats
-	- Over 110 locations which the 40 kasplats in the game can be
+	- Over 100 locations which the 40 kasplats in the game can be
 	- All are collectable glitchless as every kong
 	- Some are just shifted to [new locations](https://twitter.com/2dosSRL/status/1087442940094500865) and some are [in completely new maps!](https://twitter.com/2dosSRL/status/1087800177765818368)
 	- Blueprints stay in the levels you find them in (no blueprint-sanity)
