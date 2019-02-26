@@ -1,5 +1,5 @@
 <p align="center">
-  <img src ="https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/logo%20-%20ui%20(450).png" />
+  <img src ="https://raw.githubusercontent.com/theballaam96/dk64-lz-randomizer/master/image/readme%20-%20logo%20(450%2Cus).png" />
 </p>
 
 <p align="center">
