@@ -130,9 +130,11 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 - Controller Mapping
 	- Go to Config > Controllers
 	- All button mappings: Use the first page (Player 1, Normal Controls)
+		- Do NOT set your controller stick directions to A Up/Down/Left/Right on this page.
 	- Analogue Stick mapping: Use the 3rd page (Player 1, Analog Controls)
 		- This allows you to go in all directions, not just the 8 ordinal/cardinal points.
-	
+		- If a direction is inverted (eg. you are holding left, but the kong is going right), click "Flip Axis" on the appropriate axis
+
 ![devs](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20devs.png)
 - Developers
 	- [theballaam96](https://www.youtube.com/c/theballaam96srl)
