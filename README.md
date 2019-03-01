@@ -51,7 +51,7 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 			- Medium: 50 for Helm, others are less (but random)
 			- Long: 100 for Helm, others are less (but random)
 		- Doors open at the end of Helm
-			- Short: Both Coin & Crown Doors are open
+			- Short: Both Coin & Crown Doors are open, and the Blast-o-matic is off
 			- Medium: Coin Door open
 			- Long: Neither Coin or Crown Door are open
 		- Requirements to unlock K Rool
