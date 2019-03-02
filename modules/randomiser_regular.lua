@@ -895,8 +895,8 @@ boss_door_kong_permits = {
 };
 
 boss_door_range = { -- Normal amount is 1680
-	[1] = 500 * settings.gameLengths, -- Min
-	[2] = 500 + (500 * settings.gameLengths), -- Max
+	[1] = ((500 * settings.gameLengths) - 250), -- Min
+	[2] = (250 + (500 * settings.gameLengths)), -- Max
 };
 
 bblast_maps = {
@@ -1551,7 +1551,36 @@ function testRegularMapAssortment()
 	end
 end
 
+level_tns_inputs = {
+	[1] = 397, -- Japes
+	[2] = 281, -- Aztec
+	[3] = 345, -- Factory
+	[4] = 353, -- Galleon
+	[5] = 322, -- Fungi
+	[6] = 322, -- Caves
+	[7] = 350, -- Castle
+};
+
+tns_hard_cap = 350;
+tns_ratios = {3,5,6};
+
+function generateCaps()
+	level_tns_caps = {};
+	for i = 1, #level_tns_inputs do
+		update_cap = level_tns_inputs[i] * (tns_ratios[settings.gameLengths] / 7);
+		update_cap = math.floor(update_cap / 5);
+		level_tns_caps[i] = update_cap * 5;
+	end
+	
+	for i = 1, #level_tns_caps do
+		if level_tns_caps[i] > tns_hard_cap then
+			level_tns_caps[i] = tns_hard_cap;
+		end
+	end
+end
+
 function generateTnSNumberAssortment()
+	generateCaps();
 	tns_number_assortment = {};
 	for i = 1, 7 do
 		tns_number_assortment[i] = 0;
@@ -1586,24 +1615,8 @@ function generateTnSNumberAssortment()
 		tns_running_total = tns_running_total - 5;
 		list_to_remove = {};
 		removal_count_tns = 0;
-		if tns_number_assortment[1] == 200 then -- Japes at 200 (Max obtainable for DK/Diddy)
-			for j = 1, #tns_probability_array do
-				if tns_probability_array[j] == 1 then
-					removal_count_tns = removal_count_tns + 1;
-					list_to_remove[removal_count_tns] = j;
-				end
-			end
-		end
-		if tns_number_assortment[2] == 400 then -- Aztec at 400 (Max obtainable for DK/Diddy/Lanky/Tiny)
-			for j = 1, #tns_probability_array do
-				if tns_probability_array[j] == 2 then
-					removal_count_tns = removal_count_tns + 1;
-					list_to_remove[removal_count_tns] = j;
-				end
-			end
-		end
-		for k = 3, 7 do
-			if tns_number_assortment[k] == 400 then -- Capping other levels at 400 for balance purposes
+		for k = 1, 7 do
+			if tns_number_assortment[k] == level_tns_caps[k] then -- Compare assortment to caps
 				for j = 1, #tns_probability_array do
 					if tns_probability_array[j] == k then
 						removal_count_tns = removal_count_tns + 1;
@@ -1614,13 +1627,15 @@ function generateTnSNumberAssortment()
 		end
 		if #list_to_remove > 0 then
 			for j = #list_to_remove, 1, -1 do
-				table.remove(tns_probability_array, j);
+				table.remove(tns_probability_array, list_to_remove[j]);
 			end
 		end
 	end
 end
 
-function generateKRoolOrder()
+k_rool_fight_lengths = {2,3,5};
+
+function generateKRoolOrder(fightLength)
 	temporary_k_rool_table = {};
 	k_rool_assortment = {};
 	k_rool_seedSetting = seedAsNumber * 10000;
@@ -1628,12 +1643,12 @@ function generateKRoolOrder()
 		temporary_k_rool_table[i] = i;
 	end
 	math.randomseed(k_rool_seedSetting);
-	for i = 1, 4 do
+	for i = 1, (fightLength - 1) do
 		selected_temp_value = chooseRandomIndex(temporary_k_rool_table);
 		k_rool_assortment[i] = temporary_k_rool_table[selected_temp_value];
 		table.remove(temporary_k_rool_table, selected_temp_value);
 	end
-	k_rool_assortment[5] = 5; -- Always ends on Chunky Phase
+	k_rool_assortment[fightLength] = 5; -- Always ends on Chunky Phase
 end
 
 function generateBLockerAssortment()
@@ -1675,9 +1690,10 @@ function generateBBlastAssortment()
 end
 
 function setAssortments()
+	selected_kr_length = k_rool_fight_lengths[settings.gameLengths];
 	generateAssortmentWithLogic();
 	generateBossAssortment();
-	generateKRoolOrder();
+	generateKRoolOrder(selected_kr_length);
 	generateBossDoorAssortment();
 	generateTnSNumberAssortment();
 	generateBLockerAssortment();
@@ -1706,7 +1722,7 @@ end
 function getKRoolInput()
 	k_rool_input = {};
 	k_rool_input[1] = k_rool_maps_table[1][1];
-	for i = 2, 5 do
+	for i = 2, #k_rool_assortment do
 		k_rool_input[i] = k_rool_maps_table[k_rool_assortment[i-1] + 1][1];
 	end
 end
@@ -1777,4 +1793,4 @@ function checkMap(map_value)
 	end
 end
 
-event.onframestart(keySwap, "Swaps keys out to prevent T&S portal disappearing");
+event.onframestart(keySwap, "Swaps keys out (prevents T&S Portal disappear/allows refight)");

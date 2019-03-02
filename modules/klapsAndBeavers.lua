@@ -35,9 +35,10 @@ end
 
 function changeKlaptrapsAndBeavers()
 	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
+	cmapType = mapType(current_cmap);
 	transition_speed_value = mainmemory.readfloat(Mem.transition_speed[version], true);
 	obj_m2_timer_value = mainmemory.read_u32_be(Mem.obj_model2_timer[version]);
-	if transition_speed_value < 0 and obj_m2_timer_value == 1 and mini_enemy_rando_happened == 0 then
+	if transition_speed_value < 0 and obj_m2_timer_value == 1 and mini_enemy_rando_happened == 0 and cmapType ~= "bonus_maps" then
 		randomiseBeavers();
 		randomiseKlaptraps();
 		mini_enemy_rando_happened = 1;

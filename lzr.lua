@@ -42,6 +42,7 @@ Mem = {
 	loading_zone_array_size = {0x7FDCB0, 0x7FDBF0, 0x7FE140},
 	loading_zone_array = {0x7FDCB4, 0x7FDBF4, 0x7FE144},
 	character = {0x74E77C, 0x748EDC, 0x74E05C},
+	arcade_round = {0x04A76C,nil,nil},
 };
 
 -------------------------------
@@ -755,7 +756,22 @@ function changeKRoolLoadingZone()
 	end
 end
 
-event.onframestart(changeKRoolLoadingZone, "Changes K Rool LZ if necessary");
+function fixArcade()
+	arcadeGBflag = checkFlag(0x10,2);
+	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
+	if settings.gameLengths > 2 then
+		if not arcadeGBflag and current_dmap == 2 then
+			mainmemory.writebyte(Mem.arcade_round[version],1);
+		end
+	end
+end
+
+function eventCycle()
+	changeKRoolLoadingZone();
+	fixArcade();
+end
+
+event.onframestart(eventCycle, "The event cycle for various functions");
 
 function Spoiler()
 	print("Writing spoiler to file...");

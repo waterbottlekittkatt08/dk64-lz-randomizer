@@ -95,6 +95,13 @@ function randomise()
 							rando_happened = 1;
 						end
 					end
+					if current_dmap == 0x11 then -- Helm
+						mainmemory.write_u32_be(Mem.dexit[version],3); -- Enter Helm from Lever
+						if cmapType ~= "bonus_maps" and cmapType ~= "crown_maps" then -- Not coming from minigame or battle crown_maps
+							--mainmemory.writebyte(Mem.cutscene_fade_active[version],1);
+							--mainmemory.write_u16_be(Mem.cutscene_fade_value[version],2); -- Open Helm Doors
+						end
+					end
 				end
 			elseif transition_speed_value < 0 and zipProg > 6 and zipProg < 12 and cutsceneActive == 0 and dmapType == "k_rool" and previous_msb_value % 2 == 0 then
 				mainmemory.writebyte(Mem.map_state[version], previous_msb_value + 1);
