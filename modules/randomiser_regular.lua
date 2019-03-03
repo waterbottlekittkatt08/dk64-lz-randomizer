@@ -986,53 +986,57 @@ function generateAssortmentWithLogic()
 	local regular_seedSetting = seedAsNumber * 1000;
 	math.randomseed(regular_seedSetting);
 	
-	regular_map_assortment = {};
-	inverted_map_assortment = {};
-	
-	origins_remaining = {};
-	destinations_remaining = {};
-	for key, value in pairs(regular_map_table) do
-		origins_remaining[key] = value
-		destinations_remaining[key] = value;
-	end
-	
-	tagless_maps_done = {};
-
-	--Handle tag-less maps first
-	for i = 1, #tagless_map_table do
-		--step a) identify map and which kongs need access
-		local dest_map = tagless_map_table[i][1];
-		local kong_array = tagless_map_table[i][2];
+	local isValid = false;
+	repeat
+		regular_map_assortment = {};
+		inverted_map_assortment = {};
 		
-		handle_tagless_map(dest_map, kong_array);
-		file:write("\n");
-	end
-	
-	file:write("Finished assigning all tag-less maps!\n\n");
-	
-	--Fill out rest of randomization
-	for i = 1, #regular_map_table do
-		if inverted_map_assortment[i] == nil then
-			local selected_temp_value = chooseRandomIndex(origins_remaining);
-			local origin_lz = origins_remaining[selected_temp_value];
-			local origin_ref = getLzReference(origin_lz);
-			
-			if origin_ref == nil then
-				print("Error! No origins remaining!");
-			end
-			
-			inverted_map_assortment[i] = origin_ref;
-			table.remove(origins_remaining, selected_temp_value);
+		origins_remaining = {};
+		destinations_remaining = {};
+		for key, value in pairs(regular_map_table) do
+			origins_remaining[key] = value
+			destinations_remaining[key] = value;
 		end
-	end
-	regular_map_assortment = table_invert(inverted_map_assortment);
-	
-	file:write("Finished assigning all remaining maps!\n\n");
-	
-	--validate nothing went wrong
-	assert(#inverted_map_assortment == #regular_map_assortment, "Assortment contains repeated or missing pathways");
-	validateReachability();
-	
+		
+		tagless_maps_done = {};
+
+		--Handle tag-less maps first
+		for i = 1, #tagless_map_table do
+			--step a) identify map and which kongs need access
+			local dest_map = tagless_map_table[i][1];
+			local kong_array = tagless_map_table[i][2];
+			
+			handle_tagless_map(dest_map, kong_array);
+			file:write("\n");
+		end
+		
+		file:write("Finished assigning all tag-less maps!\n\n");
+		
+		--Fill out rest of randomization
+		for i = 1, #regular_map_table do
+			if inverted_map_assortment[i] == nil then
+				local selected_temp_value = chooseRandomIndex(origins_remaining);
+				local origin_lz = origins_remaining[selected_temp_value];
+				local origin_ref = getLzReference(origin_lz);
+				
+				if origin_ref == nil then
+					print("Error! No origins remaining!");
+				end
+				
+				inverted_map_assortment[i] = origin_ref;
+				table.remove(origins_remaining, selected_temp_value);
+			end
+		end
+		regular_map_assortment = table_invert(inverted_map_assortment);
+		
+		file:write("Finished assigning all remaining maps!\n\n");
+		
+		--validate nothing went wrong		
+		local reachabilityPassed = validateReachability();
+		if #inverted_map_assortment == #regular_map_assortment and reachabilityPassed then
+			isValid = true;
+		end
+	until(isValid)
 	file:close();
 end
 
@@ -1279,9 +1283,11 @@ function validateReachability()
 	if passed then
 		file:write("\nReachability validation passed!\n");
 		print("Reachability validation passed!");
+		return true;
 	else
 		file:write("\nReachability validation failed! Could not reach "..getMapName(unreachedmap),"\n");
 		print("Reachability validation failed! Could not reach "..getMapName(unreachedmap));
+		return false;
 	end
 end
 
