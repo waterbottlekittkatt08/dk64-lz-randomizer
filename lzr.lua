@@ -43,6 +43,8 @@ Mem = {
 	loading_zone_array = {0x7FDCB4, 0x7FDBF4, 0x7FE144},
 	character = {0x74E77C, 0x748EDC, 0x74E05C},
 	arcade_round = {0x04A76C,nil,nil},
+	prev_map = {0x76AEF3,nil,nil},
+	temp_flag_start = {0x7FDCE0,nil,nil},
 };
 
 -------------------------------
@@ -146,6 +148,13 @@ function checkFlag(byte, bit)
 	else
 	end
 	return false;
+end
+
+function setTempFlag(tempByte,tempBit)
+	temp_start = Mem.temp_flag_start[version]
+	temp_flag_value = mainmemory.readbyte(temp_start + tempByte);
+	temp_flag_value = bit.set(temp_flag_value,tempBit);
+	mainmemory.writebyte(temp_start + tempByte, temp_flag_value);
 end
 
 function isLoading()
@@ -619,6 +628,7 @@ function confirmSettings()
 	WriteSettings();
 	client.unpause();
 	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "");
+	forms.destroy(lzrForm.UI.options_form);
 end
 
 function setSeed(value)
@@ -742,7 +752,14 @@ function changeKRoolLoadingZone()
 	player = getPlayerObject();
 	if isRDRAM(player) then
 		player_chunk = mainmemory.read_u16_be(player + 0x12C);
-		if (obj_model2_timer_value == 30 and current_cmap == 0x22) or player_chunk == 0 then
+		willAttemptToChange = false;
+		if player_chunk == 0 then
+			willAttemptToChange = true;
+		end
+		if obj_model2_timer_value == 30 and current_cmap == 0x22 then
+			willAttemptToChange = true;
+		end
+		if willAttemptToChange then
 			getLZPointers();
 			if #lz_pointers > 0 then
 				for i = 1, #lz_pointers do
@@ -779,6 +796,7 @@ function Spoiler()
 	file:write("~~~~~~~~~~~~~", "\n");
 	file:write("SEED SPOILERS", "\n");
 	file:write("Seed Number: "..seedAsNumber, "\n");
+	file:write("Seed Length: "..gameLengths[settings.gameLengths], "/n");
 	file:write("\n");
 	if settings.randomiser == 1 then
 		file:write("REGULAR MAP ASSORTMENT", "\n");
@@ -909,8 +927,14 @@ end
 
 gameLengths = {
 	[1] = "Short",
-	[2] = "Medium",
+	[2] = "Standard",
 	[3] = "Long",
+};
+
+gameLengthsAlphabetical = {
+	[1] = "Long",
+	[2] = "Short",
+	[3] = "Standard",
 };
 
 lzrForm.UI.form_controls["Title Label 1"] = forms.label(lzrForm.UI.options_form, "DONKEY KONG 64", lzrForm.UI.col(1) + 10, lzrForm.UI.row(0) + lzrForm.UI.label_offset, 410, 24);
@@ -941,13 +965,24 @@ lzrForm.UI.form_controls["Length Dropdown"] = forms.dropdown(lzrForm.UI.options_
 seed_form_height = 13;
 seed_form_offset = 0.5;
 
+seedVal1 = seedValue[1];
+seedVal2 = seedValue[2];
+seedVal3 = seedValue[3];
+seedVal4 = seedValue[4];
+seedVal5 = seedValue[5];
+
 lzrForm.UI.form_controls["Increase 10000"] = forms.button(lzrForm.UI.options_form, "+", increase10000, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
 lzrForm.UI.form_controls["Increase 1000"] = forms.button(lzrForm.UI.options_form, "+", increase1000, lzrForm.UI.col(seed_form_offset + 3), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
 lzrForm.UI.form_controls["Increase 100"] = forms.button(lzrForm.UI.options_form, "+", increase100, lzrForm.UI.col(seed_form_offset + 4), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
 lzrForm.UI.form_controls["Increase 10"] = forms.button(lzrForm.UI.options_form, "+", increase10, lzrForm.UI.col(seed_form_offset + 5), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
 lzrForm.UI.form_controls["Increase 1"] = forms.button(lzrForm.UI.options_form, "+", increase1, lzrForm.UI.col(seed_form_offset + 6), lzrForm.UI.row(seed_form_height), lzrForm.UI.button_height, lzrForm.UI.button_height);
 
-lzrForm.UI.form_controls["Seed Label"] = forms.label(lzrForm.UI.options_form, seedString, lzrForm.UI.col(seed_form_offset), lzrForm.UI.row(seed_form_height + 1) + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Seed Label 0"] = forms.label(lzrForm.UI.options_form, "Seed:", lzrForm.UI.col(seed_form_offset), lzrForm.UI.row(seed_form_height + 1) + lzrForm.UI.label_offset, 50, 24);
+lzrForm.UI.form_controls["Seed Label 1"] = forms.label(lzrForm.UI.options_form, seedVal1, lzrForm.UI.col(seed_form_offset + 2.2), lzrForm.UI.row(seed_form_height + 1) + lzrForm.UI.label_offset, 24, 24);
+lzrForm.UI.form_controls["Seed Label 2"] = forms.label(lzrForm.UI.options_form, seedVal2, lzrForm.UI.col(seed_form_offset + 3.2), lzrForm.UI.row(seed_form_height + 1) + lzrForm.UI.label_offset, 24, 24);
+lzrForm.UI.form_controls["Seed Label 3"] = forms.label(lzrForm.UI.options_form, seedVal3, lzrForm.UI.col(seed_form_offset + 4.2), lzrForm.UI.row(seed_form_height + 1) + lzrForm.UI.label_offset, 24, 24);
+lzrForm.UI.form_controls["Seed Label 4"] = forms.label(lzrForm.UI.options_form, seedVal4, lzrForm.UI.col(seed_form_offset + 5.2), lzrForm.UI.row(seed_form_height + 1) + lzrForm.UI.label_offset, 24, 24);
+lzrForm.UI.form_controls["Seed Label 5"] = forms.label(lzrForm.UI.options_form, seedVal5, lzrForm.UI.col(seed_form_offset + 6.2), lzrForm.UI.row(seed_form_height + 1) + lzrForm.UI.label_offset, 24, 24);
 
 lzrForm.UI.form_controls["Decrease 10000"] = forms.button(lzrForm.UI.options_form, "-", decrease10000, lzrForm.UI.col(seed_form_offset + 2), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
 lzrForm.UI.form_controls["Decrease 1000"] = forms.button(lzrForm.UI.options_form, "-", decrease1000, lzrForm.UI.col(seed_form_offset + 3), lzrForm.UI.row(seed_form_height + 2) + 5, lzrForm.UI.button_height, lzrForm.UI.button_height);
@@ -979,11 +1014,27 @@ end
 if previousSettings.random_kasplats == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Kasplat Checkbox"], "Checked", true);
 end
-forms.setproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem", gameLengths[previousSettings.gameLengths]);
+gLReturn = 1;
+for i = 1, 3 do
+	if gameLengthsAlphabetical[i] == gameLengths[previousSettings.gameLengths] then
+		gLReturn = i;
+	end
+end
+
+forms.setproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem", gLReturn);
 
 function lzrForm.UI.updateReadouts()
 	getSeedString();
-	forms.settext(lzrForm.UI.form_controls["Seed Label"], seedString);
+	seedVal1 = seedValue[1];
+	seedVal2 = seedValue[2];
+	seedVal3 = seedValue[3];
+	seedVal4 = seedValue[4];
+	seedVal5 = seedValue[5];
+	forms.settext(lzrForm.UI.form_controls["Seed Label 1"], seedVal1);
+	forms.settext(lzrForm.UI.form_controls["Seed Label 2"], seedVal2);
+	forms.settext(lzrForm.UI.form_controls["Seed Label 3"], seedVal3);
+	forms.settext(lzrForm.UI.form_controls["Seed Label 4"], seedVal4);
+	forms.settext(lzrForm.UI.form_controls["Seed Label 5"], seedVal5);
 end
 
 function realTime()

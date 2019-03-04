@@ -15,9 +15,11 @@ function randomise()
 			current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
 			current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
 			current_pmap = mainmemory.read_u16_be(Mem.pmap[version]);
+			current_prevmap = mainmemory.readbyte(Mem.prev_map[version]);
 			current_cexit = mainmemory.read_u32_be(Mem.cexit[version]);
 			dmapType = mapType(current_dmap);
 			cmapType = mapType(current_cmap);
+			prevmapType = mapType(current_prevmap);
 			previous_msb_value = mainmemory.readbyte(Mem.map_state[version]);
 			player = getPlayerObject();
 			if transition_speed_value < 0 then
@@ -28,7 +30,7 @@ function randomise()
 				movement = mainmemory.readbyte(player + 0x154); -- Might be 0x37B. Changes on same frame
 				if transition_speed_value < 0 then
 					rando_happened = 0;
-					if has_control == 0 and zipProg > 6 and movement ~= 0x42 then
+					if has_control == 0 and movement ~= 0x42 and prevmapType ~= "bonus_maps" then
 						if isRDRAM(player) then
 							local value = mainmemory.readbyte(player + 0x144);
 							if bit.check(value, 2) then
@@ -67,9 +69,11 @@ function randomise()
 				end
 				if zipProg < 50 and lag == real and rando_happened == 0 then
 					if dmapType == "bonus_maps" and cmapType ~= "bonus_maps" and settings.randomiser_barrel == 1 then
-						new_destmap_to_write = getBonusDestination(current_dmap);
-						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
-						rando_happened = 1;
+						if current_cmap ~= 0xF then -- Not Snide's HQ
+							new_destmap_to_write = getBonusDestination(current_dmap);
+							mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
+							rando_happened = 1;
+						end
 					elseif dmapType == "boss_maps" and settings.randomiser == 1 then
 						new_destmap_to_write = getBossDestination(current_pmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
@@ -97,19 +101,15 @@ function randomise()
 					end
 					if current_dmap == 0x11 then -- Helm
 						mainmemory.write_u32_be(Mem.dexit[version],3); -- Enter Helm from Lever
-						if cmapType ~= "bonus_maps" and cmapType ~= "crown_maps" then -- Not coming from minigame or battle crown_maps
-							--mainmemory.writebyte(Mem.cutscene_fade_active[version],1);
-							--mainmemory.write_u16_be(Mem.cutscene_fade_value[version],2); -- Open Helm Doors
+						if current_cmap == 0xAA then -- Coming from Lobby
+							mainmemory.writebyte(Mem.cutscene_fade_active[version],1);
+							mainmemory.write_u16_be(Mem.cutscene_fade_value[version],2); -- Open Helm Doors
 						end
 					end
 				end
 			elseif transition_speed_value < 0 and zipProg > 6 and zipProg < 12 and cutsceneActive == 0 and dmapType == "k_rool" and previous_msb_value % 2 == 0 then
 				mainmemory.writebyte(Mem.map_state[version], previous_msb_value + 1);
 				forcing_a_cutscene = 1;
-				-- On first frame of 6 zip progress (-1 transition speed), reload byte
-				-- ensure same dest map
-				-- Force CS number to array value
-				-- Reduce Round Number by 14
 			elseif transition_speed_value < 0 and zipProg > 0 and zipProg < 9 and cutsceneActive == 1 and cmapType == "k_rool" and (cutscene == k_rool_maps_table[current_cmap - 0xCA][3][1] or cutscene == k_rool_maps_table[current_cmap - 0xCA][3][2])then
 				mainmemory.write_u16_be(Mem.cs[version], k_rool_maps_table[current_cmap - 0xCA][2]);
 				forcing_a_cutscene = 0;

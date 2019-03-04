@@ -104,6 +104,14 @@ function removeCutscenes()
 			mainmemory.writebyte(Mem.cutscene_fade_active[version], 0);
 			mainmemory.write_u32_be(Mem.dmap[version], 0x22)
 		end
+	elseif current_cmap == 0x11 then
+		setTempFlag(0xB8,6); -- DK Grate
+		setTempFlag(0xB8,7); -- Chunky Grate
+		setTempFlag(0xB9,0); -- Lanky Grate
+		setTempFlag(0xB9,1); -- Tiny Grate
+		if cutscene == 2 and cutscene_active == 1 and cutscene_timer > 242 then
+			setTempFlag(0xB7,3); -- Roman Numeral Doors
+		end
 	end
 	if settings.using_jabos == 0 then
 		quickFile() -- Getting back to the main menu faster
