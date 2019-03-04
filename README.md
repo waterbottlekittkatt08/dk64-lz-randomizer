@@ -3,23 +3,23 @@
 </p>
 
 <p align="center">
-A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
+A randomizer lua script for Donkey Kong 64. Intended for BizHawk.
 <br>
 <a href="https://discordapp.com/invite/6GCuY7B">Discord Invite</a>
 </p>
 
 <br>
 
-![Installation and Usage](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20install.png)
+![Installation and Usage](https://github.com/theballaam96/dk64-lz-randomizer/blob/master/image/readme%20-%20install.png)
 
 - Step 1: Open the [BizHawk emulator](https://github.com/TASVideos/BizHawk/releases/)
 - Step 2: Open any valid DK64 US ROM
 - Step 3: Open the Lua Console (Tools > Lua Console)
-- Step 4: Open the Loading Zone Randomiser (Script > Open Script > lzr.lua)
+- Step 4: Open the Loading Zone Randomizer (Script > Open Script > lzr.lua)
 - Step 5: Select the settings you want to use and determine your seed
 - Step 6: Click confirm and enjoy the oncoming madness!
 
-![Features](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20features.png)
+![Features](https://github.com/theballaam96/dk64-lz-randomizer/blob/master/image/readme%20-%20features.png)
 - Randomization of regular loading zones
 	-For example: Trying to enter the loading zone to DK Isles from Aztec Lobby could take you to the Winch Room in Fungi Forest. Exiting the Winch Room however could take you to the Library in Creepy Castle.
 	- Some maps are excluded from this randomization (Snide's, Cranky's, Candy's, Funky's, Troff 'n' Scoff, Helm Lobby and Helm Entrance)
@@ -43,9 +43,9 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 	- Either Short, Medium or Long
 	- Modifies the following:
 		- Total amount of Coloured Bananas required to open all 7 T&S Doors
-			- Short: 500 - 1000
-			- Medium: 1000 - 1500
-			- Long: 1500 - 2000
+			- Short: 250 - 750
+			- Medium: 750 - 1250
+			- Long: 1250 - 1750
 		- B-Locker Requirements
 			- Short: 25 for Helm, others are less (but random)
 			- Medium: 50 for Helm, others are less (but random)
@@ -80,7 +80,7 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 	- Beavers can either be blue or gold.
 - Spoiler log
 	
-![Future Features](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20future%20features.png)
+![Future Features](https://github.com/theballaam96/dk64-lz-randomizer/blob/master/image/readme%20-%20future%20features.png)
 - ROM generation instead of running a Lua script
 - Logic to improve the gameplay experience for all skill levels
 - Upgrade/Gun/Instrument randomization
@@ -102,40 +102,10 @@ A randomiser lua script for Donkey Kong 64. Intended for BizHawk.
 	- Shortening timers on some minigames (Eg. Teetering Turtle Trouble)
 	- Altered requirements for some minigames (Eg. Beaver Bother)
 	
-![BizHawk Setup Guide](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20setup.png)
-- Download and install BizHawk & the pre-requisites
-	- Version 1.12.1 is recommended for DK64 due to it's inclusion of the Dynarec Core Type & Jabo's Video Plugin (and also the best version for reducing BizHawk crashes)
-	- To alter your plugins/settings, open any N64 ROM, click N64 (Top bar), and then click plugins.
-	- What settings you change depends on your PC's performance.
-	
-- High Performance settings
-	- Core Type: Dynarec
-		- Other core types have bugs with chunks not appearing visually
-	- Rsp Plugin: Hle
-	- Active Video Plugin: Jabo 1.6.1
-		- This will cause some issues with objects and transparency (eg. Golden Bananas, Coloured Bananas, Warp Pads), however these are just visual
-		- However, this is good for low-performance PCs
-	- Video Resolution: 320x240
-	
-- Aesthetic Settings
-	- Core Type: Dynarec
-	- Rsp Plugin: Hle
-	- Active Video Plugin: GlideN64
-		- If you get some graphical glitching (parts of kong textures appearing way too bright, reboot the core (Ctrl + R) to fix
-		- This will act as a console reset, so don't reboot core if your progress
-	- Video Resolution: 800x600
-		- This is a decent compromise between good visual quality and good performance
-		- If your PC can handle it, feel free to increase
-		
-- Controller Mapping
-	- Go to Config > Controllers
-	- All button mappings: Use the first page (Player 1, Normal Controls)
-		- Do NOT set your controller stick directions to A Up/Down/Left/Right on this page.
-	- Analogue Stick mapping: Use the 3rd page (Player 1, Analog Controls)
-		- This allows you to go in all directions, not just the 8 ordinal/cardinal points.
-		- If a direction is inverted (eg. you are holding left, but the kong is going right), click "Flip Axis" on the appropriate axis
+![BizHawk Setup Guide](https://github.com/theballaam96/dk64-lz-randomizer/blob/master/image/readme%20-%20setup.png)
+- Click the following link to go to the guide: [Click Here](https://docs.google.com/document/d/1FmMYjsgSc7EspCEIBDOuLAvUCc6UXTlZQdBPeQowwCc/edit?usp=sharing)
 
-![devs](https://github.com/theballaam96/dk64-lz-randomiser/blob/master/image/readme%20-%20devs.png)
+![devs](https://github.com/theballaam96/dk64-lz-randomizer/blob/master/image/readme%20-%20devs.png)
 - Developers
 	- [theballaam96](https://www.youtube.com/c/theballaam96srl)
 	- [Bismuth](https://www.youtube.com/c/Bismuth9)
