@@ -753,7 +753,7 @@ function changeKRoolLoadingZone()
 	if isRDRAM(player) then
 		player_chunk = mainmemory.read_u16_be(player + 0x12C);
 		willAttemptToChange = false;
-		if player_chunk == 0 then
+		if player_chunk == 0 and current_cmap == 0x22 then
 			willAttemptToChange = true;
 		end
 		if obj_model2_timer_value == 30 and current_cmap == 0x22 then
@@ -766,6 +766,8 @@ function changeKRoolLoadingZone()
 					lz_dmap = mainmemory.read_u16_be(lz_pointers[i] + 0x12);
 					if lz_dmap == 0xCB and not checkKeys() then -- DK phase LZ
 						mainmemory.writebyte(lz_pointers[i] + 0x39, 0);
+					elseif lz_dmap == 0xCB and checkKeys() then
+						mainmemory.writebyte(lz_pointers[i] + 0x39, 1);
 					end
 				end
 			end
