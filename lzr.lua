@@ -45,6 +45,7 @@ Mem = {
 	arcade_round = {0x04A76C,nil,nil},
 	prev_map = {0x76AEF3,nil,nil},
 	temp_flag_start = {0x7FDCE0,nil,nil},
+	arcade_win_condition = {0x04BE4D,nil,nil},
 };
 
 -------------------------------
@@ -778,9 +779,14 @@ end
 function fixArcade()
 	arcadeGBflag = checkFlag(0x10,2);
 	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
-	if settings.gameLengths > 2 then
+	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
+	if settings.gameLengths < 3 then
 		if not arcadeGBflag and current_dmap == 2 then
 			mainmemory.writebyte(Mem.arcade_round[version],1);
+			arcade_win_bool = mainmemory.readbyte(Mem.arcade_win_condition[version]);
+			if arcade_win_bool == 1 and current_cmap == 2 then
+				setTempFlag(0xB2,0); -- Make GB Spawn
+			end
 		end
 	end
 end
