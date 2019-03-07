@@ -114,7 +114,7 @@ KasplatLocations = {
 		[12] = {87, {845, 330, 235}, 0, "In the water near the Tree", 780, 930, 150, 300}, -- In the water by the drain pipe exit
 		[13] = {87, {385, 1140, 1389}, 2, "Near Cranky's Hut", 320, 540, 1335, 1455}, -- by Cranky's hut
 		[14] = {87, {195, 623, 542}, 0, "Near the Rocketbarrel by the drawbridge", 140, 220, 500, 570}, -- near the lower diddy RB
-		[15] = {199, {740, 310, 630}, 0, "Inside the King Kutout Boss Fight", 615, 615, 785, 785}, -- King Kut Out Boss Fight
+		[15] = {199, {740, 310, 630}, 0, "Inside the King Kutout Boss Fight", 615, 785, 615, 785}, -- King Kut Out Boss Fight
 	},
 	[7] = { -- Isles
 		[1] = {169, {598, 0, 576}, 0, "Inside Jungle Japes Lobby", 200, 740, 320, 700},-- Japes Lobby
@@ -304,7 +304,10 @@ function writeKasplats(level)
 					for j = 1, 3 do
 						mainmemory.write_s16_be(beavers_in_map[number_in_array] + 2 + (2 * j), KasplatLocations[level][value_to_check][2][j]); -- X/Y/Z
 					end
+					mainmemory.writebyte(beavers_in_map[number_in_array] + 0xC, 35); -- Max Idle Speed
+					mainmemory.writebyte(beavers_in_map[number_in_array] + 0xD, 100); -- Max Aggro Speed
 					mainmemory.writebyte(beavers_in_map[number_in_array] + 0xF, 50); -- Scale
+					mainmemory.writebyte(beavers_in_map[number_in_array] + 0x10, 1); -- Aggression
 					mainmemory.write_s16_be(beavers_in_map[number_in_array] + 0x40, KasplatLocations[level][value_to_check][3]); -- Chunk
 					box_address = mainmemory.read_u32_be(beavers_in_map[number_in_array] + 0x1C) - 0x80000000;
 					agg_address = mainmemory.read_u32_be(box_address + 0xC) - 0x80000000
@@ -320,6 +323,10 @@ function writeKasplats(level)
 					z_min = mainmemory.read_s16_be(box_address + z_min_offset);
 					x_max = mainmemory.read_s16_be(box_address + x_max_offset);
 					z_max = mainmemory.read_s16_be(box_address + z_max_offset);
+					x_min_select = KasplatLocations[level][value_to_check][5];
+					x_max_select = KasplatLocations[level][value_to_check][6];
+					z_min_select = KasplatLocations[level][value_to_check][7];
+					z_max_select = KasplatLocations[level][value_to_check][8];
 					if box_address > 0 and agg_address > 0 then
 						if not isBetween(x_min, x_max, kasplat_x) or not isBetween(z_min, z_max, kasplat_z) then
 							if KasplatLocations[level][value_to_check][5] ~= nil then

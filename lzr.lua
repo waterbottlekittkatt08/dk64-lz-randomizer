@@ -46,6 +46,8 @@ Mem = {
 	prev_map = {0x76AEF3,nil,nil},
 	temp_flag_start = {0x7FDCE0,nil,nil},
 	arcade_win_condition = {0x04BE4D,nil,nil},
+	obj_model2_array_pointer = {0x7F6000, 0x7F5F20, 0x7F6470},
+	obj_model2_array_count = {0x7F6004, 0x7F5F24, 0x7F6474},
 };
 
 -------------------------------
@@ -264,6 +266,32 @@ function getEnemyPointerFromIds(enemyIdTable)
 		end
 	end
 	return enemyIdPointerList;
+end
+
+function getObjectModel2Array()
+	return dereferencePointer(Mem.obj_model2_array_pointer[version]);
+end
+
+function getOM2Type(objectModel2Base)
+	local model2ID = mainmemory.read_u16_be(objectModel2Base + 0x84);
+	return model2ID
+end
+
+function getOM2PointersFromId(OM2Type)
+	om2Pointers = {};
+	om2_counter = 0;
+	local objModel2Array = getObjectModel2Array();
+	if isRDRAM(objModel2Array) then
+		local numSlots = mainmemory.read_u32_be(Mem.obj_model2_array_count[version]);
+		for i = 1, numSlots do
+			local base = objModel2Array + (i - 1) * 0x90;
+			if getOM2Type(base) == OM2Type then
+				om2_counter = om2_counter + 1;
+				om2Pointers[om2_counter] = base;
+			end
+		end
+	end
+	return om2Pointers;
 end
 
 function mapType(mapNumber)
@@ -776,11 +804,28 @@ function changeKRoolLoadingZone()
 	end
 end
 
+function changeKRoolVisibility() -- Not working rn, WIP
+	obj_model2_timer_value = mainmemory.read_u32_be(Mem.obj_model2_timer[version]);
+	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
+	if current_cmap == 0x22 and obj_model2_timer_value == 1 and checkKeys() then
+		krool_ship_pointers = getOM2PointersFromId(0x2A3);
+		krool_ship_pointer = krool_ship_pointers[1];
+		krool_behav_pointer = dereferencePointer(krool_ship_pointer + 0x7C);
+		mainmemory.writebyte(krool_behav_pointer + 0x60,0);
+	end
+end
+
 function fixArcade()
-	arcadeGBflag = checkFlag(0x10,2);
 	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
 	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
-	if settings.gameLengths < 3 then
+	validArcade = false;
+	if current_cmap == 2 or current_cmap == 0x1A or current_cmap == 0x50 then
+		if current_dmap == 2 then
+			validArcade = true;
+		end
+	end
+	if settings.gameLengths < 3 and validArcade  then
+		arcadeGBflag = checkFlag(0x10,2);
 		if not arcadeGBflag and current_dmap == 2 then
 			mainmemory.writebyte(Mem.arcade_round[version],1);
 			arcade_win_bool = mainmemory.readbyte(Mem.arcade_win_condition[version]);
