@@ -655,6 +655,7 @@ function confirmSettings()
 		client.reboot_core();
 	end
 	WriteSettings();
+	Spoiler();
 	client.unpause();
 	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "");
 	forms.destroy(lzrForm.UI.options_form);
@@ -849,7 +850,7 @@ function Spoiler()
 	file:write("~~~~~~~~~~~~~", "\n");
 	file:write("SEED SPOILERS", "\n");
 	file:write("Seed Number: "..seedAsNumber, "\n");
-	file:write("Seed Length: "..gameLengths[settings.gameLengths], "/n");
+	file:write("Seed Length: "..gameLengths[settings.gameLengths], "\n");
 	file:write("\n");
 	if settings.randomiser == 1 then
 		file:write("REGULAR MAP ASSORTMENT", "\n");
@@ -945,6 +946,10 @@ function WriteSettings()
 	file:close();
 	print("Saved settings to settings.lua!");
 end
+
+random_seedSetting = os.time()
+random_seedSetting = random_seedSetting % 100000;
+math.randomseed(random_seedSetting);
 
 function randomiseSeedValue()
 	seedAsNumber = randomBetween(0,99999);
@@ -1067,14 +1072,8 @@ end
 if previousSettings.random_kasplats == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Kasplat Checkbox"], "Checked", true);
 end
-gLReturn = 1;
-for i = 1, 3 do
-	if gameLengthsAlphabetical[i] == gameLengths[previousSettings.gameLengths] then
-		gLReturn = i;
-	end
-end
 
-forms.setproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem", gLReturn);
+forms.setproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem", gameLengths[previousSettings.gameLengths]);
 
 function lzrForm.UI.updateReadouts()
 	getSeedString();
