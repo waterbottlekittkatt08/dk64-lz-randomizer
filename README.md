@@ -26,38 +26,44 @@ A randomizer lua script for Donkey Kong 64. Intended for BizHawk.
 - Randomization of Bonus Barrels
 	- For Example: Trying to enter the bonus barrel near Arcade in Frantic Factory (Which would take you to Stash Snatch) might take you to Mad Maze Maul
 	- This also includes the unused bonus barrels not accessible via normal gameplay!
-	- Beaver Bother cannot appear in Hideout Helm (We are nice sometimes)
+	- Beaver Bother, the two harder Minecart Mayhems, and a couple unused minigames cannot appear in Hideout Helm (We are nice sometimes)
 - Randomized Kasplats
 	- Over 100 locations which the 40 kasplats in the game can be
 	- All are collectable glitchless as every kong
 	- Some are just shifted to [new locations](https://twitter.com/2dosSRL/status/1087442940094500865) and some are [in completely new maps!](https://twitter.com/2dosSRL/status/1087800177765818368)
 	- Blueprints stay in the levels you find them in (no blueprint-sanity)
+		- One exception, the Kasplat in Kut Out will belong to Castle regardless of what level Kut Out appears in
 - Randomized bosses
 	- The boss you fight in each level is random (the spawned keys are not)
 	- The kong used to fight each boss is random
 	- The coloured bananas required to open a boss is randomised
-	- Exceptions: Chunky must fight Dogadon 2, Lanky cannot fight Mad Jack
+		- The counts cannot go above a certain cap that's determined on a level-by-level basis
+	- Exceptions: Chunky must fight Dogadon 2, Lanky cannot fight Mad Jack, Tiny can't fight Army Dillo II, DK can't fight pufftoss
 - Access to K Rool has been modified
 	- Depends on Game Length selected
 - Game Length Modifiers
-	- Either Short, Medium or Long
+	- Either Short, Standard or Long
 	- Modifies the following:
 		- Total amount of Coloured Bananas required to open all 7 T&S Doors
 			- Short: 250 - 750
-			- Medium: 750 - 1250
+			- Standard: 750 - 1250
 			- Long: 1250 - 1750
 		- B-Locker Requirements
 			- Short: 25 for Helm, others are less (but random)
-			- Medium: 50 for Helm, others are less (but random)
+			- Standard: 50 for Helm, others are less (but random)
 			- Long: 100 for Helm, others are less (but random)
 		- Doors open at the end of Helm
 			- Short: Both Coin & Crown Doors are open, and the Blast-o-matic is off
-			- Medium: Coin Door open
+			- Standard: Coin Door open
 			- Long: Neither Coin or Crown Door are open
 		- Requirements to unlock K Rool
 			- Short: Keys 3 & 8
-			- Medium: Keys 3, 6, 7 & 8
+			- Standard: Keys 3, 6, 7 & 8
 			- Long: All 8 Keys
+		- K Rool Phases if phases are randomised
+			- Short: 2 Phases
+			- Standard: 3 Phases
+			- Long: 5 Phases
 - Cutscenes are reduced/excessive text removed
 	- You will be taken to the main menu right after the Nintendo Logo, skipping the DK Rap, Rareware & N64 Logo and DK TV
 	- Training barrels are completed and Simian Slam is already learned
