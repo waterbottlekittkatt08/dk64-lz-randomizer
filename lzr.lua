@@ -1,31 +1,31 @@
 Mem = {
-	kong_base = {0x7FC950, 0x7FC890, 0x7FCDE0},
-	rng = {0x746A40, 0x7411A0, 0x746300},
-	dmap = {0x7444E4, 0x73EC34, 0x743DA4},
-	mode = {0x755318, 0x74FB98, 0x7553D8},
-	transition_speed = {0x7FD88C, 0x7FD7CC, 0x7FDD1C},
-	cmap = {0x76A0A8, 0x764BC8, 0x76A298},
-	dexit = {0x7444E8, 0x73EC38, 0x743DA8},
-	cs = {0x7476F4, 0x741E54, 0x746FB4},
-	cs_active = {0x7444EC, 0x73EC3C, 0x743DAC},
-	zipper_progress = {0x7ECC60, 0x7ECBA0, 0x7ECE50},
-	frame_lag = {0x76AF10, 0x765A30, 0x76B100},
-	frame_real = {0x7F0560, 0x7F0480, 0x7F09D0},
-	cutscene_timer = {0x7476F0, 0x741E50, 0x746FB0},
-	pmap = {0x76A172, 0x764C92, 0x76A362},
-	actor_count = {0x7FC3F0, 0x7FC310, 0x7FC860},
-	pointer_list = {0x7FBFF0, 0x7FBF10, 0x7FC460},
-	map_state = {0x76A0B1, 0x764BD1, 0x76A2A1},
-	krool_round = {0x750AD4, 0x74B224, 0x7503B4},
+	kong_base = {0x7FC950, 0x7FC890, 0x7FCDE0}, -- Header
+	rng = {0x746A40, 0x7411A0, 0x746300}, -- u32
+	dmap = {0x7444E4, 0x73EC34, 0x743DA4}, -- u32
+	mode = {0x755318, 0x74FB98, 0x7553D8}, -- u8
+	transition_speed = {0x7FD88C, 0x7FD7CC, 0x7FDD1C}, -- float
+	cmap = {0x76A0A8, 0x764BC8, 0x76A298}, -- u32
+	dexit = {0x7444E8, 0x73EC38, 0x743DA8}, -- u32
+	cs = {0x7476F4, 0x741E54, 0x746FB4}, -- u16
+	cs_active = {0x7444EC, 0x73EC3C, 0x743DAC}, -- u8
+	zipper_progress = {0x7ECC60, 0x7ECBA0, 0x7ECE50}, -- u8
+	frame_lag = {0x76AF10, 0x765A30, 0x76B100}, -- u32
+	frame_real = {0x7F0560, 0x7F0480, 0x7F09D0}, -- u32
+	cutscene_timer = {0x7476F0, 0x741E50, 0x746FB0}, -- u16
+	pmap = {0x76A172, 0x764C92, 0x76A362}, -- u16
+	actor_count = {0x7FC3F0, 0x7FC310, 0x7FC860}, -- u16
+	pointer_list = {0x7FBFF0, 0x7FBF10, 0x7FC460}, -- header
+	map_state = {0x76A0B1, 0x764BD1, 0x76A2A1}, -- u8 bitfield
+	krool_round = {0x750AD4, 0x74B224, 0x7503B4}, -- u8
 	level_index_mapping = {0x7445E0, 0x73ED30, 0x743EA0},
 	eeprom_copy_base = {0x7ECEA8, 0x7ECDC8, 0x7ED318},
 	eeprom_file_mapping = {0x7EDEA8, 0x7EDDC8, 0x7EE318},
 	file = {0x7467C8, 0x740F18, 0x746088},
-	story_skip = {0x74452C,0x73EC7C,0x743DEC},
+	story_skip = {0x74452C,0x73EC7C,0x743DEC}, -- u8
 	enemy_respawn_object = {0x7FDC8C, 0x7FDBCC, 0x7FE11C},
 	num_enemies = {0x7FDC88, 0x7FDBC8, 0x7FE118},
-	obj_model2_timer = {0x76A064, 0x764B84, 0x76A254},
-	cexit = {0x76A0AC, 0x764BCC, 0x76A29C},
+	obj_model2_timer = {0x76A064, 0x764B84, 0x76A254}, -- u32
+	cexit = {0x76A0AC, 0x764BCC, 0x76A29C}, -- u32
 	pexit = {0x76A174, 0x764C94, 0x76A364},
 	music = {0x7458DD, nil, nil},
 	insubmap = {0x76A160, nil, nil},
@@ -238,10 +238,11 @@ function devPrint(text)
 	end
 end
 
-regular_maps = {4,6,7,12,13,14,16,17,19,20,21,22,23,24,26,27,29,30,31,33,34,36,37,38,39,41,43,44,45,46,47,48,49,51,52,54,55,56,57,58,59,60,61,62,63,64,70,71,72,82,84,85,86,87,88,89,90,91,92,93,94,95,97,98,100,105,106,108,110,112,113,114,151,163,164,166,167,168,169,170,171,173,174,175,176,178,179,183,185,186,187,188,189,193,194,195,200};
+regular_maps = {4,6,7,12,13,14,16,17,19,20,21,22,23,24,26,27,29,30,31,33,34,36,38,39,43,44,45,46,47,48,49,51,52,55,56,57,58,59,60,61,62,63,64,70,71,72,82,84,85,86,87,88,89,90,91,92,93,94,95,97,98,100,105,106,108,112,113,114,151,163,164,166,167,168,169,170,171,173,174,175,176,178,179,183,185,189,193,194,195,200};
 global_maps = {1,5,15,25,42};
 boss_maps = {8,83,111,154,196,197,199};
 special_minigame_maps = {2,9};
+baboon_blast = {37,41,54,110,186,187,188};
 bonus_maps = {3,10,18,32,35,50,65,66,67,68,69,74,75,77,78,79,96,99,101,102,103,104,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,165,201,202,209,210,211,212};
 crown_maps = {53,73,155,156,157,158,159,160,161,162};
 training_barrels = {177,180,181,182};
@@ -335,6 +336,11 @@ function mapType(mapNumber)
 			return "k_rool";
 		end
 	end
+	for i = 1, #baboon_blast do
+		if mapNumber == baboon_blast[i] then
+			return "baboon_blast";
+		end
+	end
 	return "Unassigned";
 end
 
@@ -424,7 +430,7 @@ function checkNewFile()
 	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
 	zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
 	if current_cmap == 80 and cutsceneActive == 6 and cutsceneValue == 19 and zipProg < 37 then -- Entering New File
-		if settings.randomiser_regular == 1 then
+		if settings.randomiser == 1 then
 			setTnSDoorStuff();
 		end
 		if current_dmap == 176 then -- New File
@@ -573,8 +579,8 @@ settings = {
 	gameLengths = 1,
 };
 
-keys_short = {3, 8}; -- Only works for Glitched runs
-keys_med = {3, 6, 7, 8};
+keys_short = {1,2,3,4,5,6,7,8};
+keys_med = {1,2,3,4,5,6,7,8};
 keys_long = {1,2,3,4,5,6,7,8};
 
 function confirmSettings()
@@ -617,9 +623,8 @@ function confirmSettings()
 		require "modules.randomiser_regular"
 		print("Randomiser On");
 		setAssortments();
-		setTnSDoorStuff();
 	else
-		settings.randomizer = 0;
+		settings.randomiser = 0;
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["Barrel Randomiser Checkbox"]) then
 		settings.randomiser_barrel = 1;
@@ -627,7 +632,7 @@ function confirmSettings()
 		print("Barrel Randomiser On");
 		generateBonusAssortmentWithLogic();
 	else
-		settings.randomizer_barrel = 0;
+		settings.randomiser_barrel = 0;
 	end
 	if settings.randomiser_barrel == 1 or settings.randomiser == 1 then
 		require "modules.replaceLZCode"
@@ -636,6 +641,9 @@ function confirmSettings()
 	settings.no_cutscenes = 1;
 	require "modules.reducedCutscenes"
 	require "modules.klapsAndBeavers"
+	require "modules.troffnscoff"
+	setTnSAssortments();
+	setTnSDoorStuff();
 		
 	if forms.ischecked(lzrForm.UI.form_controls["Jabos Checkbox"]) then
 		settings.using_jabos = 1;

@@ -49,7 +49,6 @@ regular_map_table = {
 	0x220A,
 	0x220B,
 	0x2400,
-	0x2500,
 	0x2600,
 	0x2601,
 	0x2602,
@@ -61,7 +60,6 @@ regular_map_table = {
 	0x2611,
 	0x2613,
 	0x2700,
-	0x2900,
 	0x2B00,
 	0x2B01,
 	0x2B02,
@@ -92,7 +90,6 @@ regular_map_table = {
 	0x3100,
 	0x3300,
 	0x3400,
-	0x3600,
 	0x3700,
 	0x3800,
 	0x3900,
@@ -159,7 +156,6 @@ regular_map_table = {
 	0x6900,
 	0x6A00,
 	0x6C00,
-	0x6E00,
 	0x7000,
 	0x7100,
 	0x7101,
@@ -189,9 +185,6 @@ regular_map_table = {
 	0xB703,
 	0xB704,
 	0xB900,
-	0xBA00,
-	0xBB00,
-	0xBC00,
 	0xBD00,
 	0xC100,
 	0xC101,
@@ -277,9 +270,7 @@ inaccessible_map_table_Diddy = {
 	0x1D00,
 	0x1F00,
 	0x2100,
-	0x2500,
 	0x2700,
-	0x2900,
 	0x2B01,
 	0x2B02,
 	0x2C00,
@@ -291,7 +282,6 @@ inaccessible_map_table_Diddy = {
 	0x3005,
 	0x3007,
 	0x3400,
-	0x3600,
 	0x3700,
 	0x3B00,
 	0x3D01,
@@ -318,7 +308,6 @@ inaccessible_map_table_Diddy = {
 	0x6200,
 	0x6A00,
 	0x6C00,
-	0x6E00,
 	0x7100,
 	0x7102,
 	0x7200,
@@ -328,9 +317,6 @@ inaccessible_map_table_Diddy = {
 	0xA800,
 	0xB300,
 	0xB900,
-	0xBA00,
-	0xBB00,
-	0xBC00,
 	0xBD00,
 };
 
@@ -347,9 +333,7 @@ inaccessible_map_table_Lanky = {
 	0x1D00,
 	0x1F00,
 	0x2100,
-	0x2500,
 	0x2700,
-	0x2900,
 	0x2B00,
 	0x2B01,
 	0x2C00,
@@ -361,7 +345,6 @@ inaccessible_map_table_Lanky = {
 	0x3007,
 	0x3300,
 	0x3400,
-	0x3600,
 	0x3700,
 	0x3800,
 	0x3B00,
@@ -383,7 +366,6 @@ inaccessible_map_table_Lanky = {
 	0x5F00,
 	0x6400,
 	0x6A00,
-	0x6E00,
 	0x7000,
 	0x7100,
 	0x7102,
@@ -393,9 +375,6 @@ inaccessible_map_table_Lanky = {
 	0xA700,
 	0xB300,
 	0xB900,
-	0xBA00,
-	0xBB00,
-	0xBC00,
 	0xBD00,
 	0xC800,
 };
@@ -410,9 +389,7 @@ inaccessible_map_table_Tiny = {
 	0x1D00,
 	0x1F00,
 	0x2100,
-	0x2500,
 	0x2700,
-	0x2900,
 	0x2B00,
 	0x2B01,
 	0x2B02,
@@ -420,7 +397,6 @@ inaccessible_map_table_Tiny = {
 	0x2F01,
 	0x3005,
 	0x3300,
-	0x3600,
 	0x3700,
 	0x3800,
 	0x3B00,
@@ -443,16 +419,12 @@ inaccessible_map_table_Tiny = {
 	0x6200,
 	0x6400,
 	0x6A00,
-	0x6E00,
 	0x7000,
 	0x7100,
 	0x7200,
 	0x7201, --special case: library back door
 	0xA600,
 	0xA800,
-	0xBA00,
-	0xBB00,
-	0xBC00,
 	0xC800,
 };
 
@@ -470,9 +442,7 @@ inaccessible_map_table_Chunky = {
 	0x1700,
 	0x1B00,
 	0x1D00,
-	0x2500,
 	0x2700,
-	0x2900,
 	0x2B00,
 	0x2B02,
 	0x2C00,
@@ -484,7 +454,6 @@ inaccessible_map_table_Chunky = {
 	0x3007,
 	0x3300,
 	0x3400,
-	0x3600,
 	0x3800,
 	0x3B00,
 	0x3D01,
@@ -509,7 +478,6 @@ inaccessible_map_table_Chunky = {
 	0x6400,
 	0x6A00,
 	0x6C00,
-	0x6E00,
 	0x7102,
 	0x7200,
 	0x7201, --special case: library back door
@@ -517,9 +485,6 @@ inaccessible_map_table_Chunky = {
 	0xA800,
 	0xB300,
 	0xB900,
-	0xBA00,
-	0xBB00,
-	0xBC00,
 	0xBD00,
 	0xC800,
 };
@@ -576,9 +541,7 @@ tagless_map_table = {
 	{31, {5}},
 	{33, {5}},
 	{36, {1,3}},
-	{37, {1}},
 	{39, {1}},
-	{41, {1}},
 	{43, {2}, 0x2B00},
 	{43, {5}, 0x2B01},
 	{43, {3}, 0x2B02},
@@ -591,7 +554,6 @@ tagless_map_table = {
 	{49, {1}},
 	{51, {2}},
 	{52, {4}},
-	{54, {1}},
 	{55, {5}},
 	{56, {2}},
 	{57, {2}},
@@ -619,7 +581,6 @@ tagless_map_table = {
 	{105, {3}},
 	{106, {1}},
 	{108, {3,4}},
-	{110, {1}},
 	{112, {1,2,5}},
 	{113, {5}, 0x7100},
 	{113, {4}, 0x7101},
@@ -630,9 +591,6 @@ tagless_map_table = {
 	{168, {3}},
 	{179, {4}},
 	{185, {4}},
-	{186, {1}},
-	{187, {1}},
-	{188, {1}},
 	{189, {4}}
 };
 
@@ -684,7 +642,6 @@ lz_origin_map_table = {
 	[0x220A] = {194},
 	[0x220B] = {193},
 	[0x2400] = {26},
-	[0x2500] = {7},
 	[0x2600] = {173,38},
 	[0x2601] = {16},
 	[0x2602] = {20},
@@ -697,7 +654,6 @@ lz_origin_map_table = {
 	[0x2611] = {14},
 	[0x2613] = {173},
 	[0x2700] = {30,39},
-	[0x2900] = {38},
 	[0x2B00] = {30},
 	[0x2B01] = {30},
 	[0x2B02] = {30},
@@ -729,7 +685,6 @@ lz_origin_map_table = {
 	[0x3100] = {30},
 	[0x3300] = {30},
 	[0x3400] = {48},
-	[0x3600] = {30},
 	[0x3700] = {48,55},
 	[0x3800] = {48},
 	[0x3900] = {48,57},
@@ -798,7 +753,6 @@ lz_origin_map_table = {
 	[0x6900] = {87},
 	[0x6A00] = {112,106},
 	[0x6C00] = {183,108},
-	[0x6E00] = {26},
 	[0x7000] = {183},
 	[0x7001] = {106},
 	[0x7100] = {87},
@@ -825,9 +779,6 @@ lz_origin_map_table = {
 	[0xB300] = {30},
 	[0xB700] = {87},
 	[0xB704] = {108},
-	[0xBA00] = {72},
-	[0xBB00] = {87},
-	[0xBC00] = {48},
 	[0xBD00] = {34},
 	[0xC100] = {34},
 	[0xC101] = {87,88,105,108,112,113,114,151,163,164,166,167,168,183},
@@ -859,47 +810,12 @@ lz_origin_exceptions_table = {
 	[0xB703] = {0x7000},
 };
 
-boss_map_table = {
-	[1] = 8, -- Army 1
-	[2] = 197, -- Dog 1
-	[3] = 154, -- MJ
-	[4] = 111, -- Puff
-	[5] = 83, -- Dog 2
-	[6] = 196, -- Army 2
-	[7] = 199, -- KKO
-};
-
-tns_parent_maps_table = {
-	[1] = {0x7}, -- Japes (Japes Main Map)
-	[2] = {0x26}, -- Aztec (Aztec Main, 
-	[3] = {0x1A}, -- Factory
-	[4] = {0x1E}, -- Galleon
-	[5] = {0x30}, -- Fungi
-	[6] = {0x48}, -- Caves
-	[7] = {0x57, 0x97, 0xB7}, -- Castle
-};
-
 k_rool_maps_table = {
 	[1] = {0xCB,5,{25,4}};
 	[2] = {0xCC,4,{3,3}};
 	[3] = {0xCD,7,{6,6}};
 	[4] = {0xCE,4,{20,4}};
 	[5] = {0xCF,5,{4,4}};
-};
-
-boss_door_kong_permits = {
-	[1] = {1, 2, 3, 4, 5}, -- Army Dillo 1
-	[2] = {1, 2, 3, 4, 5}, -- Dogadon 1
-	[3] = {1, 2, 4, 5}, -- Mad Jack
-	[4] = {2, 3, 4, 5}, -- Pufftoss
-	[5] = {5}, -- Dogadon 2
-	[6] = {1, 2, 3, 5}, -- Army Dillo 2
-	[7] = {1, 2, 3, 4, 5}, -- King Kut Out
-};
-
-boss_door_range = { -- Normal amount is 1680
-	[1] = ((500 * settings.gameLengths) - 250), -- Min
-	[2] = (250 + (500 * settings.gameLengths)), -- Max
 };
 
 bblast_maps = {
@@ -912,6 +828,7 @@ bblast_maps = {
 	[7] = 0xBB, -- Castle
 };
 
+--[[
 key_take_occurred = 0;
 key_give_occurred = 0;
 
@@ -954,6 +871,7 @@ function keySwap()
 		--print("Reset key swap bits");
 	end
 end
+]]--
 
 function reprintRMTable()
 	RMTcounter = 0;
@@ -1564,88 +1482,6 @@ function testRegularMapAssortment()
 	end
 end
 
-level_tns_inputs = {
-	[1] = 397, -- Japes
-	[2] = 281, -- Aztec
-	[3] = 345, -- Factory
-	[4] = 353, -- Galleon
-	[5] = 322, -- Fungi
-	[6] = 322, -- Caves
-	[7] = 350, -- Castle
-};
-
-tns_hard_cap = 350;
-tns_ratios = {3,5,6};
-
-function generateCaps()
-	level_tns_caps = {};
-	for i = 1, #level_tns_inputs do
-		update_cap = level_tns_inputs[i] * (tns_ratios[settings.gameLengths] / 7);
-		update_cap = math.floor(update_cap / 5);
-		level_tns_caps[i] = update_cap * 5;
-	end
-	
-	for i = 1, #level_tns_caps do
-		if level_tns_caps[i] > tns_hard_cap then
-			level_tns_caps[i] = tns_hard_cap;
-		end
-	end
-end
-
-function generateTnSNumberAssortment()
-	generateCaps();
-	tns_number_assortment = {};
-	for i = 1, 7 do
-		tns_number_assortment[i] = 0;
-	end
-	tns_priority = {};
-	tns_temp_priority = {};
-	for i = 1, 7 do
-		tns_temp_priority[i] = i;
-	end
-	tns_number_seedSetting = seedAsNumber + 120;
-	math.randomseed(tns_number_seedSetting);
-	for i = 1, 7 do
-		selected_value = chooseRandomIndex(tns_temp_priority);
-		selected_value2 = tns_temp_priority[selected_value];
-		tns_priority[i] = selected_value2;
-	end
-	tns_probability_array = {};
-	tns_array_counter = 0;
-	for i = 1, 7 do
-		for j = 1, tns_priority[i] do
-			tns_array_counter = tns_array_counter + 1;
-			tns_probability_array[tns_array_counter] = i;
-		end
-	end
-	tns_total_temp = randomBetween(boss_door_range[1],boss_door_range[2]);
-	tns_total = tns_total_temp - (tns_total_temp % 5);
-	tns_running_total = tns_total;
-	for i = 1, (tns_total / 5) do
-		selected_level_value = chooseRandomIndex(tns_probability_array);
-		selected_level = tns_probability_array[selected_level_value];
-		tns_number_assortment[selected_level] = tns_number_assortment[selected_level] + 5;
-		tns_running_total = tns_running_total - 5;
-		list_to_remove = {};
-		removal_count_tns = 0;
-		for k = 1, 7 do
-			if tns_number_assortment[k] == level_tns_caps[k] then -- Compare assortment to caps
-				for j = 1, #tns_probability_array do
-					if tns_probability_array[j] == k then
-						removal_count_tns = removal_count_tns + 1;
-						list_to_remove[removal_count_tns] = j;
-					end
-				end
-			end
-		end
-		if #list_to_remove > 0 then
-			for j = #list_to_remove, 1, -1 do
-				table.remove(tns_probability_array, list_to_remove[j]);
-			end
-		end
-	end
-end
-
 k_rool_fight_lengths = {2,3,5};
 
 function generateKRoolOrder(fightLength)
@@ -1705,11 +1541,7 @@ end
 function setAssortments()
 	selected_kr_length = k_rool_fight_lengths[settings.gameLengths];
 	generateAssortmentWithLogic();
-	generateBossAssortment();
 	generateKRoolOrder(selected_kr_length);
-	generateBossDoorAssortment();
-	generateTnSNumberAssortment();
-	generateBLockerAssortment();
 	getKRoolInput();
 	generateBBlastAssortment();
 end
@@ -1770,20 +1602,6 @@ function getBBlastDestination(inputmap)
 	end
 end
 
-function setTnSDoorStuff()
-	for i = 0, 6 do
-		mainmemory.write_u16_be(Mem.tnsdoor_header[version] + (2 * i), tns_number_assortment[i + 1]);
-	end
-	for i = 0, 7 do
-		mainmemory.write_u16_be(Mem.tnsdoor_header[version] + 0x10 + (2 * i), b_locker_assortment[i + 1]);
-	end
-	for i = 1, 7 do
-		boss_assigned = boss_map_assortment[i]; -- check the value of the boss assigned to it
-		kong_assigned = boss_door_assortment[boss_assigned];-- Use that value as a lookup for the kong used
-		mainmemory.writebyte(Mem.tnsdoor_header[version] + 0x30 + (i - 1), kong_assigned - 1); -- Set that value of kong
-	end
-end
-
 level_index_flags = {
 	[0] = {0x38,5}, -- Japes
 	[1] = {0x38,6}, -- Aztec
@@ -1806,4 +1624,4 @@ function checkMap(map_value)
 	end
 end
 
-event.onframestart(keySwap, "Swaps keys out (prevents T&S Portal disappear/allows refight)");
+--event.onframestart(keySwap, "Swaps keys out (prevents T&S Portal disappear/allows refight)");

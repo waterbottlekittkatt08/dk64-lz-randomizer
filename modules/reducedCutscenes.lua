@@ -41,69 +41,18 @@ function removeCutscenes()
 				mainmemory.writebyte(snide_pointers[1] + 0x232, 1);
 			end
 		end
-	--elseif current_cmap == 0xCC then -- Diddy Phase
-	--	if cutscene == 1 then
-	--		krool_diddy_array = getActorPointers(292);
-	--		krool_diddy = krool_diddy_array[1];
-	--		krool_diddy_state = mainmemory.readbyte(krool_diddy + 0x155);
-	--		if krool_diddy_state == 3 then
-	--			mainmemory.writebyte(krool_diddy + 0x155, 4); -- Auto Fast Light
-	--		end
-	--	end
+	--[[
+	elseif current_cmap == 0xCC then -- Diddy Phase
+		if cutscene == 1 then
+			krool_diddy_array = getActorPointers(292);
+			krool_diddy = krool_diddy_array[1];
+			krool_diddy_state = mainmemory.readbyte(krool_diddy + 0x155);
+			if krool_diddy_state == 3 then
+				mainmemory.writebyte(krool_diddy + 0x155, 4); -- Auto Fast Light
+			end
+		end ]]--
 	elseif current_cmap == 97 then
-		if cutscene == 0 and cutscene_active == 1 and padlock_swap_occurred == 0 then
-			padlock_actors = getActorPointers(334);
-			if #padlock_actors > 0 then
-				padlock_actor_pointer_array = {};
-				for i = 1, #padlock_actors do
-					previous_value = mainmemory.readbyte(padlock_actors[i] + 0x17A);
-					padlock_actor_pointer_array[previous_value + 1] = padlock_actors[i];
-					mainmemory.writebyte(padlock_actors[i] + 0x17A, 7);
-				end
-				padlock_swap_occurred = 1;
-			end
-		end
-		if cutscene == 0 and cutscene_active == 1 then
-			padlock_actors = getActorPointers(334);
-			if #padlock_actors > 0 then
-				for i = 1, 8 do
-					if padlock_actor_pointer_array[i] ~= nil then
-						state = mainmemory.readbyte(padlock_actor_pointer_array[i] + 0x154);
-						sub_state = mainmemory.readbyte(padlock_actor_pointer_array[i] + 0x155);
-						if state == 3 and sub_state == 1 then -- Key turning in
-							setFlag(keys[i][4][1], keys[i][4][2]);
-							if not checkFlag(keys[8][2][1], keys[8][2][2]) then
-								clearFlag(keys[8][4][1], keys[8][4][2]);
-							end
-						end
-					end
-				end
-			end
-		elseif obj_model2_timer_value < klumsy_check_lower then
-			padlock_swap_occurred = 0;
-			padlock_actors = getActorPointers(334);
-			if #padlock_actors > 0 then
-				for i = 1, #padlock_actors do
-					assigned_key = mainmemory.readbyte(padlock_actors[i] + 0x17A) + 1;
-					if checkFlag(keys[assigned_key][2][1], keys[assigned_key][2][2]) then -- has key
-						mainmemory.writebyte(padlock_actors[i] + 0x154, 2); -- Key active for turn-in
-						mainmemory.writebyte(padlock_actors[i] + 0x147, 1); -- Has key inside (visually)
-					end
-				end
-			end
-		end
-		if cutscene == 1 and cutscene_active == 1 then
-			if not checkFlag(keys[8][2][1], keys[8][2][2]) then
-				clearFlag(keys[8][4][1], keys[8][4][2]);
-			end
-			if not checkFlag(keys[3][2][1], keys[3][2][2]) then
-				clearFlag(keys[3][4][1], keys[3][4][2]);
-			end
-		end
-		if cs_fade_active == 1 and cs_fade_val == 9 and current_dmap == 153 then -- loading K Rool Takeoff
-			mainmemory.writebyte(Mem.cutscene_fade_active[version], 0);
-			mainmemory.write_u32_be(Mem.dmap[version], 0x22)
-		end
+		-- KLumsyKeyCompression() 
 	elseif current_cmap == 0x11 then
 		setTempFlag(0xB8,6); -- DK Grate
 		setTempFlag(0xB8,7); -- Chunky Grate
@@ -117,6 +66,62 @@ function removeCutscenes()
 		quickFile() -- Getting back to the main menu faster
 	end
 	mainmemory.writebyte(Mem.story_skip[version],1);
+end
+
+function KLumsyKeyCompression()
+	if cutscene == 0 and cutscene_active == 1 and padlock_swap_occurred == 0 then
+		padlock_actors = getActorPointers(334);
+		if #padlock_actors > 0 then
+			padlock_actor_pointer_array = {};
+			for i = 1, #padlock_actors do
+				previous_value = mainmemory.readbyte(padlock_actors[i] + 0x17A);
+				padlock_actor_pointer_array[previous_value + 1] = padlock_actors[i];
+				mainmemory.writebyte(padlock_actors[i] + 0x17A, 7);
+			end
+			padlock_swap_occurred = 1;
+		end
+	end
+	if cutscene == 0 and cutscene_active == 1 then
+		padlock_actors = getActorPointers(334);
+		if #padlock_actors > 0 then
+			for i = 1, 8 do
+				if padlock_actor_pointer_array[i] ~= nil then
+					state = mainmemory.readbyte(padlock_actor_pointer_array[i] + 0x154);
+					sub_state = mainmemory.readbyte(padlock_actor_pointer_array[i] + 0x155);
+					if state == 3 and sub_state == 1 then -- Key turning in
+						setFlag(keys[i][4][1], keys[i][4][2]);
+						if not checkFlag(keys[8][2][1], keys[8][2][2]) then
+							clearFlag(keys[8][4][1], keys[8][4][2]);
+						end
+					end
+				end
+			end
+		end
+	elseif obj_model2_timer_value < klumsy_check_lower then
+		padlock_swap_occurred = 0;
+		padlock_actors = getActorPointers(334);
+		if #padlock_actors > 0 then
+			for i = 1, #padlock_actors do
+				assigned_key = mainmemory.readbyte(padlock_actors[i] + 0x17A) + 1;
+				if checkFlag(keys[assigned_key][2][1], keys[assigned_key][2][2]) then -- has key
+					mainmemory.writebyte(padlock_actors[i] + 0x154, 2); -- Key active for turn-in
+					mainmemory.writebyte(padlock_actors[i] + 0x147, 1); -- Has key inside (visually)
+				end
+			end
+		end
+	end
+	if cutscene == 1 and cutscene_active == 1 then
+		if not checkFlag(keys[8][2][1], keys[8][2][2]) then
+			clearFlag(keys[8][4][1], keys[8][4][2]);
+		end
+		if not checkFlag(keys[3][2][1], keys[3][2][2]) then
+			clearFlag(keys[3][4][1], keys[3][4][2]);
+		end
+	end
+	if cs_fade_active == 1 and cs_fade_val == 9 and current_dmap == 153 then -- loading K Rool Takeoff
+		mainmemory.writebyte(Mem.cutscene_fade_active[version], 0);
+		mainmemory.write_u32_be(Mem.dmap[version], 0x22)
+	end
 end
 
 function quickFile()
