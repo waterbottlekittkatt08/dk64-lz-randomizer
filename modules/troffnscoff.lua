@@ -94,7 +94,7 @@ function generateTnSNumberAssortment()
 	tns_number_seedSetting = seedAsNumber + 120;
 	math.randomseed(tns_number_seedSetting);
 	for i = 1, 7 do
-		selected_value = chooseRandomIndex(tns_temp_priority);
+		selected_value = randomBetween(1,#tns_temp_priority);
 		selected_value2 = tns_temp_priority[selected_value];
 		tns_priority[i] = selected_value2;
 	end
@@ -110,7 +110,7 @@ function generateTnSNumberAssortment()
 	tns_total = tns_total_temp - (tns_total_temp % 5);
 	tns_running_total = tns_total;
 	for i = 1, (tns_total / 5) do
-		selected_level_value = chooseRandomIndex(tns_probability_array);
+		selected_level_value = randomBetween(1,#tns_probability_array);
 		selected_level = tns_probability_array[selected_level_value];
 		tns_number_assortment[selected_level] = tns_number_assortment[selected_level] + 5;
 		tns_running_total = tns_running_total - 5;
@@ -150,7 +150,7 @@ function generateListOfNeededKeys()
 	end
 	math.randomseed(keys_seedSetting);
 	for i = 1, (amount_needed - 1) do
-		selected_temp_value = chooseRandomIndex(temporary_keys_table);
+		selected_temp_value = randomBetween(1,#temporary_keys_table);
 		needed_keys[i] = temporary_keys_table[selected_temp_value];
 		table.remove(temporary_keys_table, selected_temp_value);
 	end
@@ -181,8 +181,27 @@ function generateListOfUnneededKeys()
 	end
 end
 
+function generateBossDoorAssortment()
+	boss_door_assortment = {};
+	boss_door_seedSetting = seedAsNumber + 5;
+	math.randomseed(boss_door_seedSetting);
+	for i = 1, #boss_door_kong_permits do
+		selected_temp_value = randomBetween(1,#boss_door_kong_permits[i]);
+		boss_door_assortment[i] = boss_door_kong_permits[i][selected_temp_value];
+	end
+end
+
+function generateBLockerAssortment()
+	b_locker_assortment = {};
+	b_locker_assortment[8] = 100 / (2 ^ (3 - settings.gameLengths));
+	b_locker_seedSetting = seedAsNumber + 801;
+	math.randomseed(b_locker_seedSetting);
+	for i = 1, 7 do
+		b_locker_assortment[i] = randomBetween(1,b_locker_assortment[8] - 1);
+	end
+end
+
 function setTnSAssortments()
-	generateBossAssortment();
 	generateBossDoorAssortment();
 	generateTnSNumberAssortment();
 	generateBLockerAssortment();

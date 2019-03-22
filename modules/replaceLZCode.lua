@@ -67,10 +67,12 @@ function randomise()
 					mainmemory.writebyte(Mem.insubmap[version], 0);
 					mainmemory.writebyte(Mem.insubmap_b[version], 0);
 				end
+				--[[
 				if dmapType == "baboon_blast" then
 					mainmemory.writebyte(Mem.insubmap[version], 1);
 					mainmemory.writebyte(Mem.insubmap_b[version], 2);
 				end
+				]]--
 				if zipProg < 50 and lag == real and rando_happened == 0 then
 					if dmapType == "bonus_maps" and cmapType ~= "bonus_maps" and settings.randomiser_barrel == 1 then
 						if current_cmap ~= 0xF then -- Not Snide's HQ
@@ -102,10 +104,12 @@ function randomise()
 							checkMap(new_destmap_to_write);
 							rando_happened = 1;
 						end
+					--[[
 					elseif cmapType == "regular_maps" and dmapType == "baboon_blast" and settings.randomiser == 1 then
 						new_destmap_to_write = getBBlastDestination(current_dmap);
 						--mainmemory.write_u32_be(Mem.dmap[version],new_destmap_to_write); -- TODO: Need to fix BBlast Crashes
 						rando_happened = 1;
+					]]--
 					end
 					if current_dmap == 0x11 then -- Helm
 						mainmemory.write_u32_be(Mem.dexit[version],3); -- Enter Helm from Lever

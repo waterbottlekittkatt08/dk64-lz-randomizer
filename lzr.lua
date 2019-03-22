@@ -238,11 +238,11 @@ function devPrint(text)
 	end
 end
 
-regular_maps = {4,6,7,12,13,14,16,17,19,20,21,22,23,24,26,27,29,30,31,33,34,36,38,39,43,44,45,46,47,48,49,51,52,55,56,57,58,59,60,61,62,63,64,70,71,72,82,84,85,86,87,88,89,90,91,92,93,94,95,97,98,100,105,106,108,112,113,114,151,163,164,166,167,168,169,170,171,173,174,175,176,178,179,183,185,189,193,194,195,200};
+regular_maps = {4,6,7,12,13,14,16,17,19,20,21,22,23,24,26,27,29,30,31,33,34,36,37,38,39,41,43,44,45,46,47,48,49,51,52,54,55,56,57,58,59,60,61,62,63,64,70,71,72,82,84,85,86,87,88,89,90,91,92,93,94,95,97,98,100,105,106,108,110,112,113,114,151,163,164,166,167,168,169,170,171,173,174,175,176,178,179,183,185,186,187,188,189,193,194,195,200};
 global_maps = {1,5,15,25,42};
 boss_maps = {8,83,111,154,196,197,199};
 special_minigame_maps = {2,9};
-baboon_blast = {37,41,54,110,186,187,188};
+--baboon_blast = {37,41,54,110,186,187,188};
 bonus_maps = {3,10,18,32,35,50,65,66,67,68,69,74,75,77,78,79,96,99,101,102,103,104,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,165,201,202,209,210,211,212};
 crown_maps = {53,73,155,156,157,158,159,160,161,162};
 training_barrels = {177,180,181,182};
@@ -336,11 +336,13 @@ function mapType(mapNumber)
 			return "k_rool";
 		end
 	end
+	--[[
 	for i = 1, #baboon_blast do
 		if mapNumber == baboon_blast[i] then
 			return "baboon_blast";
 		end
 	end
+	]]--
 	return "Unassigned";
 end
 
@@ -421,23 +423,37 @@ newFileFlags = {
 	[74] = {0x30,0}, -- Simian Slam Given from Cranky
 	[75] = {0xD,5}, -- Factory Hatch
 	[76] = {0x2C,4}, -- BBlast CS in Japes
+	[77] = {0x10,1}, -- Arcade Lever Spawned
+};
+
+newFileTempFlags = {
+	[1] = {0xBD,0}, -- Army 1 Long Intro
+	[2] = {0xBC,7}, -- Dog 1 Long Intro
+	[3] = {0xBD,2}, -- MJ Long Intro
+	[4] = {0xBD,3}, -- Puff Long Intro
+	[5] = {0xBD,1}, -- Dog 2 Long Intro
+	[6] = {0xBD,5}, -- Army 2 Long Intro
+	[7] = {0xBD,4}, -- KKO Long Intro
 };
 
 function checkNewFile()
 	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
-	cutsceneValue = mainmemory.read_u16_be(Mem.cs[version]);
-	cutsceneActive = mainmemory.readbyte(Mem.cs_active[version]);
 	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
-	zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
-	if current_cmap == 80 and cutsceneActive == 6 and cutsceneValue == 19 and zipProg < 37 then -- Entering New File
-		if settings.randomiser == 1 then
-			setTnSDoorStuff();
-		end
-		if current_dmap == 176 then -- New File
+	if current_cmap == 80 and current_dmap ~= 80 then -- In Main Menu, Moving to a new map
+		main_menu_controller_pointers = getActorPointers(326);
+		selected_pointer = main_menu_controller_pointers[1];
+		main_menu_position = mainmemory.readbyte(selected_pointer + 0x18A);
+		if main_menu_position == 3 then -- File Progress Screen
+			if settings.randomiser == 1 then
+				setTnSDoorStuff();
+			end
 			mainmemory.write_u32_be(Mem.dmap[version],0x22);
 			mainmemory.write_u32_be(Mem.dexit[version],0);
 			for i = 1, #newFileFlags do
 				setFlag(newFileFlags[i][1],newFileFlags[i][2]);
+			end
+			for i = 1, #newFileTempFlags do
+				setTempFlag(newFileTempFlags[i][1], newFileTempFlags[i][2]);
 			end
 			for i = 0, 4 do
 				selected_kong_header = Mem.kong_base[version] + (i * 0x5E);
@@ -450,8 +466,6 @@ function checkNewFile()
 				getAllKongs();
 			end
 			mainmemory.write_u16_be(Mem.oranges[version],20); -- Gives 20 oranges
-		elseif current_dmap == 0x22 then -- Old File
-			-- If something needs to be set here
 		end
 	end
 end
@@ -622,7 +636,6 @@ function confirmSettings()
 		settings.randomiser = 1;
 		require "modules.randomiser_regular"
 		print("Randomiser On");
-		setAssortments();
 	else
 		settings.randomiser = 0;
 	end
@@ -642,6 +655,9 @@ function confirmSettings()
 	require "modules.reducedCutscenes"
 	require "modules.klapsAndBeavers"
 	require "modules.troffnscoff"
+	if settings.randomiser == 1 then
+		setAssortments();
+	end
 	setTnSAssortments();
 	setTnSDoorStuff();
 		

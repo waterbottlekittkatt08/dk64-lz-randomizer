@@ -49,6 +49,7 @@ regular_map_table = {
 	0x220A,
 	0x220B,
 	0x2400,
+	0x2500,
 	0x2600,
 	0x2601,
 	0x2602,
@@ -60,6 +61,7 @@ regular_map_table = {
 	0x2611,
 	0x2613,
 	0x2700,
+	0x2900,
 	0x2B00,
 	0x2B01,
 	0x2B02,
@@ -90,6 +92,7 @@ regular_map_table = {
 	0x3100,
 	0x3300,
 	0x3400,
+	0x3600,
 	0x3700,
 	0x3800,
 	0x3900,
@@ -156,6 +159,7 @@ regular_map_table = {
 	0x6900,
 	0x6A00,
 	0x6C00,
+	0x6E00,
 	0x7000,
 	0x7100,
 	0x7101,
@@ -185,6 +189,9 @@ regular_map_table = {
 	0xB703,
 	0xB704,
 	0xB900,
+	0xBA00,
+	0xBB00,
+	0xBC00,
 	0xBD00,
 	0xC100,
 	0xC101,
@@ -270,7 +277,9 @@ inaccessible_map_table_Diddy = {
 	0x1D00,
 	0x1F00,
 	0x2100,
+	0x2500,
 	0x2700,
+	0x2900,
 	0x2B01,
 	0x2B02,
 	0x2C00,
@@ -282,6 +291,7 @@ inaccessible_map_table_Diddy = {
 	0x3005,
 	0x3007,
 	0x3400,
+	0x3600,
 	0x3700,
 	0x3B00,
 	0x3D01,
@@ -308,6 +318,7 @@ inaccessible_map_table_Diddy = {
 	0x6200,
 	0x6A00,
 	0x6C00,
+	0x6E00,
 	0x7100,
 	0x7102,
 	0x7200,
@@ -317,6 +328,9 @@ inaccessible_map_table_Diddy = {
 	0xA800,
 	0xB300,
 	0xB900,
+	0xBA00,
+	0xBB00,
+	0xBC00,
 	0xBD00,
 };
 
@@ -333,7 +347,9 @@ inaccessible_map_table_Lanky = {
 	0x1D00,
 	0x1F00,
 	0x2100,
+	0x2500,
 	0x2700,
+	0x2900,
 	0x2B00,
 	0x2B01,
 	0x2C00,
@@ -345,6 +361,7 @@ inaccessible_map_table_Lanky = {
 	0x3007,
 	0x3300,
 	0x3400,
+	0x3600,
 	0x3700,
 	0x3800,
 	0x3B00,
@@ -366,6 +383,7 @@ inaccessible_map_table_Lanky = {
 	0x5F00,
 	0x6400,
 	0x6A00,
+	0x6E00,
 	0x7000,
 	0x7100,
 	0x7102,
@@ -375,6 +393,9 @@ inaccessible_map_table_Lanky = {
 	0xA700,
 	0xB300,
 	0xB900,
+	0xBA00,
+	0xBB00,
+	0xBC00,
 	0xBD00,
 	0xC800,
 };
@@ -389,7 +410,9 @@ inaccessible_map_table_Tiny = {
 	0x1D00,
 	0x1F00,
 	0x2100,
+	0x2500,
 	0x2700,
+	0x2900,
 	0x2B00,
 	0x2B01,
 	0x2B02,
@@ -397,6 +420,7 @@ inaccessible_map_table_Tiny = {
 	0x2F01,
 	0x3005,
 	0x3300,
+	0x3600,
 	0x3700,
 	0x3800,
 	0x3B00,
@@ -419,12 +443,16 @@ inaccessible_map_table_Tiny = {
 	0x6200,
 	0x6400,
 	0x6A00,
+	0x6E00,
 	0x7000,
 	0x7100,
 	0x7200,
 	0x7201, --special case: library back door
 	0xA600,
 	0xA800,
+	0xBA00,
+	0xBB00,
+	0xBC00,
 	0xC800,
 };
 
@@ -442,7 +470,9 @@ inaccessible_map_table_Chunky = {
 	0x1700,
 	0x1B00,
 	0x1D00,
+	0x2500,
 	0x2700,
+	0x2900,
 	0x2B00,
 	0x2B02,
 	0x2C00,
@@ -454,6 +484,7 @@ inaccessible_map_table_Chunky = {
 	0x3007,
 	0x3300,
 	0x3400,
+	0x3600,
 	0x3800,
 	0x3B00,
 	0x3D01,
@@ -478,6 +509,7 @@ inaccessible_map_table_Chunky = {
 	0x6400,
 	0x6A00,
 	0x6C00,
+	0x6E00,
 	0x7102,
 	0x7200,
 	0x7201, --special case: library back door
@@ -485,6 +517,9 @@ inaccessible_map_table_Chunky = {
 	0xA800,
 	0xB300,
 	0xB900,
+	0xBA00,
+	0xBB00,
+	0xBC00,
 	0xBD00,
 	0xC800,
 };
@@ -541,7 +576,9 @@ tagless_map_table = {
 	{31, {5}},
 	{33, {5}},
 	{36, {1,3}},
+	{37, {1}},
 	{39, {1}},
+	{41, {1}},
 	{43, {2}, 0x2B00},
 	{43, {5}, 0x2B01},
 	{43, {3}, 0x2B02},
@@ -554,6 +591,7 @@ tagless_map_table = {
 	{49, {1}},
 	{51, {2}},
 	{52, {4}},
+	{54, {1}},
 	{55, {5}},
 	{56, {2}},
 	{57, {2}},
@@ -581,6 +619,7 @@ tagless_map_table = {
 	{105, {3}},
 	{106, {1}},
 	{108, {3,4}},
+	{110, {1}},
 	{112, {1,2,5}},
 	{113, {5}, 0x7100},
 	{113, {4}, 0x7101},
@@ -591,6 +630,9 @@ tagless_map_table = {
 	{168, {3}},
 	{179, {4}},
 	{185, {4}},
+	{186, {1}},
+	{187, {1}},
+	{188, {1}},
 	{189, {4}}
 };
 
@@ -642,6 +684,7 @@ lz_origin_map_table = {
 	[0x220A] = {194},
 	[0x220B] = {193},
 	[0x2400] = {26},
+	[0x2500] = {7},
 	[0x2600] = {173,38},
 	[0x2601] = {16},
 	[0x2602] = {20},
@@ -654,6 +697,7 @@ lz_origin_map_table = {
 	[0x2611] = {14},
 	[0x2613] = {173},
 	[0x2700] = {30,39},
+	[0x2900] = {38},
 	[0x2B00] = {30},
 	[0x2B01] = {30},
 	[0x2B02] = {30},
@@ -685,6 +729,7 @@ lz_origin_map_table = {
 	[0x3100] = {30},
 	[0x3300] = {30},
 	[0x3400] = {48},
+	[0x3600] = {30},
 	[0x3700] = {48,55},
 	[0x3800] = {48},
 	[0x3900] = {48,57},
@@ -753,6 +798,7 @@ lz_origin_map_table = {
 	[0x6900] = {87},
 	[0x6A00] = {112,106},
 	[0x6C00] = {183,108},
+	[0x6E00] = {26},
 	[0x7000] = {183},
 	[0x7001] = {106},
 	[0x7100] = {87},
@@ -779,6 +825,9 @@ lz_origin_map_table = {
 	[0xB300] = {30},
 	[0xB700] = {87},
 	[0xB704] = {108},
+	[0xBA00] = {72},
+	[0xBB00] = {87},
+	[0xBC00] = {48},
 	[0xBD00] = {34},
 	[0xC100] = {34},
 	[0xC101] = {87,88,105,108,112,113,114,151,163,164,166,167,168,183},
@@ -1439,16 +1488,6 @@ function generateBossAssortment()
 	end
 end
 
-function generateBossDoorAssortment()
-	boss_door_assortment = {};
-	boss_door_seedSetting = seedAsNumber + 5;
-	math.randomseed(boss_seedSetting);
-	for i = 1, #boss_door_kong_permits do
-		selected_temp_value = randomBetween(1,#boss_door_kong_permits[i]);
-		boss_door_assortment[i] = boss_door_kong_permits[i][selected_temp_value];
-	end
-end
-
 function validateData(value)
 	for i = 1, #regular_map_assortment do
 		if regular_map_assortment[i] == value then
@@ -1500,16 +1539,6 @@ function generateKRoolOrder(fightLength)
 	k_rool_assortment[fightLength] = 5; -- Always ends on Chunky Phase
 end
 
-function generateBLockerAssortment()
-	b_locker_assortment = {};
-	b_locker_assortment[8] = 100 / (2 ^ (3 - settings.gameLengths));
-	b_locker_seedSetting = seedAsNumber + 801;
-	math.randomseed(b_locker_seedSetting);
-	for i = 1, 7 do
-		b_locker_assortment[i] = randomBetween(1,b_locker_assortment[8] - 1);
-	end
-end
-
 function generateBBlastAssortment()
 	bblast_map_assortment = {};
 	bblast_seedSetting = seedAsNumber + 12;
@@ -1542,6 +1571,7 @@ function setAssortments()
 	selected_kr_length = k_rool_fight_lengths[settings.gameLengths];
 	generateAssortmentWithLogic();
 	generateKRoolOrder(selected_kr_length);
+	generateBossAssortment();
 	getKRoolInput();
 	generateBBlastAssortment();
 end
