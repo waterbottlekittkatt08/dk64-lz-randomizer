@@ -47,7 +47,8 @@ KasplatLocations = {
 		[12] = {26, {621, 440, 1335}, 7, "Inside the central Crusher in Production Room", 600, 650, 1310, 1360, {1,2,3,4,5}},-- Inside the Crusher
 		[13] = {26, {1276, 201, 710}, 0, "On Chunky's Cage", 1130, 1540, 530, 900, {1,2,3,4,5}}, -- On Chunky's Cage
 		[14] = {26, {1579, 811, 2197}, 10, "Near Snide's", 1510, 1660, 2120, 2240, {1,2,3,4,5}}, -- Snide's
-		--[15] = {26, {2664, 1034, 1834}, 8, "On the 1-16 Number Game"},-- Number game
+		[15] = {29, {116, 2, 121}, -1, "In the Power Shed", 68,151,66,154,{1}},-- Power Shed	
+		--[16] = {26, {2664, 1034, 1834}, 8, "On the 1-16 Number Game"},-- Number game	
 	},
 	[3] = { -- Galleon
 		[1] = {30, {3468, 1670, 3803}, 8, "Near the 3 Above-Ground treasure Chests", 3340, 3500, 3715, 3900, {1,2,3,4,5}},-- Chest area
@@ -248,6 +249,75 @@ function isBetween(bound_lower, bound_upper, value)
 	return false;
 end
 
+function spawnInNewKasplat(kasplatLevel,kasplatIndex,kasplatKong)
+	freeMemory = 0x7FFE00;
+	spawner_size = 0x48;
+	m_box_size = 0x24;
+	a_box_size = 0x30;
+	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
+	for i = 1, #maps_with_no_spawners do
+		if maps_with_no_spawners[i] == current_cmap then
+			enemy_count = mainmemory.read_u16_be(Mem.num_enemies[version]);
+			mainmemory.write_u16_be(Mem.num_enemies[version],enemy_count + 1);
+			mainmemory.write_u32_be(Mem.enemy_respawn_object[version], 0x80000000 + freeMemory);
+			createNewKasplatSpawner(freeMemory, freeMemory + spawner_size, freeMemory + spawner_size + m_box_size,kasplatKong,kasplatLevel,kasplatIndex);
+		end
+	end
+end
+
+function createNewKasplatSpawner(spawnerHeader,movementBoxHeader,aggBoxHeader,kong,level,kasplatLocationIndex)
+	mainmemory.writebyte(spawnerHeader,0x3C + kong); -- Kasplat type
+	for i = 1, 3 do
+		mainmemory.write_s16_be(spawnerHeader + 2 + (2 * i), KasplatLocations[level][kasplatLocationIndex][2][i]); -- Set Positions
+	end
+	mainmemory.writebyte(spawnerHeader + 0xC, 35); -- Set Max Idle Speed
+	mainmemory.writebyte(spawnerHeader + 0xD, 100);	-- Set Max Aggro Speed
+	mainmemory.writebyte(spawnerHeader + 0xF, 50); -- Scale
+	mainmemory.writebyte(spawnerHeader + 0x10, 1); -- Aggression
+	mainmemory.writebyte(spawnerHeader + 0x13, 1); -- Spawn Trigger
+	mainmemory.write_u32_be(spawnerHeader + 0x1C, 0x80000000 + movementBoxHeader); -- Movement Box Pointer
+	mainmemory.writebyte(spawnerHeader + 0x42, 2); -- Spawner State
+	mainmemory.write_s16_be(spawnerHeader + 0x40, KasplatLocations[level][kasplatLocationIndex][3]); -- Chunk
+	mainmemory.writebyte(spawnerHeader + 0x44, 0x3C + kong); -- Alt Enemy Spawn
+	
+	x_min_kasplat = KasplatLocations[level][kasplatLocationIndex][5];
+	x_max_kasplat = KasplatLocations[level][kasplatLocationIndex][6];
+	z_min_kasplat = KasplatLocations[level][kasplatLocationIndex][7];
+	z_max_kasplat = KasplatLocations[level][kasplatLocationIndex][8];
+	x_kasplat = KasplatLocations[level][kasplatLocationIndex][2][1];
+	y_kasplat = KasplatLocations[level][kasplatLocationIndex][2][2];
+	z_kasplat = KasplatLocations[level][kasplatLocationIndex][2][3];
+	
+	mainmemory.write_s16_be(movementBoxHeader, x_min_kasplat);
+	mainmemory.write_s16_be(movementBoxHeader + 0x2, z_min_kasplat);
+	mainmemory.write_s16_be(movementBoxHeader + 0x4, x_max_kasplat);
+	mainmemory.write_s16_be(movementBoxHeader + 0x6, z_max_kasplat);
+	mainmemory.write_u32_be(movementBoxHeader + 0xC, 0x80000000 + aggBoxHeader); -- Aggression Box Pointer
+	
+	mainmemory.write_s16_be(aggBoxHeader + 0x0, KasplatLocations[level][kasplatLocationIndex][5]);
+	mainmemory.write_s16_be(aggBoxHeader + 0xC, KasplatLocations[level][kasplatLocationIndex][5]);
+	mainmemory.write_s16_be(aggBoxHeader + 0x6, KasplatLocations[level][kasplatLocationIndex][6]);
+	mainmemory.write_s16_be(aggBoxHeader + 0x12, KasplatLocations[level][kasplatLocationIndex][6]);
+	mainmemory.write_s16_be(aggBoxHeader + 0x4, KasplatLocations[level][kasplatLocationIndex][7]);
+	mainmemory.write_s16_be(aggBoxHeader + 0x10, KasplatLocations[level][kasplatLocationIndex][7]);
+	mainmemory.write_s16_be(aggBoxHeader + 0xA, KasplatLocations[level][kasplatLocationIndex][8]);
+	mainmemory.write_s16_be(aggBoxHeader + 0x16, KasplatLocations[level][kasplatLocationIndex][8]);
+	for i = 1, 4 do
+		mainmemory.write_s16_be(aggBoxHeader + (6 * i) - 4, y_kasplat); -- + (20 * (1 - (2 * (i % 2))))
+	end
+	mainmemory.write_s16_be(aggBoxHeader + 26, y_kasplat); 
+	mainmemory.write_s16_be(aggBoxHeader + 0x18, x_kasplat);
+	mainmemory.write_s16_be(aggBoxHeader + 0x1C, z_kasplat);
+end
+
+maps_with_no_spawners = {
+	0x1D, -- Power Shed
+	0x3F, -- Fungi Slam Mushrooms Puzzle
+	0x59, -- Rotating Room
+	0xB0, -- Training Grounds
+	0xC3, -- Snide's Room (DK Isles)
+};
+
 function writeKasplats(level)
 	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
 	beavers_in_map = getEnemyPointerFromIds(potential_enemies_table);
@@ -419,10 +489,27 @@ function writeData()
 	end
 	if transition_speed_value < 0 and obj_m2_timer_value == 1 and kasplat_rando_happened == 0 then
 		if levelIndexKasplats < 8 then
-			replaceKasplats();
-			getKasplatCount(levelIndexKasplats);
-			writeKasplats(levelIndexKasplats);
-			devPrint("Kasplats Inserted: "..#kasplats_in_map);
+			map_has_native_spawner = true;
+			for i = 1, #maps_with_no_spawners do
+				if maps_with_no_spawners[i] == current_cmap then
+					map_has_native_spawner = false;
+				end
+			end
+			if map_has_native_spawner then
+				replaceKasplats();
+				getKasplatCount(levelIndexKasplats);
+				writeKasplats(levelIndexKasplats);
+				devPrint("Kasplats Inserted: "..#kasplats_in_map);
+			else
+				for i = 1, 5 do
+					kasplatLocationIndex_to_lookup = kasplat_assortment[levelIndexKasplats][i];
+					kasplat_map = KasplatLocations[levelIndexKasplats][kasplatLocationIndex_to_lookup][1];
+					if kasplat_map == current_cmap then
+						spawnInNewKasplat(levelIndexKasplats,kasplatLocationIndex_to_lookup,i);
+						devPrint("Kasplats Inserted: 1");
+					end
+				end
+			end
 			kasplat_rando_happened = 1;
 		end
 	elseif transition_speed_value > 0 then

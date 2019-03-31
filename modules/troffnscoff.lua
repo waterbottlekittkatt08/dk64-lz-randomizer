@@ -10,7 +10,7 @@ boss_door_kong_permits = {
 	[4] = {2, 3, 4, 5}, -- Pufftoss
 	[5] = {5}, -- Dogadon 2
 	[6] = {1, 2, 3, 5}, -- Army Dillo 2
-	[7] = {1, 2, 3, 4, 5}, -- King Kut Out
+	[7] = {1, 2, 3, 4}, -- King Kut Out
 };
 
 boss_door_range = { -- Normal amount is 1680
