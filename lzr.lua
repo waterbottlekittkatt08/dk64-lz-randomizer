@@ -675,6 +675,7 @@ function confirmSettings()
 	else
 		settings.random_kasplats = 0;
 	end
+	require "modules.krool_indicator"
 	if settings.using_jabos == 0 then
 		client.reboot_core();
 	end
