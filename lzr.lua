@@ -171,6 +171,15 @@ function getPlayerObject() -- TODO: Cache this
 	return dereferencePointer(Mem.player_pointer[version]);
 end
 
+function cancelDanceSkip()
+	-- GB DANCE SKIP --
+	mainmemory.write_u32_be(0x6EFB9C, 0xA1EE0154) -- Movement Write
+	mainmemory.write_u32_be(0x6EFC1C, 0x0C189E52) -- CS Play Function Call
+	mainmemory.write_u32_be(0x6EFB88, 0x0C18539E) -- Animation Write Function Call
+	mainmemory.write_u32_be(0x6EFC0C, 0xA58200E6) -- Change Rotation Write
+end
+cancelDanceSkip()
+
 client.pause();
 
 function getActorPointers(actor_value)
