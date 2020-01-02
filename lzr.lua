@@ -48,6 +48,8 @@ Mem = {
 	arcade_win_condition = {0x04BE4D,nil,nil},
 	obj_model2_array_pointer = {0x7F6000, 0x7F5F20, 0x7F6470},
 	obj_model2_array_count = {0x7F6004, 0x7F5F24, 0x7F6474},
+	kong_reload_pointer = {0x7FC924, nil, nil},
+	player1_input = {0x014DC4,nil,nil},
 };
 
 -------------------------------
