@@ -601,6 +601,7 @@ settings = {
 	using_jabos = 0,
 	random_kasplats = 0,
 	randomiser_barrel = 0,
+	tag_anywhere = 0,
 	gameLengths = 1,
 };
 
@@ -685,6 +686,13 @@ function confirmSettings()
 		generateKasplatAssortment();
 	else
 		settings.random_kasplats = 0;
+	end
+	if forms.ischecked(lzrForm.UI.form_controls["Tag Anywhere Checkbox"]) then
+		settings.tag_anywhere = 1;
+		require "modules.tag_anywhere"
+		print("'Tag Anywhere' On");
+	else
+		settings.tag_anywhere = 0;
 	end
 	require "modules.krool_indicator"
 	if settings.using_jabos == 0 then
@@ -976,6 +984,7 @@ function WriteSettings()
 	file:write("all_kongs = ", settings.all_kongs, ",", "\n");
 	file:write("using_jabos = ", settings.using_jabos, ",", "\n");
 	file:write("random_kasplats = ", settings.random_kasplats, ",", "\n");
+	file:write("tag_anywhere = ", settings.tag_anywhere, ",", "\n");
 	file:write("seed = ", seedAsNumber, ",", "\n");
 	file:write("gameLengths = ", settings.gameLengths, ",", "\n");
 	file:write("};", "\n");
@@ -1053,10 +1062,13 @@ lzrForm.UI.form_controls["Jabos Checkbox"] = forms.checkbox(lzrForm.UI.options_f
 lzrForm.UI.form_controls["Kasplat Label"] = forms.label(lzrForm.UI.options_form, "Random Kasplat Locations:", lzrForm.UI.col(0), lzrForm.UI.row(9) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["Kasplat Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(9) + lzrForm.UI.dropdown_offset);
 
-lzrForm.UI.form_controls["Length Label"] = forms.label(lzrForm.UI.options_form, "Length:", lzrForm.UI.col(0), lzrForm.UI.row(10) + lzrForm.UI.label_offset, 60, 24);
-lzrForm.UI.form_controls["Length Dropdown"] = forms.dropdown(lzrForm.UI.options_form, gameLengths, lzrForm.UI.col(3) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(10) + lzrForm.UI.dropdown_offset + 5, lzrForm.UI.col(5) + 8, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Tag Anywhere Label"] = forms.label(lzrForm.UI.options_form, "Tag Anywhere:", lzrForm.UI.col(0), lzrForm.UI.row(10) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Tag Anywhere Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(10) + lzrForm.UI.dropdown_offset);
 
-seed_form_height = 13;
+lzrForm.UI.form_controls["Length Label"] = forms.label(lzrForm.UI.options_form, "Length:", lzrForm.UI.col(0), lzrForm.UI.row(11) + lzrForm.UI.label_offset, 60, 24);
+lzrForm.UI.form_controls["Length Dropdown"] = forms.dropdown(lzrForm.UI.options_form, gameLengths, lzrForm.UI.col(3) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(11) + lzrForm.UI.dropdown_offset + 5, lzrForm.UI.col(5) + 8, lzrForm.UI.button_height);
+
+seed_form_height = 14;
 seed_form_offset = 0.5;
 
 seedVal1 = seedValue[1];
@@ -1107,6 +1119,9 @@ if previousSettings.using_jabos == 1 then
 end
 if previousSettings.random_kasplats == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Kasplat Checkbox"], "Checked", true);
+end
+if previousSettings.tag_anywhere == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["Tag Anywhere Checkbox"], "Checked", true);
 end
 
 forms.setproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem", gameLengths[previousSettings.gameLengths]);
