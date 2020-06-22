@@ -42,25 +42,25 @@ candy_upgrade_prices = {
 
 price_lower = {3,5,7};
 price_upper = {3,5,7};
-price_upper_limit = 15;
+price_kong_upper_limit = 21;
 
 function setPriceRanges()
 	--Initializing with the price tier to use for each move
 	if settings.gameLengths == 1 then
 		price_lower = {1,3,5};
 		price_upper = {5,7,9};
-		--average = 15
-		price_upper_limit = 18;
+		--average = 21, max = 31
+		price_kong_upper_limit = 26;
 	elseif settings.gameLengths == 2 then
 		price_lower = {2,4,6};
-		price_upper = {8,10,12};
-		--average = 21
-		price_upper_limit = 25;
+		price_upper = {6,8,10};
+		--average = 26, max = 36
+		price_kong_upper_limit = 31;
 	elseif settings.gameLengths == 3 then
-		price_lower = {3,6,9};
-		price_upper = {9,12,15};
-		--average = 27
-		price_upper_limit = 32;
+		price_lower = {3,5,7};
+		price_upper = {7,9,11};
+		--average = 31, max = 41
+		price_kong_upper_limit = 36;
 	end
 end
 
@@ -68,15 +68,50 @@ function generateRandomPrices()
 	price_seedSetting = seedAsNumber + 69;
 	--print("Price seed: "..price_seedSetting);
 	math.randomseed(price_seedSetting);
+	
+	--print("Kong upper limit: "..price_kong_upper_limit);
+	
 	for kong = 1, 5 do
 		--print("Cranky Moves");
+		kong_total = 0;
 		for tier = 1, 3 do
 			cranky_solo_prices[kong][tier] = randomBetween(price_lower[tier], price_upper[tier]);
+			kong_total = kong_total + cranky_solo_prices[kong][tier];
 		end
 		--print("Guns");
 		funky_solo_prices[kong] = randomBetween(price_lower[1], price_upper[1]);
+		kong_total = kong_total + funky_solo_prices[kong];
 		--print("Instruments");
 		candy_solo_prices[kong] = randomBetween(price_lower[1], price_upper[1]);
+		kong_total = kong_total + candy_solo_prices[kong];
+		
+		--Adjust for kong upper limit
+		--print(kongNames[kong].." Kong total unadjusted: "..kong_total);
+		
+		while kong_total > price_kong_upper_limit do
+			move_to_adjust = randomBetween(1,5);
+			if move_to_adjust == 1 and cranky_solo_prices[kong][1] > price_lower[1] then
+				--print("  adjusting cranky 1st move down...");
+				cranky_solo_prices[kong][1] = cranky_solo_prices[kong][1] - 1;
+				kong_total = kong_total - 1;
+			elseif move_to_adjust == 2 and cranky_solo_prices[kong][2] > price_lower[2] then
+				--print("  adjusting cranky 2nd move down...");
+				cranky_solo_prices[kong][2] = cranky_solo_prices[kong][2] - 1;
+				kong_total = kong_total - 1;
+			elseif move_to_adjust == 3 and cranky_solo_prices[kong][3] > price_lower[3] then
+				--print("  adjusting cranky 3rd move down...");
+				cranky_solo_prices[kong][3] = cranky_solo_prices[kong][3] - 1;
+				kong_total = kong_total - 1;
+			elseif move_to_adjust == 4 and funky_solo_prices[kong] > price_lower[1] then
+				--print("  adjusting gun down...");
+				funky_solo_prices[kong] = funky_solo_prices[kong] - 1;
+				kong_total = kong_total - 1;
+			elseif move_to_adjust == 5 and candy_solo_prices[kong] > price_lower[1] then
+				--print("  adjusting instrument down...");
+				candy_solo_prices[kong] = candy_solo_prices[kong] - 1;
+				kong_total = kong_total - 1;
+			end
+		end
 	end
 	--print("Simian Slams");
 	for tier = 2, 3 do

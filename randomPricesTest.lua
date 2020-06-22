@@ -1,5 +1,4 @@
 print("Testing random prices");
-seedAsNumber = 0;
 
 settings = {
 	randomiser = 0,
@@ -37,6 +36,10 @@ require "modules.randomPrices";
 for length = 1,3 do
 	print("Setting Game Length to "..length);
 	settings.gameLengths = length;
+	
+	seedAsNumber = randomBetween(0,99999);
+	print("Seed: "..seedAsNumber);
+
 	setPriceRanges();
 	
 	print("Price ranges:");
