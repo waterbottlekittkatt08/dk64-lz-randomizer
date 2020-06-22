@@ -9,7 +9,7 @@ cranky_solo_prices = {
 	[5] = {1,2,3}, -- Chunky
 };
 cranky_slam_prices = {2,3}; --Super, Super Duper
-funky_gun_prices = {
+funky_solo_prices = {
 	[1] = 1, -- Donkey
 	[2] = 1, -- Diddy
 	[3] = 1, -- Lanky
@@ -47,36 +47,37 @@ end
 
 function generateRandomPrices()
 	price_seedSetting = seedAsNumber + 69;
+	--print("Price seed: "..price_seedSetting);
 	math.randomseed(price_seedSetting);
 	for kong = 1, 5 do
-		--Cranky Moves
+		--print("Cranky Moves");
 		for move = 1, 3 do
 			tier = cranky_solo_prices[kong][move];
 			cranky_solo_prices[kong][move] = randomBetween(price_lower[tier], price_upper[tier]);
 		end
-		--Guns
+		--print("Guns");
 		tier = funky_solo_prices[kong];
 		funky_solo_prices[kong] = randomBetween(price_lower[tier], price_upper[tier]);
-		--Instruments
+		--print("Instruments");
 		tier = candy_solo_prices[kong];
 		candy_solo_prices[kong] = randomBetween(price_lower[tier], price_upper[tier]);
 	end
-	--Simian Slams
+	--print("Simian Slams");
 	for i = 1, #cranky_slam_prices do
 		tier = cranky_slam_prices[i];
 		cranky_slam_prices[i] = randomBetween(price_lower[tier], price_upper[tier]);
 	end
-	--Funky Ammo
+	--print("Funky Ammo");
 	for i = 1, #funky_ammo_prices do
 		tier = funky_ammo_prices[i];
 		funky_ammo_prices[i] = randomBetween(price_lower[tier], price_upper[tier]);
 	end
-	--Funky Upgrades
+	--print("Funky Upgrades");
 	for i = 1, #funky_ammo_prices do
 		tier = funky_upgrade_prices[i];
 		funky_upgrade_prices[i] = randomBetween(price_lower[tier], price_upper[tier]);
 	end
-	--Candy Upgrades
+	--print("Candy Upgrades");
 	for i = 1, #candy_upgrade_prices do
 		tier = candy_upgrade_prices[i];
 		if tier == 4 then
@@ -88,45 +89,37 @@ function generateRandomPrices()
 end
 
 --Variables to determine price
-shop_types {
-	[1] = 'Cranky',
-	[2] = 'Funky',
-	[3] = 'Candy',
-};
-
-move_types {
-	[0] = 'Cranky'
+move_types = {
+	[0] = 'Cranky',
 	[1] = 'Slam',
 	[2] = 'Gun',
 	[3] = 'Ammo',
 	[4] = 'Candy',
 };
 
-function getPriceToUse(kong, shop_type, move_type, price_tier)
-	price = 0;
-	if shop_types[shop_type] == 'Cranky' then
-		if move_types[move_type] == 'Cranky' then
-			price = cranky_solo_prices[kong][price_tier];
-		else if move_types[move_type] == 'Slam' then
-			price = cranky_slam_prices[price_tier - 1];
+function getPriceToUse(kong, move_type, price_tier)
+	price = nil;
+	if move_types[move_type] == 'Cranky' then
+		price = cranky_solo_prices[kong][price_tier];
+	elseif move_types[move_type] == 'Slam' then
+		price = cranky_slam_prices[price_tier - 1];
+	elseif move_types[move_type] == 'Gun' then
+		if price_tier == 1 then
+			price = funky_solo_prices[kong];
+		else
+			price = funky_upgrade_prices[price_tier - 1];
 		end
-	else if shop_types[shop_type] == 'Funky' then
-		if move_types[move_type] == 'Gun' then
-			if price_tier == 1 then
-				price = funky_solo_prices[kong];
-			else
-				price = funky_upgrade_prices[price_tier - 1];
-			end
-		else move_types[move_type] == 'Ammo' then
-			price = funky_ammo_prices[price_tier];
-		end
-	end
-	else if shop_types[shop_type] == 'Candy' then
+	elseif move_types[move_type] == 'Ammo' then
+		price = funky_ammo_prices[price_tier];
+	elseif move_types[move_type] == 'Candy' then
 		if price_tier == 1 then
 			price = candy_solo_prices[kong];
 		else
-			price = candy_upgrade_prices[price_tier];
+			price = candy_upgrade_prices[price_tier - 1];
 		end
+	end
+	if price == nil then
+		price = "N/A"
 	end
 	return price;
 end
