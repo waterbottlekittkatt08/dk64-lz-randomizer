@@ -32,34 +32,27 @@ function randomBetween(min_rand,max_rand)
 	return rand_numb;
 end
 
-print("Setting Game Length to short");
-settings.gameLengths = 1;
-
 require "modules.randomPrices";
 
-print("Price ranges:");
-for i = 1, 3 do
-	print("  Tier "..i..": "..price_lower[i].." to "..price_upper[i]);
-end
+for length = 1,3 do
+	print("Setting Game Length to "..length);
+	settings.gameLengths = length;
+	setPriceRanges();
+	
+	print("Price ranges:");
+	for i = 1, 3 do
+		print("  Tier "..i..": "..price_lower[i].." to "..price_upper[i]);
+	end
 
-print("Generating Random Prices...");
-generateRandomPrices();
-print("Prices generated");
-
--- move_types = {
-	-- [0] = 'Cranky',
-	-- [1] = 'Slam',
-	-- [2] = 'Gun',
-	-- [3] = 'Ammo',
-	-- [4] = 'Candy',
--- };
-
---Show Prices
-for move_type = 0, 4 do
-	for tier = 1,4 do
-		for kong = 1, 5 do
-			print(kongNames[kong].." "..move_types[move_type].." "..tier..": "..getPriceToUse(kong,move_type,tier));
+	print("Generating Random Prices...");
+	generateRandomPrices();
+	
+	print("Prices: ");
+	for move_type = 0, 4 do
+		for tier = 1,4 do
+			for kong = 1, 5 do
+				print("  "..kongNames[kong].." "..move_types[move_type].." "..tier..": "..getPriceToUse(kong,move_type,tier));
+			end
 		end
 	end
 end
-
