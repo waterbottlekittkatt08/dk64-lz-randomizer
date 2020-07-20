@@ -613,6 +613,7 @@ keys_long = {1,2,3,4,5,6,7,8};
 function confirmSettings()
 	print("Settings Confirmed");
 	print("Seed: "..seedAsNumber);
+	k_rool_assortment = {1,2,3,4,5};
 	lengthString = forms.getproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem");
 	settings.gameLengths = 1;
 	for i = 1, #gameLengths do
