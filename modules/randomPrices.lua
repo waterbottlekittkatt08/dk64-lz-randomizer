@@ -69,7 +69,8 @@ function generateRandomPrices()
 	--print("Price seed: "..price_seedSetting);
 	math.randomseed(price_seedSetting);
 	
-	--print("Kong upper limit: "..price_kong_upper_limit);
+	--Set the upper and lower limits
+	setPriceRanges();
 	
 	for kong = 1, 5 do
 		--print("Cranky Moves");
@@ -166,8 +167,46 @@ function getPriceToUse(kong, move_type, price_tier)
 		end
 	end
 	if price == nil then
-		price = "N/A"
+		price = 0;
 	end
 	return price;
 end
 
+--Code that runs while in shops
+function randomizePrices()
+	currentMap = mainmemory.read_u32_be(Mem.cmap[version]);
+	
+	--get relevant shop owner
+	shopOwner = {};
+	if (currentMap == 0x5) then --Cranky's map
+		shopOwner = getActorPointers(189); --cranky
+	elseif (currentMap == 0x1) then --Funky's map
+		shopOwner = getActorPointers(190); --funky
+	elseif (currentMap == 0x19) then --Candy's map
+		shopOwner = getActorPointers(191); --candy
+	end
+	
+	if(#shopOwner > 0) then
+		priceAddress = shopOwner[1] + 0x1C4; --16 bit
+		moveTierAddress = shopOwner[1] + 0x1D1;
+		moveTypeAddress = shopOwner[1] + 0x1CB;
+		
+		moveTier = mainmemory.readbyte(moveTierAddress);
+		moveType = mainmemory.readbyte(moveTypeAddress);
+		
+		currentKong = mainmemory.readbyte(Mem.character[version]) + 1;
+		
+		if(moveTier > 0 and moveTier <= 4 and moveType >= 0 and moveType <= 4) then
+			newPrice = getPriceToUse(currentKong, moveType, moveTier);
+			--write new price into memory
+			if (newPrice > 0) then
+				mainmemory.write_u16_be(priceAddress, newPrice); --shopowner data
+				mainmemory.write_u16_be(0x750AC8, newPrice); --displayed price
+			end
+		end
+	end
+end
+
+generateRandomPrices();
+
+event.onframeend(randomizePrices, "Randomises Prices in Shop");

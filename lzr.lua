@@ -494,7 +494,7 @@ lzrForm = {
 		form_controls = {},
 		form_padding = 8,
 		form_width = 10,
-		form_height = 22,
+		form_height = 23,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -596,6 +596,7 @@ end
 settings = {
 	randomiser = 0,
 	all_moves = 0,
+	random_prices = 0,
 	no_cutscenes = 0,
 	all_kongs = 0,
 	using_jabos = 0,
@@ -636,6 +637,13 @@ function confirmSettings()
 		end
 	else
 		settings.all_moves = 0;
+	end
+	if forms.ischecked(lzrForm.UI.form_controls["Random Prices Checkbox"]) then
+		settings.random_prices = 1;
+		require "modules.randomPrices"
+		print("Random Prices On");
+	else
+		settings.random_prices = 0;
 	end
 	if forms.ischecked(lzrForm.UI.form_controls["All Kongs Checkbox"]) then
 		settings.all_kongs = 1;
@@ -980,6 +988,7 @@ function WriteSettings()
 	file:write("randomiser = ", settings.randomiser, ",", "\n");
 	file:write("randomiser_barrel = ", settings.randomiser_barrel, ",", "\n");
 	file:write("all_moves = ", settings.all_moves, ",", "\n");
+	file:write("random_prices = ", settings.random_prices, ",", "\n");
 	file:write("no_cutscenes = ", settings.no_cutscenes, ",", "\n");
 	file:write("all_kongs = ", settings.all_kongs, ",", "\n");
 	file:write("using_jabos = ", settings.using_jabos, ",", "\n");
@@ -1040,35 +1049,52 @@ gameLengthsAlphabetical = {
 	[3] = "Standard",
 };
 
-lzrForm.UI.form_controls["Title Label 1"] = forms.label(lzrForm.UI.options_form, "DONKEY KONG 64", lzrForm.UI.col(1) + 10, lzrForm.UI.row(0) + lzrForm.UI.label_offset, 410, 24);
-lzrForm.UI.form_controls["Title Label 2"] = forms.label(lzrForm.UI.options_form, "LOADING ZONE RANDOMISER", lzrForm.UI.col(0), lzrForm.UI.row(1) + lzrForm.UI.label_offset, 410, 24);
-lzrForm.UI.form_controls["Title Label 3"] = forms.label(lzrForm.UI.options_form, "SETTINGS", lzrForm.UI.col(2) + 10, lzrForm.UI.row(2) + lzrForm.UI.label_offset, 410, 24);
+current_row = 0;
 
-lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Loading Zone Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(4) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(4) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Title Label 1"] = forms.label(lzrForm.UI.options_form, "DONKEY KONG 64", lzrForm.UI.col(1) + 10, lzrForm.UI.row(current_row) + lzrForm.UI.label_offset, 410, 24);
+current_row = current_row + 1;
+lzrForm.UI.form_controls["Title Label 2"] = forms.label(lzrForm.UI.options_form, "LOADING ZONE RANDOMISER", lzrForm.UI.col(0), lzrForm.UI.row(current_row) + lzrForm.UI.label_offset, 410, 24);
+current_row = current_row + 1;
+lzrForm.UI.form_controls["Title Label 3"] = forms.label(lzrForm.UI.options_form, "SETTINGS", lzrForm.UI.col(2) + 10, lzrForm.UI.row(current_row) + lzrForm.UI.label_offset, 410, 24);
+current_row = current_row + 1;
 
-lzrForm.UI.form_controls["Barrel Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Barrel Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(5) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Barrel Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(5) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Loading Zone Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+current_row = current_row + 1;
 
-lzrForm.UI.form_controls["All Moves Label"] = forms.label(lzrForm.UI.options_form, "Give All Moves:", lzrForm.UI.col(0), lzrForm.UI.row(6) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["All Moves Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(6) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Barrel Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Barrel Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Barrel Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+current_row = current_row + 1;
 
-lzrForm.UI.form_controls["All Kongs Label"] = forms.label(lzrForm.UI.options_form, "Unlock All Kongs:", lzrForm.UI.col(0), lzrForm.UI.row(7) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["All Kongs Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(7) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["All Moves Label"] = forms.label(lzrForm.UI.options_form, "Give All Moves:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["All Moves Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+current_row = current_row + 1;
 
-lzrForm.UI.form_controls["Jabos Label"] = forms.label(lzrForm.UI.options_form, "I am using Jabo 1.6.1:", lzrForm.UI.col(0), lzrForm.UI.row(8) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Jabos Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(8) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Random Prices Label"] = forms.label(lzrForm.UI.options_form, "Randomize Move Prices:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Random Prices Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+current_row = current_row + 1;
 
-lzrForm.UI.form_controls["Kasplat Label"] = forms.label(lzrForm.UI.options_form, "Random Kasplat Locations:", lzrForm.UI.col(0), lzrForm.UI.row(9) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Kasplat Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(9) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["All Kongs Label"] = forms.label(lzrForm.UI.options_form, "Unlock All Kongs:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["All Kongs Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+current_row = current_row + 1;
 
-lzrForm.UI.form_controls["Tag Anywhere Label"] = forms.label(lzrForm.UI.options_form, "Tag Anywhere:", lzrForm.UI.col(0), lzrForm.UI.row(10) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Tag Anywhere Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(10) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Jabos Label"] = forms.label(lzrForm.UI.options_form, "I am using Jabo 1.6.1:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Jabos Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+current_row = current_row + 1;
 
-lzrForm.UI.form_controls["Length Label"] = forms.label(lzrForm.UI.options_form, "Length:", lzrForm.UI.col(0), lzrForm.UI.row(11) + lzrForm.UI.label_offset, 60, 24);
-lzrForm.UI.form_controls["Length Dropdown"] = forms.dropdown(lzrForm.UI.options_form, gameLengths, lzrForm.UI.col(3) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(11) + lzrForm.UI.dropdown_offset + 5, lzrForm.UI.col(5) + 8, lzrForm.UI.button_height);
+lzrForm.UI.form_controls["Kasplat Label"] = forms.label(lzrForm.UI.options_form, "Random Kasplat Locations:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Kasplat Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+current_row = current_row + 1;
 
-seed_form_height = 14;
+lzrForm.UI.form_controls["Tag Anywhere Label"] = forms.label(lzrForm.UI.options_form, "Tag Anywhere:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Tag Anywhere Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+current_row = current_row + 1;
+
+lzrForm.UI.form_controls["Length Label"] = forms.label(lzrForm.UI.options_form, "Length:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) + lzrForm.UI.label_offset, 60, 24);
+lzrForm.UI.form_controls["Length Dropdown"] = forms.dropdown(lzrForm.UI.options_form, gameLengths, lzrForm.UI.col(3) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset + 5, lzrForm.UI.col(5) + 8, lzrForm.UI.button_height);
+current_row = current_row + 1;
+
+seed_form_height = 15;
 seed_form_offset = 0.5;
 
 seedVal1 = seedValue[1];
@@ -1110,6 +1136,9 @@ if previousSettings.randomiser_barrel == 1 then
 end
 if previousSettings.all_moves == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["All Moves Checkbox"], "Checked", true);
+end
+if previousSettings.random_prices == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["Random Prices Checkbox"], "Checked", true);
 end
 if previousSettings.all_kongs == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["All Kongs Checkbox"], "Checked", true);
