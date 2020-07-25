@@ -132,6 +132,7 @@ function autoDanceSkip()
 	mainmemory.write_u32_be(0x6EFC0C, 0x0) -- Cancel Change Rotation Write
 end
 autoDanceSkip()
+event.onloadstate(autoDanceSkip, "Automatically skips dances")
 
 function quickFile()
 	if version < 2 then

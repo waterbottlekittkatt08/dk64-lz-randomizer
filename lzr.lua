@@ -476,6 +476,7 @@ function checkNewFile()
 			if settings.all_kongs == 1 then
 				getAllKongs();
 			end
+			autoDanceSkip()
 			mainmemory.write_u16_be(Mem.oranges[version],20); -- Gives 20 oranges
 		end
 	end
