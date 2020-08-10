@@ -112,8 +112,8 @@ function randomise()
 					]]--
 					end
 					if current_dmap == 0x11 then -- Helm
-						mainmemory.write_u32_be(Mem.dexit[version],3); -- Enter Helm from Lever
-						if current_cmap == 0xAA then -- Coming from Lobby
+						if current_cmap == 0xAA and not checkFlag(0x60,2) then -- Coming from Lobby. BoM is not shut down
+							mainmemory.write_u32_be(Mem.dexit[version],3); -- Enter Helm from Lever
 							mainmemory.writebyte(Mem.cutscene_fade_active[version],1);
 							mainmemory.write_u16_be(Mem.cutscene_fade_value[version],2); -- Open Helm Doors
 						end
