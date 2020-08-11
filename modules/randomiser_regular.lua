@@ -1190,11 +1190,6 @@ function chooseAccessibleOrigin(kong_array, origins_remaining)
 	return accessible_exits[chooseRandomIndex(accessible_exits)];
 end
 
-function chooseRandomIndex(tbl)
-	local random_index = randomBetween(1,#tbl);
-	return random_index;
-end
-
 function getLzReference(lz)
 	local reference = nil;
 	for i = 1, #regular_map_table do
@@ -1203,37 +1198,6 @@ function getLzReference(lz)
 		end
 	end
 	return reference;
-end
-
-function table_invert(t)
-   local s={}
-   for k,v in pairs(t) do
-	 s[v]=k
-   end
-   return s
-end
-
-function isValInTable(v, tbl)
-	for key,val in ipairs(tbl) do if val==v then return true end end
-end
-
-function differenceOfSets(setA,setB)
-	local ret = {}
-	for key,val in ipairs(setA) do
-		if not isValInTable(val,setB) then table.insert(ret, val) end
-	end
-	return ret
-end
-
-function unionOfSets(setA,setB)
-	local ret = {}
-	for key,val in ipairs(setA) do
-		table.insert(ret, val);
-	end
-	for key,val in ipairs(setB) do
-		if not isValInTable(val,setA) then table.insert(ret, val) end
-	end
-	return ret
 end
 
 function validateReachability()

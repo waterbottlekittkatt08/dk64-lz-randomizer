@@ -1,3 +1,5 @@
+require "modules.commonFunctions";
+
 Mem = {
 	kong_base = {0x7FC950, 0x7FC890, 0x7FCDE0}, -- Header
 	rng = {0x746A40, 0x7411A0, 0x746300}, -- u32
@@ -643,6 +645,8 @@ function confirmSettings()
 	if forms.ischecked(lzrForm.UI.form_controls["Random Prices Checkbox"]) then
 		settings.random_prices = 1;
 		require "modules.randomPrices"
+		generateRandomPrices();
+		event.onframeend(randomizePrices, "Randomises Prices in Shop");
 		print("Random Prices On");
 	else
 		settings.random_prices = 0;
@@ -725,17 +729,6 @@ function setSeed(value)
 		seedValue[i] = math.floor((seedAsNumber - seedTotal) / (10 ^ (5 - i)));
 		seedTotal = seedTotal + (seedValue[i] * (10 ^ (5 - i)));
 	end
-end
-
-function randomBetween(min_rand,max_rand)
-	rand_diff = max_rand - min_rand + 1;
-	rand_numb = (min_rand - 1) + math.ceil(math.random() * rand_diff);
-	if rand_numb < (min_rand + 1) then
-		rand_numb = min_rand;
-	elseif rand_numb > max_rand then
-		rand_numb = max_rand;
-	end
-	return rand_numb;
 end
 
 require 'settings';

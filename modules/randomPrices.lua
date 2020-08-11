@@ -206,7 +206,3 @@ function randomizePrices()
 		end
 	end
 end
-
-generateRandomPrices();
-
-event.onframeend(randomizePrices, "Randomises Prices in Shop");

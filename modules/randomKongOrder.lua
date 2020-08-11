@@ -73,5 +73,3 @@ function RemoveRandomValueFromTable(tableOfValues)
 	table.remove(tableOfValues, index);
 	return selectedValue;
 end
-
-generateRandomKongOrder();
