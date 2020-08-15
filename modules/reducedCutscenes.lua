@@ -73,6 +73,7 @@ function CrownDoorCutsceneSkip()
 	if cs_fade_active == 1 and cs_fade_val == 24 and current_dmap == 28 then -- loading K Rool Press Button
 		mainmemory.writebyte(Mem.cutscene_fade_active[version], 0);
 		mainmemory.write_u32_be(Mem.dmap[version], 0x11)
+		mainmemory.write_u32_be(Mem.dexit[version],4); -- Respawn in Helm at Crown Door
 	end
 end
 
