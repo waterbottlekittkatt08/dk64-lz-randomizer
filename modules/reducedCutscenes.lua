@@ -51,9 +51,9 @@ function removeCutscenes()
 				mainmemory.writebyte(krool_diddy + 0x155, 4); -- Auto Fast Light
 			end
 		end ]]--
-	elseif current_cmap == 97 then
+	elseif current_cmap == 97 then -- Klumsy
 		-- KLumsyKeyCompression() 
-	elseif current_cmap == 0x11 then
+	elseif current_cmap == 0x11 then --Helm
 		setTempFlag(0xB8,6); -- DK Grate
 		setTempFlag(0xB8,7); -- Chunky Grate
 		setTempFlag(0xB9,0); -- Lanky Grate
@@ -61,11 +61,19 @@ function removeCutscenes()
 		if cutscene == 2 and cutscene_active == 1 and cutscene_timer > 242 then
 			setTempFlag(0xB7,3); -- Roman Numeral Doors
 		end
+		CrownDoorCutsceneSkip();
 	end
 	if settings.using_jabos == 0 then
 		quickFile() -- Getting back to the main menu faster
 	end
 	mainmemory.writebyte(Mem.story_skip[version],1);
+end
+
+function CrownDoorCutsceneSkip()
+	if cs_fade_active == 1 and cs_fade_val == 24 and current_dmap == 28 then -- loading K Rool Press Button
+		mainmemory.writebyte(Mem.cutscene_fade_active[version], 0);
+		mainmemory.write_u32_be(Mem.dmap[version], 0x11)
+	end
 end
 
 function KLumsyKeyCompression()
