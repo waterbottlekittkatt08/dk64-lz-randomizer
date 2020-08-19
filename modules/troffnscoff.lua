@@ -3,6 +3,12 @@
 -- Handle Boss Randomisation (If no randomisation, default to regular assortment)
 -- Key Randomisation
 
+levels_needed_count = { --not counting helm
+	[1] = 2, -- Short
+	[2] = 4, -- Standard
+	[3] = 7, -- Long
+};
+
 boss_door_kong_permits = {
 	[1] = {1, 2, 3, 4, 5}, -- Army Dillo 1
 	[2] = {1, 2, 3, 4, 5}, -- Dogadon 1
@@ -13,10 +19,27 @@ boss_door_kong_permits = {
 	[7] = {1, 2, 3, 4}, -- King Kut Out
 };
 
-boss_door_range = { -- Normal amount is 1680
-	[1] = ((500 * settings.gameLengths) - 250), -- Min
-	[2] = (250 + (500 * settings.gameLengths)), -- Max
+variance = { --not counting helm
+	[1] = 0.2, -- Short
+	[2] = 0.2, -- Standard
+	[3] = 0.1, -- Long
 };
+
+--Short ---- 80 per needed door (old: 71)
+--Standard - 120 per needed door (old: 142)
+--Long ----- 160 per needed door (old: 214)
+boss_needed_door_range = { -- Normal amount is 1680
+	[1] = (40 * (settings.gameLengths + 1) * levels_needed_count[settings.gameLengths] * (1 - variance[settings.gameLengths])), -- Min
+	[2] = (40 * (settings.gameLengths + 1) * levels_needed_count[settings.gameLengths] * (1 + variance[settings.gameLengths])), -- Max
+};
+
+boss_unneeded_door_range = {
+	[1] = (40 * (settings.gameLengths + 1) * (7-levels_needed_count[settings.gameLengths]) * (1 - variance[settings.gameLengths])), -- Min
+	[2] = (40 * (settings.gameLengths + 1) * (7-levels_needed_count[settings.gameLengths]) * (1 + variance[settings.gameLengths])), -- Max
+};
+
+print("boss_needed_door_range: "..boss_needed_door_range[1].." - "..boss_needed_door_range[2]);
+print("boss_unneeded_door_range: "..boss_unneeded_door_range[1].." - "..boss_unneeded_door_range[2]);
 
 boss_map_table = {
 	[1] = 8, -- Army 1
@@ -81,67 +104,113 @@ function generateCaps()
 end
 
 function generateTnSNumberAssortment()
-	generateCaps();
+	tns_number_seedSetting = seedAsNumber + 120;
+	math.randomseed(tns_number_seedSetting);
+	generateCaps(); --sets upper limit for each level tns Count
+	
+	--variable to hold final tns counts
 	tns_number_assortment = {};
 	for i = 1, 7 do
 		tns_number_assortment[i] = 0;
 	end
-	tns_priority = {};
-	tns_temp_priority = {};
-	for i = 1, 7 do
-		tns_temp_priority[i] = i;
-	end
-	tns_number_seedSetting = seedAsNumber + 120;
-	math.randomseed(tns_number_seedSetting);
-	for i = 1, 7 do
-		selected_value = randomBetween(1,#tns_temp_priority);
-		selected_value2 = tns_temp_priority[selected_value];
-		tns_priority[i] = selected_value2;
-	end
-	tns_probability_array = {};
+	
+	num_levels_needed = levels_needed_count[settings.gameLengths];
+	num_levels_unneeded = 7 - num_levels_needed;
+
+	--Generates probability array for the needed levels (based on needed_keys)
+	--each level appears between 1 and 7 times
+	tns_needed_probability_array = {};
 	tns_array_counter = 0;
-	for i = 1, 7 do
-		for j = 1, tns_priority[i] do
+	for i = 1, num_levels_needed do
+		relative_probability = randomBetween(1,7);
+		for j = 1, relative_probability do
 			tns_array_counter = tns_array_counter + 1;
-			tns_probability_array[tns_array_counter] = i;
+			tns_needed_probability_array[tns_array_counter] = needed_keys[i];
 		end
 	end
-	tns_total_temp = randomBetween(boss_door_range[1],boss_door_range[2]);
-	tns_total = tns_total_temp - (tns_total_temp % 5);
-	tns_running_total = tns_total;
-	for i = 1, (tns_total / 5) do
-		selected_level_value = randomBetween(1,#tns_probability_array);
-		selected_level = tns_probability_array[selected_level_value];
+	
+	--Generates probability array for the unneeded levels (based on antikeys_table)
+	--each level appears between 1 and 7 times
+	tns_unneeded_probability_array = {};
+	tns_array_counter = 0;
+	for i = 1, num_levels_unneeded do
+		relative_probability = randomBetween(1,7);
+		for j = 1, relative_probability do
+			tns_array_counter = tns_array_counter + 1;
+			tns_unneeded_probability_array[tns_array_counter] = antikeys_table[i];
+		end
+	end
+	
+	--Picks random sum of all doors, rounded down to nearest multiple of 5
+	tns_total_temp = randomBetween(boss_needed_door_range[1],boss_needed_door_range[2]);
+	tns_total_needed = tns_total_temp - (tns_total_temp % 5);
+	
+	print("tns_total_needed: "..tns_total_needed);
+	
+	--Assigning to all needed levels first
+	--for every division of 5 bananas
+	for i = 1, (tns_total_needed / 5) do
+		--Select random level out of the probability array
+		selected_index = randomBetween(1,#tns_needed_probability_array);
+		selected_level = tns_needed_probability_array[selected_index];
+		
+		--Add 5 bananas to that level
 		tns_number_assortment[selected_level] = tns_number_assortment[selected_level] + 5;
-		tns_running_total = tns_running_total - 5;
+
+		--If the selected level reached its cap, remove it from the probability array
 		list_to_remove = {};
 		removal_count_tns = 0;
-		for k = 1, 7 do
-			if tns_number_assortment[k] == level_tns_caps[k] then -- Compare assortment to caps
-				for j = 1, #tns_probability_array do
-					if tns_probability_array[j] == k then
-						removal_count_tns = removal_count_tns + 1;
-						list_to_remove[removal_count_tns] = j;
-					end
+		if tns_number_assortment[selected_level] == level_tns_caps[selected_level] then
+			for j = 1, #tns_needed_probability_array do
+				if tns_needed_probability_array[j] == selected_level then
+					removal_count_tns = removal_count_tns + 1;
+					list_to_remove[removal_count_tns] = j;
 				end
 			end
 		end
 		if #list_to_remove > 0 then
 			for j = #list_to_remove, 1, -1 do
-				table.remove(tns_probability_array, list_to_remove[j]);
+				table.remove(tns_needed_probability_array, list_to_remove[j]);
+			end
+		end
+	end
+	
+	tns_total_temp = randomBetween(boss_unneeded_door_range[1],boss_unneeded_door_range[2]);
+	tns_total_unneeded = tns_total_temp - (tns_total_temp % 5);
+	
+	print("tns_total_unneeded: "..tns_total_unneeded);
+	
+	--Assigning to remaining (unneeded) levels
+	--for every division of 5 bananas
+	for i = 1, (tns_total_unneeded / 5) do
+		--Select random level out of the probability array
+		selected_index = randomBetween(1,#tns_unneeded_probability_array);
+		selected_level = tns_unneeded_probability_array[selected_index];
+		
+		--Add 5 bananas to that level
+		tns_number_assortment[selected_level] = tns_number_assortment[selected_level] + 5;
+
+		--If the selected level reached its cap, remove it from the probability array
+		list_to_remove = {};
+		removal_count_tns = 0;
+		if tns_number_assortment[selected_level] == level_tns_caps[selected_level] then
+			for j = 1, #tns_unneeded_probability_array do
+				if tns_unneeded_probability_array[j] == selected_level then
+					removal_count_tns = removal_count_tns + 1;
+					list_to_remove[removal_count_tns] = j;
+				end
+			end
+		end
+		if #list_to_remove > 0 then
+			for j = #list_to_remove, 1, -1 do
+				table.remove(tns_unneeded_probability_array, list_to_remove[j]);
 			end
 		end
 	end
 end
 
-needed_keys_counts = {
-	[1] = 3, -- Short
-	[2] = 5, -- Standard
-	[3] = 8, -- Long
-};
-
 function generateListOfNeededKeys()
-	amount_needed = needed_keys_counts[settings.gameLengths];	
+	amount_needed = levels_needed_count[settings.gameLengths] + 1;	--plus 1 for key 8
 	temporary_keys_table = {};
 	needed_keys = {};
 	keys_seedSetting = seedAsNumber + 8;
@@ -203,10 +272,10 @@ end
 
 function setTnSAssortments()
 	generateBossDoorAssortment();
-	generateTnSNumberAssortment();
 	generateBLockerAssortment();
 	generateListOfNeededKeys();
 	generateListOfUnneededKeys();
+	generateTnSNumberAssortment();
 end
 
 function setTnSDoorStuff()
