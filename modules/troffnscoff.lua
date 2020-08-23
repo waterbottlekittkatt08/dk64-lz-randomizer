@@ -38,9 +38,6 @@ boss_unneeded_door_range = {
 	[2] = (40 * (settings.gameLengths + 1) * (7-levels_needed_count[settings.gameLengths]) * (1 + variance[settings.gameLengths])), -- Max
 };
 
-print("boss_needed_door_range: "..boss_needed_door_range[1].." - "..boss_needed_door_range[2]);
-print("boss_unneeded_door_range: "..boss_unneeded_door_range[1].." - "..boss_unneeded_door_range[2]);
-
 boss_map_table = {
 	[1] = 8, -- Army 1
 	[2] = 197, -- Dog 1
@@ -145,8 +142,6 @@ function generateTnSNumberAssortment()
 	tns_total_temp = randomBetween(boss_needed_door_range[1],boss_needed_door_range[2]);
 	tns_total_needed = tns_total_temp - (tns_total_temp % 5);
 	
-	print("tns_total_needed: "..tns_total_needed);
-	
 	--Assigning to all needed levels first
 	--for every division of 5 bananas
 	for i = 1, (tns_total_needed / 5) do
@@ -177,8 +172,6 @@ function generateTnSNumberAssortment()
 	
 	tns_total_temp = randomBetween(boss_unneeded_door_range[1],boss_unneeded_door_range[2]);
 	tns_total_unneeded = tns_total_temp - (tns_total_temp % 5);
-	
-	print("tns_total_unneeded: "..tns_total_unneeded);
 	
 	--Assigning to remaining (unneeded) levels
 	--for every division of 5 bananas
