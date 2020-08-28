@@ -112,6 +112,14 @@ function randomise()
 					]]--
 					end
 					if current_dmap == 0x11 then -- Helm
+						if settings.gameLengths == 1 then -- Short Helm, 2 Rooms
+							setTempFlag(0x9,3); -- DK Shut down
+							setTempFlag(0x9,4); -- Chunky Shut down
+							setTempFlag(0x9,5); -- Tiny Shut Down
+						elseif settings.gameLengths == 2 then -- Medium Helm, 3 Rooms
+							setTempFlag(0x9,3); -- DK Shut down
+							setTempFlag(0x9,4); -- Chunky Shut down
+						end
 						if current_cmap == 0xAA and not checkFlag(0x60,2) then -- Coming from Lobby. BoM is not shut down
 							mainmemory.write_u32_be(Mem.dexit[version],3); -- Enter Helm from Lever
 							mainmemory.writebyte(Mem.cutscene_fade_active[version],1);
