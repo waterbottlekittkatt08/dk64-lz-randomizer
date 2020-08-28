@@ -41,7 +41,7 @@ function randomise()
 							end
 							mainmemory.writebyte(player + 0x144, value);
 						end
-						if settings.randomiser == 1 then
+						if settings.randomiser > 0 then
 							setTnSDoorStuff();
 						end
 					end
@@ -80,22 +80,22 @@ function randomise()
 							mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 							rando_happened = 1;
 						end
-					elseif dmapType == "boss_maps" and settings.randomiser == 1 then
+					elseif dmapType == "boss_maps" and settings.randomiser > 0 then
 						new_destmap_to_write = getBossDestination(current_pmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 						rando_happened = 1;
-					elseif dmapType == "k_rool" and current_cmap ~= 0xD6 and settings.randomiser == 1 then -- 0xD6 = Tiny Shoe
+					elseif dmapType == "k_rool" and current_cmap ~= 0xD6 and settings.randomiser > 0 then -- 0xD6 = Tiny Shoe
 						if current_cmap ~= current_dmap and current_cmap ~= 0xD7 then -- Prevents randomisation when re-attempting rounds
 							new_destmap_to_write = getKRoolDestination(current_dmap);
 							mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 							rando_happened = 1;
 						end
-					elseif dmapType == "global_maps" and cmapType == "regular_maps" and settings.randomiser == 1 then
+					elseif dmapType == "global_maps" and cmapType == "regular_maps" and settings.randomiser > 0 then
 						mainmemory.write_u16_be(Mem.pmap[version], current_cmap);
 						--mainmemory.writebyte(Mem.pexit[version], current_cexit);
 						rando_happened = 1;
 					elseif cmapType ~= "bonus_maps" and cmapType ~= "crown_maps" and cmapType ~= "special_minigame_maps" and dmapType == "regular_maps" then
-						if current_cmap ~= 0x61 and current_dmap ~= 0x61 and settings.randomiser == 1 then
+						if current_cmap ~= 0x61 and current_dmap ~= 0x61 and settings.randomiser > 0 then
 							loadingZoneCode = getLoadingZone(current_dmap, current_dexit, current_cmap, cutscene, transition_type);
 							new_destexit_to_write = loadingZoneCode % 256;
 							new_destmap_to_write = (loadingZoneCode - (loadingZoneCode % 256)) / 256;

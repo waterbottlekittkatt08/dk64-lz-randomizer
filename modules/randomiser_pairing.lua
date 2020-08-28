@@ -1,3 +1,5 @@
+require "modules.regularmaptable";
+
 lz_pairs = {
 	{0x0400, 0x0702}, -- Japes Mountain (From Japes)
 	--0x0600, -- Japes Minecart
@@ -54,11 +56,9 @@ lz_pairs = {
 	{0x300D, 0x4700}, -- Fungi Face Puzzle
 	{0x300E, 0x3F00}, -- Fungi Light Room
 	{0x300F, 0x4600}, -- Fungi Dark Room
-	--0x3010, -- Fungi From Minecart
-	--0x3017, -- Fungi (From Anthill)
+	{0x3010, 0x3700}, -- Fungi From Minecart
+	{0x3017, 0x3400}, -- Fungi (From Anthill)
 	--0x3300, -- Galleon Mech Fish
-	--0x3400, -- Fungi Anthill
-	--0x3700, -- Fungi Minecart
 	{0x3C00, 0x3E01}, -- Fungi Spider Boss
 	{0x3D01, 0x3E02}, -- Fungi Mill Front > Back Link
 	{0x4800, 0xC201}, -- Caves (From Lobby)
@@ -93,7 +93,7 @@ lz_pairs = {
 	{0x6C00, 0xB704}, -- Castle Crypt [L/T] (From Crypt [Hub])
 	{0x7000, 0xB703}, -- Castle Crypt [D/Di/T] (From Crypt [Hub])
 	{0x7101, 0xB900}, -- Castle Museum (From Castle Car Race)
-	{0x9704, 0xA300}, -- Castle Tunnel (From Dungeon)
+	{0x9704, 0xA300} -- Castle Tunnel (From Dungeon)
 	--0xA400, -- Castle Tree (From Castle)
 };
 
@@ -105,17 +105,19 @@ function generateLoadingZoneChain()
 		paired_set[i] = 0;
 	end
 	for i = 1, #lz_pairs do
-		if pair_available[i] then
+		--if pair_available[i] then
 			available_array = {};
 			for j = 1, #pair_available do
 				if pair_available[j] and (j ~= i) then
 					table.insert(available_array,j)
 				end
 			end
+			-- print(available_array)
 			selected_set = available_array[randomBetween(1,#available_array)];
+			--print(i.." > "..selected_set)
 			paired_set[i] = selected_set;
 			pair_available[selected_set] = false;
-		end
+		--end
 	end
 end
 
@@ -161,7 +163,7 @@ function getNewDestinationCode(old_destination_code)
 		if lz_pairs[i][1] == old_destination_code then
 			linked_set = paired_set[i];
 			chain_link = 1;
-		else if lz_pairs[i][2] == old_destination_code then
+		elseif lz_pairs[i][2] == old_destination_code then
 			for j = 1, #paired_set do
 				if paired_set[j] == i then
 					linked_set = j;
@@ -170,8 +172,34 @@ function getNewDestinationCode(old_destination_code)
 			chain_link = 2;
 		end
 	end
+	--print(old_destination_code)
 	new_destination_code = lz_pairs[linked_set][chain_link];
 	return new_destination_code
+end
+
+
+function generateAssortmentObject()
+	generateLoadingZoneChain();
+	regular_map_assortment = {};
+	for i = 1, #regular_map_table do
+		old_code = regular_map_table[i];
+		new_code = getNewDestinationCode(old_code);
+		reference = nil;
+		for j = 1, #regular_map_table do
+			if regular_map_table[j] == new_code then
+				reference = j;
+			end
+		end
+		if reference == nil then
+			--print("nil")
+			table.insert(regular_map_assortment,i);
+		else
+			--print("non-nil")
+			table.insert(regular_map_assortment,reference);
+		end
+		--print(regular_map_assortment)
+		--print(i.." > "..regular_map_assortment[i]);
+	end
 end
 
 function getCodeFromDestination()
@@ -190,3 +218,7 @@ function getDestinationExitFromCode(destination_code)
 	destination_exit = destination_code % 256;
 	return destination_exit;
 end
+
+
+generateAssortmentObject();
+require "modules.replaceLZCode";

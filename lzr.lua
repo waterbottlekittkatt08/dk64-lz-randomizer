@@ -470,7 +470,9 @@ function checkNewFile()
 			end
 			for i = 0, 4 do
 				selected_kong_header = Mem.kong_base[version] + (i * 0x5E);
-				mainmemory.writebyte(selected_kong_header + 1, 1); -- Slam
+				if mainmemory.readbyte(selected_kong_header + 1) < 2 then -- Don't write if SSS or SDSS
+					mainmemory.writebyte(selected_kong_header + 1, 1); -- Slam
+				end
 			end
 			if settings.all_moves == 1 then
 				giveMoves();
@@ -497,7 +499,7 @@ lzrForm = {
 		form_controls = {},
 		form_padding = 8,
 		form_width = 10,
-		form_height = 23,
+		form_height = 24,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -618,6 +620,7 @@ function confirmSettings()
 	print("Seed: "..seedAsNumber);
 	k_rool_assortment = {1,2,3,4,5};
 	lengthString = forms.getproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem");
+	lzr_string = forms.getproperty(lzrForm.UI.form_controls["Randomiser Dropdown"], "SelectedItem");
 	settings.gameLengths = 1;
 	for i = 1, #gameLengths do
 		if gameLengths[i] == lengthString then
@@ -658,10 +661,21 @@ function confirmSettings()
 	else
 		settings.all_kongs = 0;
 	end
-	if forms.ischecked(lzrForm.UI.form_controls["Randomiser Checkbox"]) then
-		settings.randomiser = 1;
+	if lzr_string ~= "None" then
+		if lzr_string == "Chained" then
+			settings.randomiser = 1;
+			lzr_type = "chain";
+		elseif lzr_string == "Chaotic" then
+			settings.randomiser = 2;
+			lzr_type = "chaos";
+		end
 		require "modules.randomiser_regular"
-		print("Randomiser On");
+		if lzr_type == "chain" then
+			require "modules.randomiser_pairing"
+			print("Chain LZ Randomiser On");
+		elseif lzr_type == "chaos" then
+			print("Chaos LZ Randomiser On");
+		end
 	else
 		settings.randomiser = 0;
 	end
@@ -681,7 +695,7 @@ function confirmSettings()
 	require "modules.reducedCutscenes"
 	require "modules.klapsAndBeavers"
 	require "modules.troffnscoff"
-	if settings.randomiser == 1 then
+	if settings.randomiser > 0 then
 		setAssortments();
 	end
 	setTnSAssortments();
@@ -899,7 +913,7 @@ function Spoiler()
 	file:write("Seed Number: "..seedAsNumber, "\n");
 	file:write("Seed Length: "..gameLengths[settings.gameLengths], "\n");
 	file:write("\n");
-	if settings.randomiser == 1 then
+	if settings.randomiser > 0 then
 		file:write("REGULAR MAP ASSORTMENT", "\n");
 		for i = 1, #regular_map_assortment do
 			lz_in = regular_map_table[i];
@@ -1044,6 +1058,18 @@ gameLengthsAlphabetical = {
 	[3] = "Standard",
 };
 
+lzrTypes = {
+	[1] = "None",
+	[2] = "Chained",
+	[3] = "Chaotic"
+}
+
+lzrTypesAlphabetical = {
+	[1] = "Chained",
+	[2] = "Chaotic",
+	[3] = "None"
+}
+
 current_row = 0;
 
 lzrForm.UI.form_controls["Title Label 1"] = forms.label(lzrForm.UI.options_form, "DONKEY KONG 64", lzrForm.UI.col(1) + 10, lzrForm.UI.row(current_row) + lzrForm.UI.label_offset, 410, 24);
@@ -1051,10 +1077,10 @@ current_row = current_row + 1;
 lzrForm.UI.form_controls["Title Label 2"] = forms.label(lzrForm.UI.options_form, "LOADING ZONE RANDOMISER", lzrForm.UI.col(0), lzrForm.UI.row(current_row) + lzrForm.UI.label_offset, 410, 24);
 current_row = current_row + 1;
 lzrForm.UI.form_controls["Title Label 3"] = forms.label(lzrForm.UI.options_form, "SETTINGS", lzrForm.UI.col(2) + 10, lzrForm.UI.row(current_row) + lzrForm.UI.label_offset, 410, 24);
-current_row = current_row + 1;
+current_row = current_row + 2;
 
-lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Loading Zone Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Exit Rando:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 100, 24);
+lzrForm.UI.form_controls["Randomiser Dropdown"] = forms.dropdown(lzrForm.UI.options_form, lzrTypes, lzrForm.UI.col(5) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset - 5, lzrForm.UI.col(3) + 8, lzrForm.UI.button_height);
 current_row = current_row + 1;
 
 lzrForm.UI.form_controls["Barrel Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Barrel Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
@@ -1123,9 +1149,7 @@ lzrForm.UI.form_controls["Settings Check Label"] = forms.label(lzrForm.UI.option
 
 lzrForm.UI.form_controls["Confirm Settings Button"] = forms.button(lzrForm.UI.options_form, "Confirm Settings", confirmSettings, lzrForm.UI.col(0.6), lzrForm.UI.row(seed_form_height + 5) + 5, 7 * lzrForm.UI.button_height, lzrForm.UI.button_height);
 
-if previousSettings.randomiser == 1 then
-	forms.setproperty(lzrForm.UI.form_controls["Randomiser Checkbox"], "Checked", true);
-end
+forms.setproperty(lzrForm.UI.form_controls["Randomiser Dropdown"], "SelectedItem", lzrTypes[previousSettings.randomiser]);
 if previousSettings.randomiser_barrel == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Barrel Randomiser Checkbox"], "Checked", true);
 end
