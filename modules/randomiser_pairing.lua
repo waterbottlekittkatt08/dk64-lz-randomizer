@@ -49,8 +49,8 @@ lz_pairs = {
 	{0x3006, 0x3E00}, -- Fungi Mill Rear (W1 Door)
 	{0x3007, 0x3E03}, -- Fungi Mill Rear (Tiny Door)
 	{0x3008, 0x4000}, -- Fungi GM (Low)
-	{0x3009, 0x4001}, -- Fungi GM (Lower Middle)
-	{0x300A, 0x4002}, -- Fungi GM (Middle)
+	{0x3009, 0x4002}, -- Fungi GM (Lower Middle)
+	{0x300A, 0x4001}, -- Fungi GM (Middle)
 	{0x300B, 0x4003}, -- Fungi GM (Upper Middle)
 	{0x300C, 0x4004}, -- Fungi GM (High)
 	{0x300D, 0x4700}, -- Fungi Face Puzzle
