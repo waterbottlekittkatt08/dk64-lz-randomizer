@@ -662,19 +662,19 @@ function confirmSettings()
 		settings.all_kongs = 0;
 	end
 	if lzr_string ~= "None" then
-		if lzr_string == "Chained" then
+		if lzr_string == "DKoupled" then
 			settings.randomiser = 1;
 			lzr_type = "chain";
-		elseif lzr_string == "Chaotic" then
+		elseif lzr_string == "DKhaos" then
 			settings.randomiser = 2;
 			lzr_type = "chaos";
 		end
 		require "modules.randomiser_regular"
 		if lzr_type == "chain" then
 			require "modules.randomiser_pairing"
-			print("Chain LZ Randomiser On");
+			print("DKoupled LZ Randomiser On");
 		elseif lzr_type == "chaos" then
-			print("Chaos LZ Randomiser On");
+			print("DKhaos LZ Randomiser On");
 		end
 	else
 		settings.randomiser = 0;
@@ -1060,13 +1060,13 @@ gameLengthsAlphabetical = {
 
 lzrTypes = {
 	[1] = "None",
-	[2] = "Chained",
-	[3] = "Chaotic"
+	[2] = "DKoupled",
+	[3] = "DKhaos"
 }
 
 lzrTypesAlphabetical = {
-	[1] = "Chained",
-	[2] = "Chaotic",
+	[1] = "DKhaos",
+	[2] = "DKoupled",
 	[3] = "None"
 }
 
