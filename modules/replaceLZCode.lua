@@ -173,10 +173,24 @@ function getLoadingZone(destmap, destexit, origmap, cs_val, transition_type)
 	lookup_value = (destmap * 256) + destexit;
 	
 	--special case: Llama temple switch
-	if destmap == 38 and destexit == 2 and transition_type == 0 then
-		devPrint("Value maintained for llama temple switch "..toHexString(lookup_value));
-		return lookup_value;
+	if destmap == 38 and destexit == 2 then
+		if lzr_type == "chain" then
+			devPrint("Value maintained for llama temple "..toHexString(lookup_value));
+			return lookup_value;
+		elseif transition_type == 0 then
+			devPrint("Value maintained for llama temple switch "..toHexString(lookup_value));
+			return lookup_value;
+		end
 	end
+
+	--special case: Tiny Temple Exit
+	if destmap == 38 and destexit == 1 then
+		if lzr_type == "chain" then
+			devPrint("Value maintained for tiny temple "..toHexString(lookup_value));
+			return lookup_value;
+		end
+	end
+
 	--disable randomization for cross-map cutscenes
 	if cutsceneActive == 1 then
 		for i=1, #cutscene_transition_table do
