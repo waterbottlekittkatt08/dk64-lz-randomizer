@@ -46,8 +46,8 @@ lz_pairs = {
 	{0x3002, 0x3900}, -- Fungi Winch Room
 	{0x3003, 0x3800}, -- Fungi Dark Attic
 	{0x3004, 0x3B00}, -- Fungi DK Barn
-	{0x3005, 0x3D00}, -- Fungi Mill Front (PPunch Door)
-	{0x3006, 0x3E00}, -- Fungi Mill Rear (W1 Door)
+	{0x3005, 0x3E00}, -- Fungi Mill Front (PPunch Door)
+	{0x3006, 0x3D00}, -- Fungi Mill Rear (W1 Door)
 	{0x3007, 0x3E03}, -- Fungi Mill Rear (Tiny Door)
 	{0x3008, 0x4000}, -- Fungi GM (Low)
 	{0x3009, 0x4002}, -- Fungi GM (Lower Middle)
