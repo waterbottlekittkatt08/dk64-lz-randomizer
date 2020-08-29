@@ -26,6 +26,7 @@ patch_locations = {
 		-- Top of Mountain
 		-- Under Chunky Bonus
 		-- Next to Shellhive
+		-- Front of Diddy's Cage
 	},
 	[0x26] = { -- Aztec
 		-- Normal (Oasis)

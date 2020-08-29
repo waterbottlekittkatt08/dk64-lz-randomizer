@@ -94,7 +94,7 @@ function randomise()
 						mainmemory.write_u16_be(Mem.pmap[version], current_cmap);
 						--mainmemory.writebyte(Mem.pexit[version], current_cexit);
 						rando_happened = 1;
-					elseif cmapType ~= "bonus_maps" and cmapType ~= "crown_maps" and cmapType ~= "special_minigame_maps" and dmapType == "regular_maps" then
+					elseif cmapType ~= "bonus_maps" and cmapType ~= "crown_maps" and cmapType ~= "special_minigame_maps" and cmapType ~= "baboon_blast" and dmapType == "regular_maps" then
 						if current_cmap ~= 0x61 and current_dmap ~= 0x61 and settings.randomiser > 0 then
 							loadingZoneCode = getLoadingZone(current_dmap, current_dexit, current_cmap, cutscene, transition_type);
 							new_destexit_to_write = loadingZoneCode % 256;

@@ -1,4 +1,5 @@
 require "modules.regularmaptable";
+require "modules.lz_validation_data";
 
 lz_pairs = {
 	{0x0400, 0x0702}, -- Japes Mountain (From Japes)
@@ -200,6 +201,238 @@ function generateAssortmentObject()
 		--print(regular_map_assortment)
 		--print(i.." > "..regular_map_assortment[i]);
 	end
+end
+
+function validateAssortment()
+	accessed_maps = {0x22}; -- Always start in isles
+	access_kongs = {1};
+	if settings.all_kongs == 1 then
+		access_kongs = {1,2,3,4,5};
+	end
+	accessed_maps_by_kong = {}
+	for i = 0, 215 do
+		accessed_maps_by_kong[i] = {};
+	end
+	for i = 1, #access_kongs do
+		table.insert(accessed_maps_by_kong[0x22],access_kongs[i]);
+	end
+	keys_acquired = {};
+	for i = 1, #antikeys_table do
+		table.insert(keys_acquired,antikeys_table[i]); -- Not defined?
+	end
+	exploreAccessibility()
+end
+
+function exploreAccessibility()
+	for i = 1, #accessed_maps do
+		assessMap(accessed_maps[i],accessed_maps_by_kong[accessed_maps[i]])
+	end
+end
+
+function assessMap(map_val,kong_list)
+	-- Check for Pause Exit Trick
+	for i = 1, #pause_exit_maps do
+		pe_map = pause_exit_maps[i];
+		for j = 1, #pause_exit_trick[pe_map] do
+			if map_val == pause_exit_trick[pe_map][j] then
+				accessed_maps = pushToList(accessed_maps,pe_map);
+				for k = 1, #kong_list do
+					accessed_maps_by_kong[pe_map] = pushToList(accessed_maps_by_kong[pe_map],kong_list[k])
+				end
+			end
+		end
+	end
+	-- Check for kongs which can be freed
+	for i = 1, #kong_free_maps do
+		if kong_free_maps[i] == map_val then
+			access_kongs = pushToList(access_kongs, i);
+		end
+	end
+	-- Checks for T&S in map which can be accessed
+	boss_maps = {0x8, 0xC5, 0x9A, 0x6F, 0x53, 0xC4, 0xC7};
+	for i = 1, #maps_with_tns do
+		for j = 1, #maps_with_tns[i] do
+			if map_val == j then -- is a map with T&S
+				kong_required = boss_door_assortment[boss_map_assortment[i]];
+				has_kong = false;
+				for k = 1, #access_kongs do
+					if access_kongs[k] == kong_required then
+						has_kong = true
+					end
+				end
+				if has_kong then
+					boss = boss_maps[boss_map_assortment[i]];
+					keys_acquired = pushToList(keys_acquired,i);
+					accessed_maps = pushToList(accessed_maps,boss);
+					accessed_maps_by_kong[boss] = pushToList(accessed_maps_by_kong[boss],kong_required);
+					accessed_maps = pushToList(accessed_maps,0x2A) -- T&S
+					for k = 1, #access_kongs do
+						accessed_maps_by_kong[0x2A] = pushToList(accessed_maps_by_kong[0x2A],access_kongs[k]);
+					end
+					if boss == 0xC7 then -- Kut Out
+						access_kongs = {1,2,3,4,5};
+					end
+				end
+			end
+		end
+	end
+	-- Get array of accessible maps and access kong arrays
+	lz_origin_map_keys = {};
+	for k, v in pairs(lz_origin_map_table) do
+		table.insert(lz_origin_map_keys,k)
+	end
+
+	for i = 1, #lz_origin_map_keys do
+		for j = 1, #lz_origin_map_table[lz_origin_map_keys[i]] do
+			if lz_origin_map_table[lz_origin_map_keys[i]][j] == map_val then -- exit code is possible exit under *some* circumstance we may not have obtained yet
+				-- Determine whether we have kong to open gateway to loading zone if necessary
+				valid_entrance_test_one = false;
+				has_extra_conditions_test_one = false;
+				for k, v in pairs(also_requires_kong_map_table) do
+					if k == lz_origin_map_keys[i] then
+						has_extra_conditions_test_one = true;
+						for l = 1, #access_kongs do
+							if v == access_kongs[l] then
+								valid_entrance_test_one = true;
+							end
+						end
+					end
+				end
+				if not has_extra_conditions_test_one then -- If no conditions, accept as passing test one
+					valid_entrance_test_one = true;
+				end
+
+				-- Determine if we have entered a required map in order for a map to open
+				valid_entrance_test_two = false;
+				has_extra_conditions_test_two = false;
+				for k, v in pairs(also_requires_reached_map_table) do
+					if k == lz_origin_map_keys[i] then
+						has_extra_conditions_test_two = true;
+						for l = 1, #accessed_maps do
+							if v == accessed_maps[l] then
+								valid_entrance_test_two = true;
+							end
+						end
+					end
+				end
+				if not has_extra_conditions_test_two then -- If no conditions, accept as passing test two
+					valid_entrance_test_two = true;
+				end
+
+				-- Determine if lobbies are open
+				valid_entrance_test_three = false;
+				has_extra_conditions_test_three = false;
+				if map_val == 0x22 then -- in Isles
+					new_map = getDestinationMapFromCode(lz_origin_map_keys[i]);
+					for k = 1, #lobby_data do
+						if new_map == lobby_data[k][0] then
+							has_extra_conditions_test_three = true;
+							has_all_keys = true;
+							for l = 1, #lobby_data[k][1] do
+								has_key = false;
+								for m = 1, #keys_acquired do
+									if keys_acquired[m] == lobby_data[k][1][l] then
+										has_key = true;
+									end
+								end
+								if not has_key then
+									has_all_keys = false;
+								end
+							end
+							if has_all_keys then
+								valid_entrance_test_three = true;
+							else
+								valid_entrance_test_three = false;
+							end
+						end
+					end
+				end
+				if not has_extra_conditions_test_three then -- If no conditions, accept as passing test three
+					valid_entrance_test_three = true;
+				end
+
+				-- Generate list of non-permitted kongs
+				banned_kongs = {};
+				for k = 1, #inaccessible_map_table_DK do
+					if k == lz_origin_map_keys[i] then
+						table.insert(banned_kongs,1);
+					end
+				end
+				for k = 1, #inaccessible_map_table_Diddy do
+					if k == lz_origin_map_keys[i] then
+						table.insert(banned_kongs,2);
+					end
+				end
+				for k = 1, #inaccessible_map_table_Lanky do
+					if k == lz_origin_map_keys[i] then
+						table.insert(banned_kongs,3);
+					end
+				end
+				for k = 1, #inaccessible_map_table_Tiny do
+					if k == lz_origin_map_keys[i] then
+						table.insert(banned_kongs,4);
+					end
+				end
+				for k = 1, #inaccessible_map_table_Chunky do
+					if k == lz_origin_map_keys[i] then
+						table.insert(banned_kongs,5);
+					end
+				end
+
+				-- Generate access list for next map
+				access_list = {};
+				for k = 1, #access_kongs do
+					banned = false;
+					for l = 1, #banned_kongs do
+						if l == k then -- kong banned
+							banned = true;
+						end
+					end
+					if not banned then
+						table.insert(access_list,k)
+					end
+				end
+
+				if valid_entrance_test_one and valid_entrance_test_two and valid_entrance_test_three then
+					new_map = getNewDestinationCode(lz_origin_map_keys[i]);
+					new_map_is_tagless = false;
+					for k = 1, #tagless_map_table do
+						if tagless_map_table[k][0] == getDestinationMapFromCode(new_map) then
+							new_map_is_tagless = true;
+						end
+					end
+					if not new_map_is_tagless then
+						access_list = {};
+						for k = 1, #access_kongs do
+							table.insert(access_list, access_kongs[k]);
+						end
+					end
+					for k = 1, #access_list do
+						accessed_maps_by_kong[new_map] = pushToList(accessed_maps_by_kong[new_map],access_list[k]);
+					end
+				end
+			end
+		end
+	end
+end
+
+function pushToList(list,value)
+	list_copy = list;
+	value_present = false;
+	if list_copy then
+		for i = 1, #list_copy do
+			if list_copy[i] == value then
+				value_present = true;
+			end
+		end
+		if not value_present then
+			table.insert(list_copy,value);
+		end
+	else
+		list_copy = {};
+		table.insert(list_copy,value);
+	end
+	return list_copy
 end
 
 function getCodeFromDestination()
