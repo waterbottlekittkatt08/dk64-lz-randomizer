@@ -52,6 +52,7 @@ Mem = {
 	obj_model2_array_count = {0x7F6004, 0x7F5F24, 0x7F6474},
 	kong_reload_pointer = {0x7FC924, nil, nil},
 	player1_input = {0x014DC4,nil,nil},
+	actor_spawner_pointer = {0x7FC400,0x7FC320,0x7FC870,nil},
 };
 
 -------------------------------
@@ -181,6 +182,7 @@ function cancelDanceSkip()
 	mainmemory.write_u32_be(0x6EFC1C, 0x0C189E52) -- CS Play Function Call
 	mainmemory.write_u32_be(0x6EFB88, 0x0C18539E) -- Animation Write Function Call
 	mainmemory.write_u32_be(0x6EFC0C, 0xA58200E6) -- Change Rotation Write
+	mainmemory.write_u32_be(0x6EFBA8, 0xA3000155) -- Control State Progress Zeroing
 end
 cancelDanceSkip()
 
