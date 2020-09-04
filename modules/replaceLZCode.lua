@@ -3,31 +3,71 @@ require "modules.mapAndExitNames";
 forcing_a_cutscene = 0;
 rando_happened = 0;
 
+exception_occurred_bblast = false;
+exception_occurred_list = false;
+exceptions = {
+	-- {destination_map, destination_exit || "ignore", transition_type || "ignore"}
+	{38,2,"ignore"},
+	{20,"ignore","ignore"},
+	{38,1,"ignore"},
+};
+
 function randomise()
 	if version < 2 then -- Should be <4, need to fix CS fade stuff
 		mode_value = mainmemory.readbyte(Mem.mode[version]);
 		dmapType = mapType(current_dmap);
 		cmapType = mapType(current_cmap);
 		ignore = false;
-		if lzr_type == "chain" then
+		transition_speed_value = mainmemory.readfloat(Mem.transition_speed[version], true);
+		zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
+		cutscene = mainmemory.read_u16_be(Mem.cs[version]);
+		cutsceneActive = mainmemory.readbyte(Mem.cs_active[version]);
+		transition_type = mainmemory.readbyte(Mem.loading_zone_transition_type[version]);
+		current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
+		current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
+		current_pmap = mainmemory.read_u16_be(Mem.pmap[version]);
+		current_prevmap = mainmemory.readbyte(Mem.prev_map[version]);
+		current_cexit = mainmemory.read_u32_be(Mem.cexit[version]);
+		prevmapType = mapType(current_prevmap);
+		previous_msb_value = mainmemory.readbyte(Mem.map_state[version]);
+		current_dexit = mainmemory.read_u32_be(Mem.dexit[version]);
+		player = getPlayerObject();
+
+
+		if lzr_type == "chain" and transition_speed_value == 1 then
 			if cmapType == "baboon_blast" or dmapType == "baboon_blast" then
 				ignore = true;
+				if not exception_occurred_bblast then
+					print("Ignoring randomisation due to Baboon Blast")
+				end
+				exception_occurred_bblast = true;
+			else
+				exception_occurred_bblast = false
+			end
+		else
+			exception_occurred_bblast = false;
+		end
+		found_exception = false;
+		for i = 1, #exceptions do
+			if current_dmap == exceptions[i][1] and transition_speed_value == 1 then
+				if current_dexit == exceptions[i][2] or exceptions[i][2] == "ignore" then
+					if transition_type == exceptions[i][3] or exceptions[i][3] == "ignore" then
+						ignore = true;
+						if not exception_occurred_list then
+							print("Ignoring randomisation due to exception match")
+						end
+						exception_occurred_list = true;
+						found_exception = true;
+					end
+				end
 			end
 		end
+		if not found_exception then
+			exception_occurred_list = false;
+		end
+
 		if mode_value > 5 and not ignore then -- Not Intro Stuff, not bblast
-			transition_speed_value = mainmemory.readfloat(Mem.transition_speed[version], true);
-			zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
-			cutscene = mainmemory.read_u16_be(Mem.cs[version]);
-			cutsceneActive = mainmemory.readbyte(Mem.cs_active[version]);
-			transition_type = mainmemory.readbyte(Mem.loading_zone_transition_type[version]);
-			current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
-			current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
-			current_pmap = mainmemory.read_u16_be(Mem.pmap[version]);
-			current_prevmap = mainmemory.readbyte(Mem.prev_map[version]);
-			current_cexit = mainmemory.read_u32_be(Mem.cexit[version]);
-			prevmapType = mapType(current_prevmap);
-			previous_msb_value = mainmemory.readbyte(Mem.map_state[version]);
-			player = getPlayerObject();
+			
 			if transition_speed_value < 0 then
 				rando_happened = 0;
 			end
