@@ -46,7 +46,7 @@ Mem = {
 	character = {0x74E77C, 0x748EDC, 0x74E05C},
 	arcade_round = {0x04A76C,nil,nil},
 	prev_map = {0x76AEF3,nil,nil},
-	temp_flag_start = {0x7FDCE0,nil,nil},
+	temp_flag_start = {0x7FDD90,nil,nil},
 	arcade_win_condition = {0x04BE4D,nil,nil},
 	obj_model2_array_pointer = {0x7F6000, 0x7F5F20, 0x7F6470},
 	obj_model2_array_count = {0x7F6004, 0x7F5F24, 0x7F6474},
@@ -441,13 +441,13 @@ newFileFlags = {
 };
 
 newFileTempFlags = {
-	[1] = {0xBD,0}, -- Army 1 Long Intro
-	[2] = {0xBC,7}, -- Dog 1 Long Intro
-	[3] = {0xBD,2}, -- MJ Long Intro
-	[4] = {0xBD,3}, -- Puff Long Intro
-	[5] = {0xBD,1}, -- Dog 2 Long Intro
-	[6] = {0xBD,5}, -- Army 2 Long Intro
-	[7] = {0xBD,4}, -- KKO Long Intro
+	[1] = {0xD,0}, -- Army 1 Long Intro
+	[2] = {0xC,7}, -- Dog 1 Long Intro
+	[3] = {0xD,2}, -- MJ Long Intro
+	[4] = {0xD,3}, -- Puff Long Intro
+	[5] = {0xD,1}, -- Dog 2 Long Intro
+	[6] = {0xD,5}, -- Army 2 Long Intro
+	[7] = {0xD,4}, -- KKO Long Intro
 };
 
 function checkNewFile()
@@ -895,7 +895,7 @@ function fixArcade()
 			mainmemory.writebyte(Mem.arcade_round[version],1);
 			arcade_win_bool = mainmemory.readbyte(Mem.arcade_win_condition[version]);
 			if arcade_win_bool == 1 and current_cmap == 2 then
-				setTempFlag(0xB2,0); -- Make GB Spawn
+				setTempFlag(0x2,0); -- Make GB Spawn
 			end
 		end
 	end

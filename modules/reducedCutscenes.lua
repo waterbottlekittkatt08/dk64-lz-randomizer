@@ -53,13 +53,21 @@ function removeCutscenes()
 		end ]]--
 	elseif current_cmap == 97 then -- Klumsy
 		-- KLumsyKeyCompression() 
-	elseif current_cmap == 0x11 then --Helm
-		setTempFlag(0xB8,6); -- DK Grate
-		setTempFlag(0xB8,7); -- Chunky Grate
-		setTempFlag(0xB9,0); -- Lanky Grate
-		setTempFlag(0xB9,1); -- Tiny Grate
+	elseif current_cmap == 0x11 or current_dmap == 0x11 then --Helm
+		setTempFlag(0x8,6); -- DK Grate
+		setTempFlag(0x8,7); -- Chunky Grate
+		setTempFlag(0x9,0); -- Lanky Grate
+		setTempFlag(0x9,1); -- Tiny Grate
+		if settings.gameLengths == 1 then -- Short Helm, 2 Rooms
+			setTempFlag(0x9,3); -- DK Shut down
+			setTempFlag(0x9,4); -- Chunky Shut down
+			setTempFlag(0x9,5); -- Tiny Shut Down
+		elseif settings.gameLengths == 2 then -- Medium Helm, 3 Rooms
+			setTempFlag(0x9,3); -- DK Shut down
+			setTempFlag(0x9,4); -- Chunky Shut down
+		end
 		if cutscene == 2 and cutscene_active == 1 and cutscene_timer > 242 then
-			setTempFlag(0xB7,3); -- Roman Numeral Doors
+			setTempFlag(0x7,3); -- Roman Numeral Doors
 		end
 		CrownDoorCutsceneSkip();
 	end
