@@ -6,7 +6,15 @@ rando_happened = 0;
 function randomise()
 	if version < 2 then -- Should be <4, need to fix CS fade stuff
 		mode_value = mainmemory.readbyte(Mem.mode[version]);
-		if mode_value > 5 then -- Not Intro Stuff
+		dmapType = mapType(current_dmap);
+		cmapType = mapType(current_cmap);
+		ignore = false;
+		if lzr_type == "chain" then
+			if cmapType == "baboon_blast" or dmapType == "baboon_blast" then
+				ignore = true;
+			end
+		end
+		if mode_value > 5 and not ignore then -- Not Intro Stuff
 			transition_speed_value = mainmemory.readfloat(Mem.transition_speed[version], true);
 			zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
 			cutscene = mainmemory.read_u16_be(Mem.cs[version]);
@@ -17,8 +25,6 @@ function randomise()
 			current_pmap = mainmemory.read_u16_be(Mem.pmap[version]);
 			current_prevmap = mainmemory.readbyte(Mem.prev_map[version]);
 			current_cexit = mainmemory.read_u32_be(Mem.cexit[version]);
-			dmapType = mapType(current_dmap);
-			cmapType = mapType(current_cmap);
 			prevmapType = mapType(current_prevmap);
 			previous_msb_value = mainmemory.readbyte(Mem.map_state[version]);
 			player = getPlayerObject();
