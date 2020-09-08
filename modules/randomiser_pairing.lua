@@ -17,6 +17,7 @@ lz_pairs = {
 	{0x1800, 0x2604}, -- Aztec Chunky 5DT
 	{0x1A00, 0xAF01}, -- Factory (From Lobby)
 	{0x1A03, 0x1D00}, -- Factory Power Shed
+	{0x1A08, 0x2400}, -- Factory Crusher Room
 	{0x1A10, 0x1B00}, -- Factory Car Race
 	{0x1E00, 0xAE01}, -- Galleon (From Lobby)
 	{0x1E01, 0x2B00}, -- Galleon Diddy 5DS
@@ -33,6 +34,7 @@ lz_pairs = {
 	{0x1E13, 0x2700}, -- Galleon Seal Race
 	{0x1E15, 0xB300}, -- Galleon Submarine
 	{0x2202, 0xA900}, -- Isles Japes Lobby
+	{0x2201, 0xAD00}, -- Isles Aztec Lobby
 	{0x2204, 0xAF00}, -- Isles Factory Lobby
 	{0x2205, 0xAE00}, -- Isles Galleon lobby
 	{0x2206, 0xB200}, -- Isles Fungi Lobby
@@ -85,10 +87,13 @@ lz_pairs = {
 	{0x5707, 0x7100}, -- Castle (From Museum)
 	{0x5708, 0xA800}, -- Castle (From Greenhouse [Front])
 	{0x5709, 0xA600}, -- Castle (From Shed)
+	{0x570B, 0x5800}, -- Castle (From Ballroom)
 	{0x570C, 0x7200}, -- Castle (From Library [Entrance])
 	{0x570D, 0x7201}, -- Castle (From Library [Exit])
 	{0x570E, 0x6900}, -- Castle (From Wind Tower)
+	{0x570F, 0xA400}, -- Castle From Tree
 	{0x5710, 0xA700}, -- Castle (From Trash Can)
+	{0x7001, 0x6A00}, -- Castle DDC Crypt (From Minecart)
 	--0x5714, -- Castle (From Greenhouse Rear)
 	{0x5801, 0x7102}, -- Castle Ballroom (From Museum)
 	{0x6C00, 0xB704}, -- Castle Crypt [L/T] (From Crypt [Hub])
