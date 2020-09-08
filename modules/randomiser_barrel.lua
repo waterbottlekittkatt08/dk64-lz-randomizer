@@ -12,12 +12,12 @@ bonus_map_table = {
 	[10] = {212, {1,2,3,4,5}, {1}, ishelm = true},
 	[11] = {3, {1,2,3,4,5}, {3}},
 	[12] = {18, {1,2,3,4,5}, {3}},
-	[13] = {32, {1,2,3,4,5}, {1,2,3,4,5}},
+	[13] = {32, {1,2,3,4,5}, {3}},
 	[14] = {65, {1,2,3,4,5}, {2}},
 	[15] = {66, {1,2,3,4,5}, nosource = true, helm_ban = true}, -- Unused MMMaul, Requires Shockwave to beat
 	[16] = {67, {1,2,3,4,5}, nosource = true},
 	[17] = {68, {1,2,3,4,5}, {3}},
-	[18] = {69, {1,2,3,4,5}, {2,4}},
+	[18] = {69, {1,2,3,4,5}, {2}},
 	[19] = {74, {1,2,3,4,5}, {5}},
 	[20] = {75, {1,2,3,4,5}, nosource = true, helm_ban = true}, -- Unused Stash Snatch (Hybrid SSnatch/SSnoop), determined too difficult for Helm
 	[21] = {77, {1,2,3,4,5}, {5}},
@@ -48,7 +48,7 @@ bonus_map_table = {
 	[46] = {131, {1,2,4,5}, {1}},
 	[47] = {132, {1,2,3,4,5}, nosource = true},
 	[48] = {133, {1,2,3,4,5}, {2}},
-	[49] = {134, {4}, {1,2,3,4,5}},
+	[49] = {134, {4}, {4}},
 	[50] = {135, {1,2,3,4,5}, nosource = true},
 	[51] = {136, {1,2,3,4,5}, {3,5}, multibarrel = true, helm_ban = true}, -- Both Castle BBothers
 	[52] = {137, {1,2,3,4,5}, nosource = true, helm_ban = true},
