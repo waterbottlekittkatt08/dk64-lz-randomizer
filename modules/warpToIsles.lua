@@ -278,7 +278,10 @@ function writeText(address,text,includeLR)
 	table.insert(bytes,0); -- Terminate the string
 	for i = 1, #bytes do
 		if isRDRAM(dereferencePointer(address)) then
-			mainmemory.writebyte(dereferencePointer(address) + (i - 1), bytes[i]);
+			if dereferencePointer(address) > dereferencePointer(address) + (i - 1) then
+			else
+				mainmemory.writebyte(dereferencePointer(address) + (i - 1), bytes[i]);
+			end
 		end
 	end
 end
@@ -327,53 +330,63 @@ function handleText()
 	end
 	pausemenu_pointers = getActorPointers(95);
 	if #pausemenu_pointers > 0 then
-		selected = mainmemory.readbyte(pausemenu_pointers[1] + 0x18F);
-		is_allowed = handlePerms();
-		if is_allowed then
-			is_regular = isRegular();
-			if selected > 1 and not is_regular then -- 2 = No "Are you sure", 3 = "Are you sure"
-				handleWarp();
-			end
-			if selected == 2 and isRDRAM(dereferencePointer(Mem.text_pointers[version])) then -- Bottom Option Selected
-				if is_regular then
-					for i = 1, #text do
-						writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), text[i][1], true);
-					end
-				else
-					attempt = handleEasterEgg(has_chanced_for_easter_egg);
-					has_chanced_for_easter_egg = attempt[2];
-					if easter_egg_initiate_frame > -1 then
+		progress = mainmemory.readfloat(pausemenu_pointers[1] + 0x178, true);
+		if progress < 0.2 then
+			selected = mainmemory.readbyte(pausemenu_pointers[1] + 0x18F);
+			is_allowed = handlePerms();
+			if is_allowed then
+				is_regular = isRegular();
+				if selected > 1 and not is_regular then -- 2 = No "Are you sure", 3 = "Are you sure"
+					handleWarp();
+				end
+				if selected == 2 and isRDRAM(dereferencePointer(Mem.text_pointers[version])) then -- Bottom Option Selected
+					if is_regular then
 						for i = 1, #text do
-							writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), handleEasterEggText(easter_egg_initiate_frame, emu.framecount()), true);
+							--print("[LINE 343] Writing to "..bizstring.hex(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2])))
+							writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), text[i][1], true);
 						end
 					else
-						for i = 1, #text do
-							writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), new_text, true);
+						attempt = handleEasterEgg(has_chanced_for_easter_egg);
+						has_chanced_for_easter_egg = attempt[2];
+						if easter_egg_initiate_frame > -1 then
+							for i = 1, #text do
+								--print("[LINE 351] Writing to "..bizstring.hex(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2])))
+								writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), handleEasterEggText(easter_egg_initiate_frame, emu.framecount()), true);
+							end
+						else
+							for i = 1, #text do
+								--print("[LINE 356] Writing to "..bizstring.hex(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2])))
+								writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), new_text, true);
+							end
 						end
+						
 					end
-					
-				end
-				should_change = handleInput();
-				if should_change and not emu.islagged() then
-					mainmemory.writebyte(free_memory_spot, 1 - mainmemory.readbyte(free_memory_spot));
-					has_chanced_for_easter_egg = false;
-					easter_egg_initiate_frame = -1;
-				end
-			else
-				if is_regular then
-					for i = 1, #text do
-						writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), text[i][1], false);
+					should_change = handleInput();
+					if should_change and not emu.islagged() then
+						--print("[LINE 364] Writing to "..bizstring.hex(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2])))
+						mainmemory.writebyte(free_memory_spot, 1 - mainmemory.readbyte(free_memory_spot));
+						has_chanced_for_easter_egg = false;
+						easter_egg_initiate_frame = -1;
 					end
 				else
-					attempt = handleEasterEgg(has_chanced_for_easter_egg);
-					has_chanced_for_easter_egg = attempt[2];
-					if easter_egg_initiate_frame > -1 then
+					if is_regular then
 						for i = 1, #text do
-							writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), handleEasterEggText(easter_egg_initiate_frame, emu.framecount()), false);
+							--print("[LINE 371] Writing to "..bizstring.hex(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2])))
+							writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), text[i][1], false);
 						end
 					else
-						for i = 1, #text do
-							writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), new_text, true);
+						attempt = handleEasterEgg(has_chanced_for_easter_egg);
+						has_chanced_for_easter_egg = attempt[2];
+						if easter_egg_initiate_frame > -1 then
+							for i = 1, #text do
+								--print("[LINE 380] Writing to "..bizstring.hex(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2])))
+								writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), handleEasterEggText(easter_egg_initiate_frame, emu.framecount()), false);
+							end
+						else
+							for i = 1, #text do
+								--print("[LINE 385] Writing to "..bizstring.hex(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2])))
+								writeText(dereferencePointer(Mem.text_pointers[version]) + (4 * text[i][2]), new_text, true);
+							end
 						end
 					end
 				end
