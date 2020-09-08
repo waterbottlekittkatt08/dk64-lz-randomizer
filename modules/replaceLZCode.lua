@@ -7,9 +7,9 @@ exception_occurred_bblast = false;
 exception_occurred_list = false;
 exceptions = {
 	-- {destination_map, destination_exit || "ignore", transition_type || "ignore"}
-	{38,2,"ignore"},
-	{20,"ignore","ignore"},
-	{38,1,"ignore"},
+	--{38,2,"ignore"}, -- Aztec from L Temple (Commented out due to crash)
+	--{20,"ignore","ignore"}, -- L Temple (Commented out due to crash)
+	--{38,1,"ignore"}, -- Aztec from T Temple (Commented out due to crash)
 };
 
 function randomise()
