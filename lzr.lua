@@ -51,8 +51,11 @@ Mem = {
 	obj_model2_array_pointer = {0x7F6000, 0x7F5F20, 0x7F6470},
 	obj_model2_array_count = {0x7F6004, 0x7F5F24, 0x7F6474},
 	kong_reload_pointer = {0x7FC924, nil, nil},
-	player1_input = {0x014DC4,nil,nil},
+	player1_input = {0x7ECD64,nil,nil},
 	actor_spawner_pointer = {0x7FC400,0x7FC320,0x7FC870,nil},
+	text_pointers = {0x7FC7E0,nil,nil,nil},
+	player1_input_current_frame = {0x014DC6,nil,nil},
+	player1_input_last_frame = {0x7ECD62,nil,nil},
 };
 
 -------------------------------
@@ -696,6 +699,7 @@ function confirmSettings()
 	
 	settings.no_cutscenes = 1;
 	require "modules.reducedCutscenes"
+	require "modules.warpToIsles"
 	require "modules.klapsAndBeavers"
 	require "modules.troffnscoff"
 	if settings.randomiser > 0 then
