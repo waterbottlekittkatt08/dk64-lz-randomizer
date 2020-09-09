@@ -39,7 +39,7 @@ function crashLogGen(header,display_type,pretext,posttext)
 end
 
 function randomise()
-	if version < 2 then -- Should be <4, need to fix CS fade stuff
+	if version < 2 and settings.dev_replacer == 0 then -- Should be <4, need to fix CS fade stuff
 		mode_value = mainmemory.readbyte(Mem.mode[version]);
 		dmapType = mapType(current_dmap);
 		cmapType = mapType(current_cmap);

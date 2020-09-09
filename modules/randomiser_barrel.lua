@@ -245,6 +245,9 @@ function getBonusDestination(destmap)
 		return destmap;
 	else
 		value_to_lookup = bonus_map_assortment[reference];
+		if value_to_lookup == nil then
+			return destmap;
+		end
 		new_dmap_code = bonus_map_table[value_to_lookup][1];
 		return new_dmap_code;
 	end

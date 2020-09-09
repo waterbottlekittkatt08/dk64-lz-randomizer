@@ -503,7 +503,7 @@ lzrForm = {
 		form_controls = {},
 		form_padding = 8,
 		form_width = 10,
-		form_height = 24,
+		form_height = 25,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -613,6 +613,7 @@ settings = {
 	randomiser_barrel = 0,
 	tag_anywhere = 0,
 	gameLengths = 1,
+	dev_replacer = 0,
 };
 
 keys_short = {1,2,3,4,5,6,7,8};
@@ -638,6 +639,11 @@ function confirmSettings()
 	if settings.gameLengths < 3 then
 		require "modules.finalHelmDoors"
 		addToCrashLog("Final Helm Doors Module Added");
+	end
+	if forms.ischecked(lzrForm.UI.form_controls["Dev Replacer Checkbox"]) then
+		settings.dev_replacer = 1;
+	else
+		settings.dev_replacer = 0;
 	end
 	print("Game Length: "..gameLengths[settings.gameLengths]);
 	if forms.ischecked(lzrForm.UI.form_controls["All Moves Checkbox"]) then
@@ -746,6 +752,11 @@ function confirmSettings()
 		print("'Tag Anywhere' On");
 	else
 		settings.tag_anywhere = 0;
+	end
+	if settings.dev_replacer == 1 then
+		require "modules.newReplaceLZCode"
+		addToCrashLog("Development LZ Replacer Module Added");
+		print("'Development LZ Replacer' On");
 	end
 	require "modules.krool_indicator"
 	addToCrashLog("K. Rool Indicator Module Added");
@@ -1073,6 +1084,7 @@ function WriteSettings()
 	file:write("tag_anywhere = ", settings.tag_anywhere, ",", "\n");
 	file:write("seed = ", seedAsNumber, ",", "\n");
 	file:write("gameLengths = ", settings.gameLengths, ",", "\n");
+	file:write("dev_replacer = ", settings.dev_replacer, ",", "\n");
 	file:write("};", "\n");
 	file:close();
 	print("Saved settings to settings.lua!");
@@ -1179,9 +1191,14 @@ lzrForm.UI.form_controls["Tag Anywhere Label"] = forms.label(lzrForm.UI.options_
 lzrForm.UI.form_controls["Tag Anywhere Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
 current_row = current_row + 1;
 
+lzrForm.UI.form_controls["Dev Replacer Label"] = forms.label(lzrForm.UI.options_form, "Dev LZ Replacer:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Dev Replacer Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+current_row = current_row + 1;
+
 lzrForm.UI.form_controls["Length Label"] = forms.label(lzrForm.UI.options_form, "Length:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) + lzrForm.UI.label_offset, 60, 24);
 lzrForm.UI.form_controls["Length Dropdown"] = forms.dropdown(lzrForm.UI.options_form, gameLengths, lzrForm.UI.col(3) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset + 5, lzrForm.UI.col(5) + 8, lzrForm.UI.button_height);
 current_row = current_row + 1;
+
 
 seed_form_height = 15;
 seed_form_offset = 0.5;
@@ -1238,6 +1255,9 @@ if previousSettings.random_kasplats == 1 then
 end
 if previousSettings.tag_anywhere == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Tag Anywhere Checkbox"], "Checked", true);
+end
+if previousSettings.dev_replacer == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["Dev Replacer Checkbox"], "Checked", true);
 end
 
 forms.setproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem", gameLengths[previousSettings.gameLengths]);
