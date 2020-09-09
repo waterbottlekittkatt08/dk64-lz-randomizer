@@ -712,8 +712,8 @@ function confirmSettings()
 	settings.no_cutscenes = 1;
 	require "modules.reducedCutscenes"
 	addToCrashLog("Reduced Cutscenes Module Added");
-	require "modules.warpToIsles"
-	addToCrashLog("Warp To Isles Module Added");
+	-- require "modules.warpToIsles"
+	-- addToCrashLog("Warp To Isles Module Added");
 	require "modules.klapsAndBeavers"
 	addToCrashLog("Klaptrap and Beaver Type Randomisation Module Added");
 	require "modules.troffnscoff"
