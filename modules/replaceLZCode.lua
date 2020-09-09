@@ -2,6 +2,7 @@ require "modules.mapAndExitNames";
 
 forcing_a_cutscene = 0;
 rando_happened = 0;
+crashLogData = {-1,-1,-1,-1}
 
 exception_occurred_bblast = false;
 exception_occurred_list = false;
@@ -32,8 +33,6 @@ function randomise()
 		previous_msb_value = mainmemory.readbyte(Mem.map_state[version]);
 		current_dexit = mainmemory.read_u32_be(Mem.dexit[version]);
 		player = getPlayerObject();
-
-
 		if lzr_type == "chain" and transition_speed_value == 1 then
 			if cmapType == "baboon_blast" or dmapType == "baboon_blast" then
 				ignore = true;
@@ -67,7 +66,6 @@ function randomise()
 		end
 
 		if mode_value > 5 and not ignore then -- Not Intro Stuff, not bblast
-			
 			if transition_speed_value < 0 then
 				rando_happened = 0;
 			end
@@ -109,6 +107,22 @@ function randomise()
 				current_dexit = mainmemory.read_u32_be(Mem.dexit[version]);
 				lag = mainmemory.read_u32_be(Mem.frame_lag[version]);
 				real = mainmemory.read_u32_be(Mem.frame_real[version]);
+				if rando_happened == 0 and crashLogData[1] == -1 then
+					crashLogData[1] = current_dmap;
+					crashLogData[2] = current_dexit;
+					crashLogData[3] = -1;
+					crashLogData[4] = -1;
+				elseif rando_happened == 1 and crashLogData[3] == -1 then
+					crashLogData[3] = current_dmap;
+					crashLogData[4] = current_dexit;
+					if crashLogData[1] == crashLogData[3] and crashLogData[2] == crashLogData[4] then
+						addToCrashLog("Frame "..emu.framecount().." | PERSISTANCE   | "..getFullName((crashLogData[1] * 256) + crashLogData[2]).." persisted")
+					else
+						addToCrashLog("Frame "..emu.framecount().." | RANDOMISATION | "..getFullName((crashLogData[1] * 256) + crashLogData[2]).." > "..getFullName((crashLogData[3] * 256) + crashLogData[4]));
+					end
+					crashLogData[1] = -1;
+					crashLogData[2] = -1;
+				end
 				if dmapType == "regular_maps" and cmapType ~= "bonus_maps" then
 					mainmemory.writebyte(Mem.insubmap[version], 0);
 					mainmemory.writebyte(Mem.insubmap_b[version], 0);

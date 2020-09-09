@@ -622,6 +622,8 @@ keys_long = {1,2,3,4,5,6,7,8};
 function confirmSettings()
 	print("Settings Confirmed");
 	print("Seed: "..seedAsNumber);
+	clearCrashLog();
+	addToCrashLog("Seed: "..seedAsNumber);
 	k_rool_assortment = {1,2,3,4,5};
 	lengthString = forms.getproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem");
 	lzr_string = forms.getproperty(lzrForm.UI.form_controls["Randomiser Dropdown"], "SelectedItem");
@@ -631,13 +633,17 @@ function confirmSettings()
 			settings.gameLengths = i;
 		end
 	end
+	require "modules.mapAndExitNames";
+	addToCrashLog("Maps & Exit Names Module Added");
 	if settings.gameLengths < 3 then
 		require "modules.finalHelmDoors"
+		addToCrashLog("Final Helm Doors Module Added");
 	end
 	print("Game Length: "..gameLengths[settings.gameLengths]);
 	if forms.ischecked(lzrForm.UI.form_controls["All Moves Checkbox"]) then
 		settings.all_moves = 1;
 		require "modules.allMoves"
+		addToCrashLog("Unlock All Moves Module Added");
 		print("All Moves On");
 		if settings.gameLengths == 1 then
 			keys_required_to_open_krool = keys_short;
@@ -652,6 +658,7 @@ function confirmSettings()
 	if forms.ischecked(lzrForm.UI.form_controls["Random Prices Checkbox"]) then
 		settings.random_prices = 1;
 		require "modules.randomPrices"
+		addToCrashLog("Random Prices Module Added");
 		generateRandomPrices();
 		event.onframeend(randomizePrices, "Randomises Prices in Shop");
 		print("Random Prices On");
@@ -661,6 +668,7 @@ function confirmSettings()
 	if forms.ischecked(lzrForm.UI.form_controls["All Kongs Checkbox"]) then
 		settings.all_kongs = 1;
 		require "modules.allKongs"
+		addToCrashLog("Unlock All Kongs Module Added");
 		print("All Kongs On");
 	else
 		settings.all_kongs = 0;
@@ -676,8 +684,10 @@ function confirmSettings()
 			lzr_type = "chaos";
 		end
 		require "modules.randomiser_regular"
+		addToCrashLog("LZ Randomiser (Regular) Module Added");
 		if lzr_type == "chain" then
 			require "modules.randomiser_pairing"
+			addToCrashLog("LZ Randomiser (Coupled) Module Added");
 			print("DKoupled LZ Randomiser On");
 		elseif lzr_type == "chaos" then
 			print("DKhaos LZ Randomiser On");
@@ -688,6 +698,7 @@ function confirmSettings()
 	if forms.ischecked(lzrForm.UI.form_controls["Barrel Randomiser Checkbox"]) then
 		settings.randomiser_barrel = 1;
 		require "modules.randomiser_barrel"
+		addToCrashLog("LZ Randomiser (Barrels) Module Added");
 		print("Barrel Randomiser On");
 		generateBonusAssortmentWithLogic();
 	else
@@ -695,13 +706,18 @@ function confirmSettings()
 	end
 	if settings.randomiser_barrel == 1 or settings.randomiser == 1 then
 		require "modules.replaceLZCode"
+		addToCrashLog("Replace LZ Code Module Added");
 	end
 	
 	settings.no_cutscenes = 1;
 	require "modules.reducedCutscenes"
+	addToCrashLog("Reduced Cutscenes Module Added");
 	require "modules.warpToIsles"
+	addToCrashLog("Warp To Isles Module Added");
 	require "modules.klapsAndBeavers"
+	addToCrashLog("Klaptrap and Beaver Type Randomisation Module Added");
 	require "modules.troffnscoff"
+	addToCrashLog("Troff n Scoff Module Added");
 	if settings.randomiser > 0 then
 		setAssortments();
 	end
@@ -717,6 +733,7 @@ function confirmSettings()
 	if forms.ischecked(lzrForm.UI.form_controls["Kasplat Checkbox"]) then
 		settings.random_kasplats = 1;
 		require "modules.randomKasplats"
+		addToCrashLog("Random Kasplats Module Added");
 		print("Random Kasplats On");
 		generateKasplatAssortment();
 	else
@@ -725,19 +742,42 @@ function confirmSettings()
 	if forms.ischecked(lzrForm.UI.form_controls["Tag Anywhere Checkbox"]) then
 		settings.tag_anywhere = 1;
 		require "modules.tag_anywhere"
+		addToCrashLog("Tag Anywhere EmuPort Module Added");
 		print("'Tag Anywhere' On");
 	else
 		settings.tag_anywhere = 0;
 	end
 	require "modules.krool_indicator"
+	addToCrashLog("K. Rool Indicator Module Added");
 	if settings.using_jabos == 0 then
 		client.reboot_core();
 	end
 	WriteSettings();
+	addToCrashLog("Settings written");
 	Spoiler();
+	addToCrashLog("Spoiler file written");
 	client.unpause();
 	forms.settext(lzrForm.UI.form_controls["Settings Check Label"], "");
 	forms.destroy(lzrForm.UI.options_form);
+	addToCrashLog("Form Destroyed");
+	addToCrashLog("----------------------------------------------");
+end
+
+function clearCrashLog()
+	print("Clearing crash log...");
+	file = io.open("crashLog.txt", "w+");
+	file:write("DONKEY KONG 64 RANDOMISER","\n");
+	file:write("CRASH LOG","\n");
+	file:write("Created at ",os.date("%A %d %B %Y, %X "),"\n");
+	file:write("----------------------------------------------","\n");
+	file:close();
+	print("Crash log cleared");
+end
+
+function addToCrashLog(line)
+	file = io.open("crashLog.txt","a");
+	file:write(line, "\n");
+	file:close()
 end
 
 function setSeed(value)
@@ -905,7 +945,28 @@ function fixArcade()
 	end
 end
 
+in_logged = false;
+out_logged = false;
+function LoadingZoneCrashLog()
+	transition_speed_value = mainmemory.readfloat(Mem.transition_speed[version], true);
+	zipProg = mainmemory.readbyte(Mem.zipper_progress[version]);
+	current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
+	current_cmap = mainmemory.read_u32_be(Mem.cmap[version]);
+	current_dexit = mainmemory.read_u32_be(Mem.dexit[version]);
+	if transition_speed_value > 0 and zipProg < 70 and not in_logged then
+		out_logged = false;
+		addToCrashLog("Frame "..emu.framecount().." | ENTER ZONE    | "..getFullName((current_dmap * 256) + current_dexit))
+		in_logged = true;
+	end
+	if transition_speed_value < 0 and zipProg < 70 and not out_logged then
+		in_logged = false;
+		addToCrashLog("Frame "..emu.framecount().." | EXIT ZONE     | "..getFullName((current_cmap * 256) + current_dexit))
+		out_logged = true;
+	end
+end
+
 function eventCycle()
+	LoadingZoneCrashLog();
 	changeKRoolLoadingZone();
 	fixArcade();
 end

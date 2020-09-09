@@ -331,7 +331,7 @@ function handleText()
 	pausemenu_pointers = getActorPointers(95);
 	if #pausemenu_pointers > 0 then
 		progress = mainmemory.readfloat(pausemenu_pointers[1] + 0x178, true);
-		if progress < 0.2 then
+		if progress < 0.6 then
 			selected = mainmemory.readbyte(pausemenu_pointers[1] + 0x18F);
 			is_allowed = handlePerms();
 			if is_allowed then
