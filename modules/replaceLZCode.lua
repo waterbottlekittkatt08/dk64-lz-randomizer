@@ -13,6 +13,31 @@ exceptions = {
 	--{38,1,"ignore"}, -- Aztec from T Temple (Commented out due to crash)
 };
 
+function crashLogGen(header,display_type,pretext,posttext)
+	if rando_happened == 1 and crashLogData[3] == -1 then
+		crashLogData[3] = current_dmap;
+		crashLogData[4] = current_dexit;
+		crash_text = "Frame "..emu.framecount().." | "..header
+		if string.len(header) < 13 then
+			for i = 1, 13 - string.len(header) do
+				crash_text = crash_text.." ";
+			end
+		end
+		crash_text = crash_text.." | "..pretext.." ";
+		if display_type == "transition" then
+			crash_text = crash_text..getFullName((crashLogData[1] * 256) + crashLogData[2]).." > "..getFullName((crashLogData[3] * 256) + crashLogData[4]);
+		elseif display_type == "input" then
+			crash_text = crash_text..getFullName((crashLogData[1] * 256) + crashLogData[2]);
+		elseif display_type == "output" then
+			crash_text = crash_text..getFullName((crashLogData[3] * 256) + crashLogData[4]);
+		end
+		crash_text = crash_text.." "..posttext;
+		addToCrashLog(crash_text);
+		crashLogData[1] = -1;
+		crashLogData[2] = -1;
+	end
+end
+
 function randomise()
 	if version < 2 then -- Should be <4, need to fix CS fade stuff
 		mode_value = mainmemory.readbyte(Mem.mode[version]);
@@ -112,16 +137,6 @@ function randomise()
 					crashLogData[2] = current_dexit;
 					crashLogData[3] = -1;
 					crashLogData[4] = -1;
-				elseif rando_happened == 1 and crashLogData[3] == -1 then
-					crashLogData[3] = current_dmap;
-					crashLogData[4] = current_dexit;
-					if crashLogData[1] == crashLogData[3] and crashLogData[2] == crashLogData[4] then
-						addToCrashLog("Frame "..emu.framecount().." | PERSISTANCE   | "..getFullName((crashLogData[1] * 256) + crashLogData[2]).." persisted")
-					else
-						addToCrashLog("Frame "..emu.framecount().." | RANDOMISATION | "..getFullName((crashLogData[1] * 256) + crashLogData[2]).." > "..getFullName((crashLogData[3] * 256) + crashLogData[4]));
-					end
-					crashLogData[1] = -1;
-					crashLogData[2] = -1;
 				end
 				if dmapType == "regular_maps" and cmapType ~= "bonus_maps" then
 					mainmemory.writebyte(Mem.insubmap[version], 0);
@@ -139,20 +154,28 @@ function randomise()
 							new_destmap_to_write = getBonusDestination(current_dmap);
 							mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 							rando_happened = 1;
+							crashLogGen("BARREL RANDO","transition","","");
 						end
 					elseif dmapType == "boss_maps" and settings.randomiser > 0 then
 						new_destmap_to_write = getBossDestination(current_pmap);
 						mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 						rando_happened = 1;
+						crashLogGen("BOSS RANDO","transition","","");
 					elseif dmapType == "k_rool" and current_cmap ~= 0xD6 and settings.randomiser > 0 then -- 0xD6 = Tiny Shoe
 						if current_cmap ~= current_dmap and current_cmap ~= 0xD7 then -- Prevents randomisation when re-attempting rounds
 							new_destmap_to_write = getKRoolDestination(current_dmap);
 							mainmemory.write_u32_be(Mem.dmap[version], new_destmap_to_write);
 							rando_happened = 1;
+							crashLogGen("K ROOL RANDO","transition","","");
 						end
 					elseif dmapType == "global_maps" and cmapType == "regular_maps" and settings.randomiser > 0 then
 						mainmemory.write_u16_be(Mem.pmap[version], current_cmap);
 						--mainmemory.writebyte(Mem.pexit[version], current_cexit);
+						if rando_happened == 0 then
+							addToCrashLog("Frame "..emu.framecount().." | PARENT MAP    | Parent Map changed to "..getMapName(current_cmap))
+							crashLogData[1] = -1;
+							crashLogData[2] = -1;
+						end
 						rando_happened = 1;
 					elseif cmapType ~= "bonus_maps" and cmapType ~= "crown_maps" and cmapType ~= "special_minigame_maps" and cmapType ~= "baboon_blast" and dmapType == "regular_maps" then
 						if current_cmap ~= 0x61 and current_dmap ~= 0x61 and settings.randomiser > 0 then
@@ -163,6 +186,7 @@ function randomise()
 							mainmemory.write_u32_be(Mem.dexit[version], new_destexit_to_write);
 							checkMap(new_destmap_to_write);
 							rando_happened = 1;
+							crashLogGen("RANDOMISATION","transition","","");
 						end
 					--[[
 					elseif cmapType == "regular_maps" and dmapType == "baboon_blast" and settings.randomiser == 1 then
@@ -176,6 +200,7 @@ function randomise()
 							mainmemory.write_u32_be(Mem.dexit[version],3); -- Enter Helm from Lever
 							mainmemory.writebyte(Mem.cutscene_fade_active[version],1);
 							mainmemory.write_u16_be(Mem.cutscene_fade_value[version],2); -- Open Helm Doors
+							addToCrashLog("Frame "..emu.framecount().." | HELM ENTRANCE | Helm Entrance Adjusted ")
 						end
 					end
 				end
@@ -228,9 +253,11 @@ function getLoadingZone(destmap, destexit, origmap, cs_val, transition_type)
 	if destmap == 38 and destexit == 2 then
 		if lzr_type == "chain" then
 			devPrint("Value maintained for llama temple "..toHexString(lookup_value));
+			crashLogGen("PERSISTANCE","input","","due to Llama Temple");
 			return lookup_value;
 		elseif transition_type == 0 then
 			devPrint("Value maintained for llama temple switch "..toHexString(lookup_value));
+			crashLogGen("PERSISTANCE","input","","due to Llama Temple Switch");
 			return lookup_value;
 		end
 	end
@@ -239,6 +266,7 @@ function getLoadingZone(destmap, destexit, origmap, cs_val, transition_type)
 	if destmap == 38 and destexit == 1 then
 		if lzr_type == "chain" then
 			devPrint("Value maintained for tiny temple "..toHexString(lookup_value));
+			crashLogGen("PERSISTANCE","input","","due to Tiny Temple");
 			return lookup_value;
 		end
 	end
@@ -248,6 +276,7 @@ function getLoadingZone(destmap, destexit, origmap, cs_val, transition_type)
 		for i=1, #cutscene_transition_table do
 			if cutscene_transition_table[i][1] == origmap and cutscene_transition_table[i][2] == cs_val then
 				devPrint("Value maintained for cutscene transition "..toHexString(lookup_value));
+				crashLogGen("PERSISTANCE","input","","due to cutscene transition");
 				return lookup_value;
 			end
 		end
@@ -260,6 +289,7 @@ function getLoadingZone(destmap, destexit, origmap, cs_val, transition_type)
 	end
 	if reference == nil then
 		devPrint("Value maintained as "..toHexString(lookup_value));
+		crashLogGen("PERSISTANCE","transition","","due to nil reference");
 		return lookup_value;
 	else
 		value_to_lookup = regular_map_assortment[reference];
