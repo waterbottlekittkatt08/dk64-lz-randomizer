@@ -43,11 +43,11 @@ krool_indicator_input_enemies = {
 };
 
 cutscene_kong_models = {
-	[1] = 0x19,
-	[2] = 0x15,
-	[3] = 0x17,
-	[4] = 0x18,
-	[5] = 0x16, -- 0x9
+	[1] = 0x13,
+	[2] = 0x14,
+	[3] = 0x15,
+	[4] = 0x16,
+	[5] = 0x17, -- 0x9
 };
 
 function replaceIndicators()
@@ -55,10 +55,9 @@ function replaceIndicators()
 	if #indicator_pointers > 0 then
 		for i = 1, spawn_count do
 			focused_pointer = indicator_pointers[i];
-			mainmemory.writebyte(focused_pointer, 0x50); -- Spawn Val
-			mainmemory.writebyte(focused_pointer + 0x44, 0x50); -- Alt Spawn Val
 			kong = k_rool_assortment[i];
-			mainmemory.writebyte(focused_pointer + 0xA, cutscene_kong_models[kong]); -- Model
+			mainmemory.writebyte(focused_pointer + 0x44, cutscene_kong_models[kong]); -- Alt Spawn Val
+			mainmemory.writebyte(focused_pointer, cutscene_kong_models[kong]); -- Spawn Val
 			for j = 1, 3 do
 				mainmemory.write_s16_be(focused_pointer + 0x2 + (j * 2), spawn[i][j]); -- Position
 			end

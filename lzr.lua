@@ -27,7 +27,8 @@ Mem = {
 	enemy_respawn_object = {0x7FDC8C, 0x7FDBCC, 0x7FE11C},
 	num_enemies = {0x7FDC88, 0x7FDBC8, 0x7FE118},
 	obj_model2_timer = {0x76A064, 0x764B84, 0x76A254}, -- u32
-	cexit = {0x76A0AC, 0x764BCC, 0x76A29C}, -- u32
+	cexit = {0x76A174, nil, nil}, -- u8
+	--cexit = {0x76A0AC, 0x764BCC, 0x76A29C}, -- u32
 	pexit = {0x76A174, 0x764C94, 0x76A364},
 	music = {0x7458DD, nil, nil},
 	insubmap = {0x76A160, nil, nil},
@@ -56,6 +57,8 @@ Mem = {
 	text_pointers = {0x7FC7E0,nil,nil,nil},
 	player1_input_current_frame = {0x014DC6,nil,nil},
 	player1_input_last_frame = {0x7ECD62,nil,nil},
+	exit_array_pointer = {0x7FC900, 0x7FC840, 0x7FCD90}, -- Pointer
+	number_of_exits = {0x7FC904, 0x7FC844, 0x7FCD94}, -- Byte
 };
 
 -------------------------------
