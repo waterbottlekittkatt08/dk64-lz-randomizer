@@ -150,6 +150,7 @@ function handleKRoolFirstLZ()
 			end
 		end
 	end
+	setTempFlag(0xB,4) -- Reset K Rool
 	setTempFlag(0xB,5) -- DK Phase Intro, Prevents fake K Rool
 	setTempFlag(0xB,0) -- Tiny Phase Intro
 	setTempFlag(0x0,0) -- Diddy Help Me
@@ -220,7 +221,11 @@ function handleKRool()
 				{0xCC,12},
 				{0xCD,12},
 				{0xCE,12},	
-			}
+			};
+			if current_dmap == 0xD6 then
+				setTempFlag(0xA,1); -- Toe 1
+				setTempFlag(0xA,2); -- Toe 2
+			end
 			if current_cmap > 0xCA and current_cmap < 0xD0 then
 				for i = 1, #final_cs_table do
 					if current_cmap == final_cs_table[i][1] then
@@ -238,6 +243,10 @@ function handleKRool()
 				end
 			end
 		elseif transition_speed_value < 1 then
+			current_dmap = mainmemory.read_u32_be(Mem.dmap[version]);
+			if current_dmap > 0xCA and current_dmap < 0xD0 then
+				mainmemory.writebyte(Mem.character[version],current_dmap - 0xCB);
+			end
 			krool_rando_happened = false;
 		end
 	end
@@ -260,6 +269,51 @@ function onEveryMapLoad()
 			if set_story[i][2][j] == current_cmap then
 				setFlag(set_story[i][1][1], set_story[i][1][2])
 			end
+		end
+	end
+	maps_with_global_map = { -- Bonus Barrels, T&S, Shops
+		0x7, -- Japes
+		0x11, -- Helm
+		0x14, -- Llama Temple
+		0x17, -- Lanky 5DT
+		0x18, -- Chunky 5DT
+		0x1A, -- Factory
+		0x1E, -- Galleon
+		0x22, -- Isles
+		0x26, -- Aztec
+		0x2B, -- DLC 5DS
+		0x2E, -- DT 5DS
+		0x2F, -- 2DS
+		0x30, -- Fungi
+		0x3B, -- DK Barn
+		0x3F, -- Mush Puzzle
+		0x40, -- Giant Mushroom
+		0x48, -- Caves
+		0x57, -- Castle
+		0x58, -- Ballroom
+		0x5A, -- Chunky 5DC
+		0x69, -- Wind Tower
+		0x70, -- DDC Crypt
+		0x97, -- Tunnel
+		0xA3, -- Dungeon
+		0xA4, -- Tree
+		0xAA, -- Helm Lobby
+		0xAD, -- Aztec Lobby
+		0xB0, -- Training Grounds
+		0xB3, -- Submarine
+		0xB7, -- Crypt Hub
+		0xC1, -- Castle Lobby
+		0xC3, -- Snide's Room in Isles
+	};
+	for i = 1, #maps_with_global_map do
+		if maps_with_global_map[i] == current_cmap then
+			mainmemory.write_u16_be(Mem.pmap[version], current_cmap);
+		end
+	end
+	if current_cmap == 0x22 then
+		setTempFlag(0xB,4) -- Reset K Rool
+		for i = 1, 4 do
+			clearTempFlag(0xA,i); -- Clear all toes
 		end
 	end
 end
@@ -307,7 +361,7 @@ function handleGlobalEntry()
 			if transition_speed_value > 0 and not parent_set then
 				if dmapType == "bonus_maps" or dmapType == "global_maps" then -- Entering Global/Bonus Map
 					if cmapType ~= "global_maps" and cmapType ~= "bonus_maps" and cmapType ~= "boss_maps" then -- Not coming from boss/bonus/global map
-						mainmemory.write_u16_be(Mem.pmap[version], current_cmap);
+						--mainmemory.write_u16_be(Mem.pmap[version], current_cmap);
 						calculated_exit = determineClosestExit();
 						mainmemory.writebyte(Mem.pexit[version], calculated_exit);
 						print("Set parent details to: "..getFullName((current_cmap * 256) + calculated_exit));

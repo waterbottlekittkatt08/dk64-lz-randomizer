@@ -171,6 +171,13 @@ function setTempFlag(tempByte,tempBit)
 	mainmemory.writebyte(temp_start + tempByte, temp_flag_value);
 end
 
+function clearTempFlag(tempByte,tempBit)
+	temp_start = Mem.temp_flag_start[version]
+	temp_flag_value = mainmemory.readbyte(temp_start + tempByte);
+	temp_flag_value = bit.clear(temp_flag_value,tempBit);
+	mainmemory.writebyte(temp_start + tempByte, temp_flag_value);
+end
+
 function isLoading()
 	return mainmemory.read_u32_be(Mem.obj_model2_timer[version]) == 0;
 end
