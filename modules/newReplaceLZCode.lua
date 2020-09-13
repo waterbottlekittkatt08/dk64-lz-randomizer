@@ -106,10 +106,12 @@ function handleBonusBarrels()
 	if #potential_pointers then
 		for i = 1, #potential_pointers do
 			actor_type = mainmemory.read_u16_be(potential_pointers[i]);
-			if actor_type == 12 or actor_type == 91 then -- Is Helm Barrel (107 - 16) or Bonus Barrel (28 - 16)
+			rotation = mainmemory.read_u16_be(potential_pointers[i] + 0x1C); -- Used as a flag as to whether barrel is randomised or not
+			if actor_type == 12 or actor_type == 91 and rotation == 0 then -- Is Helm Barrel (107 - 16) or Bonus Barrel (28 - 16)
 				inputMap = mainmemory.read_u32_be(potential_pointers[i] + 0x24);
 				outputMap = getBonusDestination(inputMap);
 				mainmemory.write_u32_be(potential_pointers[i] + 0x24, outputMap);
+				mainmemory.write_u16_be(potential_pointers[i] + 0x1C, 1); -- Set Rotation to 1, randomisation has occurred
 			end
 		end
 	end
@@ -157,7 +159,22 @@ function handleKRoolFirstLZ()
 	setTempFlag(0x0,6) -- Lanky Help Me
 	setTempFlag(0x1,0) -- Tiny Help Me
 	setTempFlag(0x1,7) -- Chunky Help Me
+end
 
+function handleCastleCannon()
+	local cannon_pointer = dereferencePointer(Mem.castle_cannon_pointer[version])
+	if isRDRAM(cannon_pointer) then
+		local origin_map = mainmemory.read_u16_be(cannon_pointer + 0x376);
+		if origin_map == 0x22 then -- DK Isles
+			local cannon_map = mainmemory.read_u16_be(cannon_pointer + 0x378);
+			local cannon_exit = mainmemory.read_u16_be(cannon_pointer + 0x37A);
+			output_data = lzRando(cannon_map, cannon_exit)
+			addToCrashLog(getFullName((cannon_map * 256) + cannon_exit).." > "..getFullName((output_data[1] * 256) + output_data[2]))
+			--print(bizstring.hex(zones[i]).." | "..bizstring.hex(cannon_map)..","..bizstring.hex(cannon_exit).." > "..bizstring.hex(output_data[1])..","..bizstring.hex(output_data[2]));
+			mainmemory.write_u16_be(cannon_pointer + 0x378, output_data[1]); -- New map
+			mainmemory.write_u16_be(cannon_pointer + 0x37A, output_data[2]); -- New Exit
+		end
+	end
 end
 
 function handleNoclip()
@@ -478,6 +495,7 @@ function changeZones()
 				end
 				if current_cmap == 0x22 then -- DK Isles
 					handleKRoolFirstLZ();
+					handleCastleCannon();
 				end
 				zones_changed = true;
 			end
