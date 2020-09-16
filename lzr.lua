@@ -765,6 +765,14 @@ function confirmSettings()
 	else
 		settings.tag_anywhere = 0;
 	end
+	if forms.ischecked(lzrForm.UI.form_controls["Bananaport Checkbox"]) then
+		settings.random_bananaports = 1;
+		require "modules.bananaports"
+		addToCrashLog("Random Bananaports Module Added");
+		print("Random Bananaports On");
+	else
+		settings.random_bananaports = 0;
+	end
 	if settings.dev_replacer == 1 then
 		require "modules.newReplaceLZCode"
 		addToCrashLog("Development LZ Replacer Module Added");
@@ -1097,6 +1105,7 @@ function WriteSettings()
 	file:write("seed = ", seedAsNumber, ",", "\n");
 	file:write("gameLengths = ", settings.gameLengths, ",", "\n");
 	file:write("dev_replacer = ", settings.dev_replacer, ",", "\n");
+	file:write("random_bananaports = ", settings.random_bananaports, ",", "\n");
 	file:write("};", "\n");
 	file:close();
 	print("Saved settings to settings.lua!");
@@ -1199,6 +1208,10 @@ lzrForm.UI.form_controls["Kasplat Label"] = forms.label(lzrForm.UI.options_form,
 lzrForm.UI.form_controls["Kasplat Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
 current_row = current_row + 1;
 
+lzrForm.UI.form_controls["Bananaport Label"] = forms.label(lzrForm.UI.options_form, "Random Bananaport Locations:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+lzrForm.UI.form_controls["Bananaport Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+current_row = current_row + 1;
+
 lzrForm.UI.form_controls["Tag Anywhere Label"] = forms.label(lzrForm.UI.options_form, "Tag Anywhere:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["Tag Anywhere Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
 current_row = current_row + 1;
@@ -1212,7 +1225,7 @@ lzrForm.UI.form_controls["Length Dropdown"] = forms.dropdown(lzrForm.UI.options_
 current_row = current_row + 1;
 
 
-seed_form_height = 15;
+seed_form_height = 16;
 seed_form_offset = 0.5;
 
 seedVal1 = seedValue[1];
@@ -1270,6 +1283,9 @@ if previousSettings.tag_anywhere == 1 then
 end
 if previousSettings.dev_replacer == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Dev Replacer Checkbox"], "Checked", true);
+end
+if previousSettings.random_bananaports == 1 then
+	forms.setproperty(lzrForm.UI.form_controls["Bananaport Checkbox"], "Checked", true);
 end
 
 forms.setproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem", gameLengths[previousSettings.gameLengths]);
