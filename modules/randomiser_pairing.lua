@@ -31,7 +31,6 @@ if settings.dev_replacer == 0 then
 		{0x1E08, 0x2F00}, -- Galleon Tiny 2DS
 		{0x1E09, 0x2F01}, -- Galleon Lanky 2DS
 		{0x1E0A, 0x3100}, -- Galleon Lighthouse
-		{0x1E0B, 0x1F00}, -- Galleon Seasick Ship
 		{0x1E13, 0x2700}, -- Galleon Seal Race
 		{0x1E15, 0xB300}, -- Galleon Submarine
 		{0x2202, 0xA900}, -- Isles Japes Lobby
@@ -60,7 +59,6 @@ if settings.dev_replacer == 0 then
 		{0x300D, 0x4700}, -- Fungi Face Puzzle
 		{0x300E, 0x3F00}, -- Fungi Light Room
 		{0x300F, 0x4600}, -- Fungi Dark Room
-		{0x3010, 0x3700}, -- Fungi From Minecart
 		{0x3017, 0x3400}, -- Fungi (From Anthill)
 		--0x3300, -- Galleon Mech Fish
 		{0x3C00, 0x3E01}, -- Fungi Spider Boss
@@ -128,7 +126,6 @@ elseif settings.dev_replacer == 1 then
 		{0x1E08, 0x2F00}, -- Galleon Tiny 2DS
 		{0x1E09, 0x2F01}, -- Galleon Lanky 2DS
 		{0x1E0A, 0x3100}, -- Galleon Lighthouse
-		{0x1E0B, 0x1F00}, -- Galleon Seasick Ship
 		{0x1E15, 0xB300}, -- Galleon Submarine
 		{0x2202, 0xA900}, -- Isles Japes Lobby
 		{0x2203, 0xAD00}, -- Isles Aztec Lobby
@@ -154,7 +151,6 @@ elseif settings.dev_replacer == 1 then
 		{0x300D, 0x4700}, -- Fungi Face Puzzle
 		{0x300E, 0x3F00}, -- Fungi Light Room
 		{0x300F, 0x4600}, -- Fungi Dark Room
-		{0x3010, 0x3700}, -- Fungi From Minecart
 		{0x3017, 0x3400}, -- Fungi (From Anthill)
 		--0x3300, -- Galleon Mech Fish
 		{0x3C00, 0x3E01}, -- Fungi Spider Boss
