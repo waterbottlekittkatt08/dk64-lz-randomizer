@@ -1,4 +1,16 @@
 port_names = {
+	[7] = { -- Jungle Japes
+		[0x59] = "Entrance",
+		[0x5A] = "Tunnel End",
+		[0x5E] = "Tunnel to Cranky Entrance",
+		[0x6F] = "Near Cranky's",
+		[0x97] = "Near Underground",
+		[0x98] = "After Tunnel",
+		[0x9E] = "Near Minecart Exit",
+		[0x9F] = "Outside Mountain",
+		[0x12A] = "Shellhive",
+		[0x12B] = "Mountain Top",
+	},
 	[17] = { -- Hideout Helm
 		[0x58] = "Crown Door Room",
 		[0x59] = "Entrance",
