@@ -1289,12 +1289,17 @@ function generateKRoolOrder(fightLength)
 	k_rool_assortment = {};
 	k_rool_seedSetting = seedAsNumber * 10000;
 	for i = 1, 4 do
-		temporary_k_rool_table[i] = i;
+		if i ~= 3 then
+			table.insert(temporary_k_rool_table,i);
+		end
 	end
 	math.randomseed(k_rool_seedSetting);
 	for i = 1, (fightLength - 1) do
+		if i == 2 then
+			table.insert(temporary_k_rool_table,3);
+		end
 		selected_temp_value = chooseRandomIndex(temporary_k_rool_table);
-		k_rool_assortment[i] = temporary_k_rool_table[selected_temp_value];
+		table.insert(k_rool_assortment,temporary_k_rool_table[selected_temp_value]);
 		table.remove(temporary_k_rool_table, selected_temp_value);
 	end
 	k_rool_assortment[fightLength] = 5; -- Always ends on Chunky Phase
