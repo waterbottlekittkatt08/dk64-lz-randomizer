@@ -153,6 +153,7 @@ function performRandomisation(currentMap, initialDestinationMap)
 		local focusedLobby = table.find(lobbies,currentMap);
 		local newLevelIndex = levelAssortment[focusedLobby];
 		mainmemory.write_u32_be(0x7444E4,levelMain[newLevelIndex]); -- Going through DK Portal to level
+		mainmemory.write_u32_be(0x7444E8,0)
 	elseif currentIsLevel and destinationIsLobby then
 		local focusedLevel = table.find(levelMain, currentMap);
 		local newLobbyIndex = table.find(levelAssortment, focusedLevel);
@@ -188,13 +189,13 @@ function flagsToSet()
 	setFlag(0x38,1) --Key 6 Turned
 	setFlag(0x38,2) --Key 7 Turned
 
-	setFlag(0x3,3) -- Japes first time cutscene
-	setFlag(0xB,7) -- Aztec first time cutscene
-	setFlag(0x11,4) -- Factory first time cutscene
-	setFlag(0x18,2) -- Galleon first time cutscene
-	setFlag(0x20,1) -- Fungi first time cutscene
-	setFlag(0x23,2) -- Caves first time cutscene
-	setFlag(0x28,5) -- Castle first time cutscene
+	setFlag(0x3,3); -- Japes first time cutscene
+	setFlag(0xB,7); -- Aztec first time cutscene
+	setFlag(0x11,4); -- Factory first time cutscene
+	setFlag(0x18,2); -- Galleon first time cutscene
+	setFlag(0x20,1); -- Fungi first time cutscene
+	setFlag(0x23,2); -- Caves first time cutscene
+	setFlag(0x28,5); -- Castle first time cutscene
 end
 flagsToSet()
 
