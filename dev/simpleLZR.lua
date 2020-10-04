@@ -187,6 +187,14 @@ function flagsToSet()
 	setFlag(0x38,0) --Key 5 Turned
 	setFlag(0x38,1) --Key 6 Turned
 	setFlag(0x38,2) --Key 7 Turned
+
+	setFlag(0x3,3) -- Japes first time cutscene
+	setFlag(0xB,7) -- Aztec first time cutscene
+	setFlag(0x11,4) -- Factory first time cutscene
+	setFlag(0x18,2) -- Galleon first time cutscene
+	setFlag(0x20,1) -- Fungi first time cutscene
+	setFlag(0x23,2) -- Caves first time cutscene
+	setFlag(0x28,5) -- Castle first time cutscene
 end
 flagsToSet()
 
