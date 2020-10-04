@@ -201,7 +201,7 @@ function frameLoop()
 				randoHappened = true;
 			end
 		end
-	elseif transitionSpeed < 0 then
+	elseif transitionSpeed < 0 or transitionSpeed == 0 then
 		randoHappened = false
 	end
 	if currentMap == 0x50 then -- Main Menu
