@@ -505,6 +505,7 @@ function changeZones()
 	end
 end
 
+--[[
 handleLZObject();
 handleBonusBarrels();
 if current_cmap == 0x2A then -- T&S
@@ -515,5 +516,6 @@ end
 if current_cmap == 0x22 then -- DK Isles
 	handleKRoolFirstLZ();
 end
+]]--
 
 event.onframeend(changeZones, "Randomises Zones");

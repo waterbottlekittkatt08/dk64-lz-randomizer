@@ -1,5 +1,7 @@
 require "modules.regularmaptable";
 require "modules.lz_validation_data";
+require "modules.test_validation_data";
+require "modules.mapAndExitNames";
 
 if settings.dev_replacer == 0 then
 	lz_pairs = {
@@ -104,9 +106,9 @@ elseif settings.dev_replacer == 1 then
 	lz_pairs = {
 		{0x0400, 0x0702}, -- Japes Mountain (From Japes)
 		--0x0600, -- Japes Minecart
-		{0x0C00, 0x0701}, -- Japes Shellhive
-		{0x0D00, 0x0705}, -- Japes Painting Room
-		{0x2100, 0x0708}, -- Japes Underground
+		{0x0701, 0x0C00}, -- Japes Shellhive
+		{0x0705, 0x0D00}, -- Japes Painting Room
+		{0x0708, 0x2100}, -- Japes Underground
 		--0x070E, -- Japes (From Minecart)
 		{0x1300, 0x2605}, -- Aztec DK 5DT
 		{0x1500, 0x2606}, -- Aztec Diddy 5DT
@@ -198,65 +200,231 @@ function generateRegularMapTable()
 end
 
 function generateLoadingZoneChain()
+	print("Generating Bad Logic Chain")
 	pair_available = {};
 	paired_set = {};
 	for i = 1, #lz_pairs do
 		pair_available[i] = true;
 		paired_set[i] = 0;
 	end
+	chain_generation_errored = false;
 	for i = 1, #lz_pairs do
-		--if pair_available[i] then
-			available_array = {};
-			for j = 1, #pair_available do
-				if pair_available[j] and (j ~= i) then
-					table.insert(available_array,j)
-				end
+		available_array = {};
+		for j = 1, #pair_available do
+			if pair_available[j] and (j ~= i) then
+				table.insert(available_array,j)
 			end
-			-- print(available_array)
-			selected_set = available_array[randomBetween(1,#available_array)];
+		end
+		if #available_array == 0 then
+			chain_generation_errored = true;
+		else
+			--print(available_array)
+			selected_index = randomBetween(1,#available_array)
+			--print(selected_index)
+			selected_set = available_array[selected_index];
 			--print(i.." > "..selected_set)
 			paired_set[i] = selected_set;
 			pair_available[selected_set] = false;
-		--end
+		end
+	end
+	if chain_generation_errored then
+		print("Chain Generation Failure")
+		generateLoadingZoneChain();
 	end
 end
 
---[[
-A LZ Set is 2 loading zones where entering one takes you to the entrance
-value associated to the other loading zone.
-For Example: Entering Factory from Lobby and going back from Factory to Lobby
-are a set
+function regenerateAvailablePairs(used_arr)
+	local new_array = {};
+	for original_pair_index = 1, #lz_pairs do
+		local used = false;
+		if #used_arr > 0 then
+			for used_arr_index = 1, #used_arr do
+				--print("{"..bizstring.hex(used_arr[used_arr_index][1])..","..bizstring.hex(used_arr[used_arr_index][2]).."}")
+				if used_arr[used_arr_index][1] == lz_pairs[original_pair_index][1] then
+					if used_arr[used_arr_index][2] == lz_pairs[original_pair_index][2] then
+						used = true;
+					end
+				elseif used_arr[used_arr_index][1] == lz_pairs[original_pair_index][2] then
+					if used_arr[used_arr_index][2] == lz_pairs[original_pair_index][1] then
+						used = true;
+					end
+				end
+			end
+		end
+		if not used then
+			table.insert(new_array,lz_pairs[original_pair_index]);
+		end
+	end
+	return new_array;
+end
 
-Lets say Painting Room LZ Set (S1) and Power Shed LZ Set (S2) are paired
-Painting Room Entrance = 0x0D00 > E1
-Japes from Painting Room = 0x0705 > E2
-Factory from Power Shed = 0x1A03 > E1
-Factory Power Shed = 0x1D00 > E2
+function findPairInLZPairs(search_pair)
+	for original_pair_index = 1, #lz_pairs do
+		if search_pair[1] == lz_pairs[original_pair_index][1] then
+			if search_pair[2] == lz_pairs[original_pair_index][2] then
+				return original_pair_index;
+			end
+		elseif search_pair[1] == lz_pairs[original_pair_index][2] then
+			if search_pair[2] == lz_pairs[original_pair_index][1] then
+				return original_pair_index
+			end
+		end
+	end
+	return 0;
+end
 
-paired_set = {
-	S1 = S2,
-	S2 = S3,
-	S3 = S1,
-}
+function findPairInLZPairsWithMapCode(map_code)
+	for original_pair_index = 1, #lz_pairs do
+		if map_code == lz_pairs[original_pair_index][1] then
+			return original_pair_index
+		elseif map_code == lz_pairs[original_pair_index][2] then
+			return original_pair_index
+		end
+	end
+	return 0;
+end
 
-S1E1 > S2E1
-S2E2 > S1E2
+function regenerateLogicArrays(used_pairs)
+	available_pairs = regenerateAvailablePairs(used_pairs);
+	generatePriorityMaps();
+	generateNoRestrictionsArray();
+	generatePopularExitsArray();
+	--print(#used_pairs.." / "..(#used_pairs + #available_pairs).." ("..(math.floor(100*(#used_pairs/#lz_pairs))/100).."%)")
+end
 
-This essentially generates LZ Chains
-
-S1    S2    S3
-
-E1 -> E1 -> E1
-|     |     |
-E2 <- E2 <- E2
-
-
-Original Dest 0D00
-New Dest 1A03
-
-Original Dest 1D00
-New Dest 0705
-]]--
+function generateSmartChains()
+	-- Define Seed
+	math.randomseed(seedAsNumber)
+	-- Generate Initial arrays
+	local used_pairs = {};
+	regenerateLogicArrays(used_pairs);
+	paired_set = {};
+	for i = 1, #lz_pairs do
+		paired_set[i] = 0;
+	end
+	local no_restrictions = priority_map_connections_no_restrictions;
+	local with_restrictions = popular_exits;
+	--[[
+		1 exit set from a priority map per priority map set is tied to a popular map which is not locked behind a kong
+	]]--
+	local priority_map_set_assigned = {}; -- Priority Grade
+	local priority_map_set_index = {} -- Random Map in assortment to assign
+	local priority_exit_table = {}; -- Table exits we can assign to a popular map. 1 is selected from each sub-array of "priority_exit_table"
+	for i = 1, #priority_maps do
+		table.insert(priority_map_set_assigned,0);
+		local random_priority_set = randomBetween(1,#priority_maps[i])
+		table.insert(priority_map_set_index,random_priority_set);
+		table.insert(priority_exit_table,{});
+	end
+	print("PHASE ONE | PRIORITY MAP ASSORTMENT TO A POPULAR MAP WITH NO RESTRICTIONS");
+	print(priority_maps[1]);
+	print(priority_maps[2]);
+	-- Find maps which we want to boost the chance of finding. Defined by table "priority_maps"
+	for i = 1, #available_pairs do
+		local focused_set = available_pairs[i];
+		for focused_index = 1, #focused_set do
+			local focused_map = (focused_set[focused_index] - (focused_set[focused_index] % 256)) / 256;
+			-- Determines if map is part of the priority maps table
+			local is_priority = false;
+			for j = 1, #priority_maps do
+				for k = 1, #priority_maps[j] do
+					if focused_map == priority_maps[j][k] then
+						is_priority = true;
+						set = j;
+						set_index = priority_map_set_index[set];
+					end
+				end
+			end
+			if is_priority then
+				if focused_map == priority_maps[set][set_index] then
+					-- Has found the priority map randomly selected
+					if set_index == priority_map_set_index[set] then
+						table.insert(priority_exit_table[set],focused_set[focused_index]);
+					end
+				end
+			end
+		end
+	end
+	for i = 1, #priority_exit_table do
+		local index = randomBetween(1, #priority_exit_table[i]);
+		local code = priority_exit_table[i][index]; -- Map Code Selected of priority map
+		local selected_priority_index = randomBetween(1,#no_restrictions);
+		local selected_lz_pair_index = findPairInLZPairsWithMapCode(no_restrictions[selected_priority_index]); -- Select Pair of No Restriction LZ to be tied
+		local selected_lz_pair = lz_pairs[selected_lz_pair_index];
+		local input_index = findPairInLZPairsWithMapCode(code);
+		table.insert(used_pairs,lz_pairs[input_index]);
+		print(input_index.." > "..selected_lz_pair_index)
+		paired_set[input_index] = selected_lz_pair_index;
+		table.remove(no_restrictions,selected_priority_index);
+		print("LINK | {"..getFullName(lz_pairs[input_index][1])..","..getFullName(lz_pairs[input_index][2]).."} > {"..getFullName(selected_lz_pair[1])..","..getFullName(selected_lz_pair[2]).."}")
+		priority_map_set_assigned[i] = priority_map_set_assigned[i] + 1;
+		regenerateLogicArrays(used_pairs);
+	end
+	--[[
+		2 other exit sets from a priority map per priority map set is tied to a popular map regardless of restrictions
+	]]--
+	print("PHASE TWO | PRIORITY MAP ASSORTMENT TO A POPULAR MAP REGARDLESS OF RESTRICTIONS");
+	local stage_two_cap = 2;
+	for process = 1, stage_two_cap do
+		local priority_map_set_index = {}
+		local priority_exit_table = {};
+		for i = 1, #priority_maps do
+			local random_priority_set = randomBetween(1,#priority_maps[i])
+			table.insert(priority_map_set_index,random_priority_set);
+			table.insert(priority_exit_table,{});
+		end
+		print(#available_pairs)
+		print(priority_maps[1])
+		print(priority_maps[2])
+		for i = 1, #available_pairs do
+			local focused_set = available_pairs[i];
+			for focused_index = 1, #focused_set do
+				local focused_map = (focused_set[focused_index] - (focused_set[focused_index] % 256)) / 256;
+				local is_priority = false;
+				for j = 1, #priority_maps do
+					for k = 1, #priority_maps[j] do
+						if focused_map == priority_maps[j][k] then
+							is_priority = true;
+							set = j;
+							set_index = priority_map_set_index[set];
+						end
+					end
+				end
+				if is_priority then
+					print(bizstring.hex(focused_set[focused_index]))
+					if focused_map == priority_maps[set][set_index] then
+						-- Has found a priority Map
+						if set_index == priority_map_set_index[set] then
+							table.insert(priority_exit_table[set],focused_set[focused_index]);
+						end
+					end
+				end
+			end
+		end
+		for i = 1, #priority_exit_table do
+			local index = randomBetween(1, #priority_exit_table[i]);
+			local code = priority_exit_table[i][index];
+			local selected_priority_index = randomBetween(1,#with_restrictions);
+			local selected_lz_pair_index = findPairInLZPairsWithMapCode(with_restrictions[selected_priority_index]);
+			local selected_lz_pair = lz_pairs[selected_lz_pair_index];
+			local input_index = findPairInLZPairsWithMapCode(code);
+			table.insert(used_pairs,selected_lz_pair);
+			print(input_index.." > "..selected_lz_pair_index)
+			paired_set[input_index] = selected_lz_pair_index;
+			table.remove(with_restrictions,selected_priority_index);
+			print("LINK | {"..getFullName(lz_pairs[input_index][1])..","..getFullName(lz_pairs[input_index][2]).."} > {"..getFullName(selected_lz_pair[1])..","..getFullName(selected_lz_pair[2]).."}")
+			priority_map_set_assigned[i] = priority_map_set_assigned[i] + 1;
+			regenerateLogicArrays(used_pairs);
+		end
+	end
+	--print(#used_pairs.." / "..(#used_pairs + #available_pairs).." ("..(math.floor(100*(#used_pairs/#lz_pairs))/100).."%)")
+	--[[
+		Assign Dead-End Maps to non-dead end maps, checking entrance permissions and requirements
+	]]--
+	--[[
+		Assign everything else
+	]]--
+end
 
 function getNewDestinationCode(old_destination_code)
 	for i = 1, #lz_pairs do
@@ -273,33 +441,39 @@ function getNewDestinationCode(old_destination_code)
 		end
 	end
 	--print(old_destination_code)
-	new_destination_code = lz_pairs[linked_set][chain_link];
-	return new_destination_code
+	if linked_set ~= nil and linked_set ~= 0 then
+		new_destination_code = lz_pairs[linked_set][chain_link];
+		return new_destination_code
+	else
+		return old_destination_code
+	end
 end
 
 
 function generateAssortmentObject()
 	generateRegularMapTable();
 	generateLoadingZoneChain();
+	if settings.dkoupled_logic == 1 then
+		generateSmartChains();
+	end
 	regular_map_assortment = {};
-	for i = 1, #regular_map_table do
-		old_code = regular_map_table[i];
+	for rmt_entry = 1, #regular_map_table do
+		old_code = regular_map_table[rmt_entry];
 		new_code = getNewDestinationCode(old_code);
 		reference = nil;
-		for j = 1, #regular_map_table do
-			if regular_map_table[j] == new_code then
-				reference = j;
+		if new_code ~= old_code then
+			--print("Difference between old and new detected ("..old_code..","..new_code..","..getNewDestinationCode(old_code)..")")
+			for rmt_search = 1, #regular_map_table do
+				if regular_map_table[rmt_search] == new_code then
+					reference = rmt_search;
+				end
 			end
 		end
 		if reference == nil then
-			--print("nil")
-			table.insert(regular_map_assortment,i);
+			table.insert(regular_map_assortment,rmt_entry);
 		else
-			--print("non-nil")
 			table.insert(regular_map_assortment,reference);
 		end
-		--print(regular_map_assortment)
-		--print(i.." > "..regular_map_assortment[i]);
 	end
 end
 
@@ -553,5 +727,5 @@ function getDestinationExitFromCode(destination_code)
 end
 
 
-generateAssortmentObject();
+--generateAssortmentObject();
 require "modules.replaceLZCode";

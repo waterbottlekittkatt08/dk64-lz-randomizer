@@ -1,4 +1,5 @@
 require "modules.commonFunctions";
+-- require "dev.arizona" -- For Wex
 
 Mem = {
 	kong_base = {0x7FC950, 0x7FC890, 0x7FCDE0}, -- Header
@@ -515,7 +516,7 @@ lzrForm = {
 		form_controls = {},
 		form_padding = 8,
 		form_width = 10,
-		form_height = 25,
+		form_height = 26,
 		label_offset = 5,
 		dropdown_offset = 1,
 		long_label_width = 140,
@@ -626,6 +627,7 @@ settings = {
 	tag_anywhere = 0,
 	gameLengths = 1,
 	dev_replacer = 0,
+	dkoupled_logic = 1,
 };
 
 keys_short = {1,2,3,4,5,6,7,8};
@@ -639,7 +641,8 @@ function confirmSettings()
 	addToCrashLog("Seed: "..seedAsNumber);
 	k_rool_assortment = {1,2,3,4,5};
 	lengthString = forms.getproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem");
-	lzr_string = forms.getproperty(lzrForm.UI.form_controls["Randomiser Dropdown"], "SelectedItem");
+	lzr_string = "DKhaos"
+	-- lzr_string = forms.getproperty(lzrForm.UI.form_controls["Randomiser Dropdown"], "SelectedItem");
 	settings.gameLengths = 1;
 	for i = 1, #gameLengths do
 		if gameLengths[i] == lengthString then
@@ -652,11 +655,11 @@ function confirmSettings()
 		require "modules.finalHelmDoors"
 		addToCrashLog("Final Helm Doors Module Added");
 	end
-	if forms.ischecked(lzrForm.UI.form_controls["Dev Replacer Checkbox"]) then
-		settings.dev_replacer = 1;
-	else
+	-- if forms.ischecked(lzrForm.UI.form_controls["Dev Replacer Checkbox"]) then
+	-- 	settings.dev_replacer = 1;
+	-- else
 		settings.dev_replacer = 0;
-	end
+	-- end
 	print("Game Length: "..gameLengths[settings.gameLengths]);
 	if forms.ischecked(lzrForm.UI.form_controls["All Moves Checkbox"]) then
 		settings.all_moves = 1;
@@ -777,6 +780,15 @@ function confirmSettings()
 		require "modules.newReplaceLZCode"
 		addToCrashLog("Development LZ Replacer Module Added");
 		print("'Development LZ Replacer' On");
+	end
+	-- if forms.ischecked(lzrForm.UI.form_controls["DKoupled Logic Checkbox"]) then
+	-- 	settings.dkoupled_logic = 1;
+	-- 	dkoupled_init();
+	-- else
+		settings.dkoupled_logic = 0;
+	-- end
+	if lzr_string == "DKoupled" then
+		generateAssortmentObject();
 	end
 	require "modules.krool_indicator"
 	addToCrashLog("K. Rool Indicator Module Added");
@@ -1106,6 +1118,7 @@ function WriteSettings()
 	file:write("gameLengths = ", settings.gameLengths, ",", "\n");
 	file:write("dev_replacer = ", settings.dev_replacer, ",", "\n");
 	file:write("random_bananaports = ", settings.random_bananaports, ",", "\n");
+	file:write("dkoupled_logic = ", settings.dkoupled_logic, ",", "\n");
 	file:write("};", "\n");
 	file:close();
 	print("Saved settings to settings.lua!");
@@ -1160,15 +1173,15 @@ gameLengthsAlphabetical = {
 };
 
 lzrTypes = {
-	[1] = "None",
-	[2] = "DKoupled",
-	[3] = "DKhaos"
+	[0] = "None",
+	[1] = "DKoupled",
+	[2] = "DKhaos"
 }
 
 lzrTypesAlphabetical = {
-	[1] = "DKhaos",
-	[2] = "DKoupled",
-	[3] = "None"
+	[0] = "DKhaos",
+	[1] = "DKoupled",
+	[2] = "None"
 }
 
 current_row = 0;
@@ -1180,9 +1193,9 @@ current_row = current_row + 1;
 lzrForm.UI.form_controls["Title Label 3"] = forms.label(lzrForm.UI.options_form, "SETTINGS", lzrForm.UI.col(2) + 10, lzrForm.UI.row(current_row) + lzrForm.UI.label_offset, 410, 24);
 current_row = current_row + 2;
 
-lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Exit Rando:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 100, 24);
-lzrForm.UI.form_controls["Randomiser Dropdown"] = forms.dropdown(lzrForm.UI.options_form, lzrTypes, lzrForm.UI.col(5) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset - 5, lzrForm.UI.col(3) + 8, lzrForm.UI.button_height);
-current_row = current_row + 1;
+-- lzrForm.UI.form_controls["Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Exit Rando:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 100, 24);
+-- lzrForm.UI.form_controls["Randomiser Dropdown"] = forms.dropdown(lzrForm.UI.options_form, lzrTypes, lzrForm.UI.col(5) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset - 5, lzrForm.UI.col(3) + 8, lzrForm.UI.button_height);
+-- current_row = current_row + 1;
 
 lzrForm.UI.form_controls["Barrel Randomiser Label"] = forms.label(lzrForm.UI.options_form, "Barrel Randomiser:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
 lzrForm.UI.form_controls["Barrel Randomiser Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
@@ -1216,16 +1229,20 @@ lzrForm.UI.form_controls["Tag Anywhere Label"] = forms.label(lzrForm.UI.options_
 lzrForm.UI.form_controls["Tag Anywhere Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
 current_row = current_row + 1;
 
-lzrForm.UI.form_controls["Dev Replacer Label"] = forms.label(lzrForm.UI.options_form, "Dev LZ Replacer:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
-lzrForm.UI.form_controls["Dev Replacer Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
-current_row = current_row + 1;
+-- lzrForm.UI.form_controls["Dev Replacer Label"] = forms.label(lzrForm.UI.options_form, "Dev LZ Replacer:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+-- lzrForm.UI.form_controls["Dev Replacer Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+-- current_row = current_row + 1;
+
+-- lzrForm.UI.form_controls["DKoupled Logic Label"] = forms.label(lzrForm.UI.options_form, "DKoupled Logic:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) - 5 + lzrForm.UI.label_offset, 180, 24);
+-- lzrForm.UI.form_controls["DKoupled Logic Checkbox"] = forms.checkbox(lzrForm.UI.options_form, "", lzrForm.UI.col(8) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset);
+-- current_row = current_row + 1;
 
 lzrForm.UI.form_controls["Length Label"] = forms.label(lzrForm.UI.options_form, "Length:", lzrForm.UI.col(0), lzrForm.UI.row(current_row) + lzrForm.UI.label_offset, 60, 24);
 lzrForm.UI.form_controls["Length Dropdown"] = forms.dropdown(lzrForm.UI.options_form, gameLengths, lzrForm.UI.col(3) + lzrForm.UI.dropdown_offset, lzrForm.UI.row(current_row) + lzrForm.UI.dropdown_offset + 5, lzrForm.UI.col(5) + 8, lzrForm.UI.button_height);
 current_row = current_row + 1;
 
 
-seed_form_height = 16;
+seed_form_height = 17;
 seed_form_offset = 0.5;
 
 seedVal1 = seedValue[1];
@@ -1259,7 +1276,7 @@ lzrForm.UI.form_controls["Settings Check Label"] = forms.label(lzrForm.UI.option
 
 lzrForm.UI.form_controls["Confirm Settings Button"] = forms.button(lzrForm.UI.options_form, "Confirm Settings", confirmSettings, lzrForm.UI.col(0.6), lzrForm.UI.row(seed_form_height + 5) + 5, 7 * lzrForm.UI.button_height, lzrForm.UI.button_height);
 
-forms.setproperty(lzrForm.UI.form_controls["Randomiser Dropdown"], "SelectedItem", lzrTypes[previousSettings.randomiser]);
+-- forms.setproperty(lzrForm.UI.form_controls["Randomiser Dropdown"], "SelectedItem", lzrTypes[previousSettings.randomiser]);
 if previousSettings.randomiser_barrel == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Barrel Randomiser Checkbox"], "Checked", true);
 end
@@ -1281,12 +1298,15 @@ end
 if previousSettings.tag_anywhere == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Tag Anywhere Checkbox"], "Checked", true);
 end
-if previousSettings.dev_replacer == 1 then
-	forms.setproperty(lzrForm.UI.form_controls["Dev Replacer Checkbox"], "Checked", true);
-end
+-- if previousSettings.dev_replacer == 1 then
+-- 	forms.setproperty(lzrForm.UI.form_controls["Dev Replacer Checkbox"], "Checked", true);
+-- end
 if previousSettings.random_bananaports == 1 then
 	forms.setproperty(lzrForm.UI.form_controls["Bananaport Checkbox"], "Checked", true);
 end
+-- if previousSettings.dkoupled_logic == 1 then
+-- 	forms.setproperty(lzrForm.UI.form_controls["DKoupled Logic Checkbox"], "Checked", true);
+-- end
 
 forms.setproperty(lzrForm.UI.form_controls["Length Dropdown"], "SelectedItem", gameLengths[previousSettings.gameLengths]);
 
