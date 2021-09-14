@@ -69,18 +69,7 @@ Mem = {
 -------------------------------
 
 function getVersion()
-	romHash = gameinfo.getromhash();
-	return 1;
-	if romHash == "F96AF883845308106600D84E0618C1A066DC6676" then
-		return 2;
-	elseif romHash == "F0AD2B2BBF04D574ED7AFBB1BB6A4F0511DCD87D" then
-		return 3;
-	elseif romHash == "CF806FF2603640A748FCA5026DED28802F1F4A50" then
-		return 1;
-	else
-		print("The ROM you are using does not work for this script");
-		return 4;
-	end
+    return 1;
 end
 
 RDRAMBase = 0x80000000;
