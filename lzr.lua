@@ -70,6 +70,7 @@ Mem = {
 
 function getVersion()
 	romHash = gameinfo.getromhash();
+	return 1;
 	if romHash == "F96AF883845308106600D84E0618C1A066DC6676" then
 		return 2;
 	elseif romHash == "F0AD2B2BBF04D574ED7AFBB1BB6A4F0511DCD87D" then
